@@ -1,7 +1,7 @@
 {
   "login": {
     "responseCode":1,
-    "message":"login success",
+    "message":"登录成功",
     "userKey":"123456",
     "userName":"piggy nono"
   }

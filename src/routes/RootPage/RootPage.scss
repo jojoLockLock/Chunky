@@ -1,0 +1,14 @@
+//
+
+.root{
+  height: 100%;
+  width: 100%;
+  .login{
+    position: absolute;
+    left:50%;
+    top:25%;
+    width: 400px;
+    margin-left:-200px;
+  }
+}
+

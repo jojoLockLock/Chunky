@@ -5,13 +5,14 @@
     "build": "roadhog build",
     "lint": "eslint --ext .js src test",
     "precommit": "npm run lint",
-    "mock": "json-server --watch mock/jsonServer.json --port 9090"
+    "mock": "json-server mock/db.json"
   },
   "dependencies": {
     "antd": "^2.8.3",
     "babel-runtime": "^6.9.2",
     "dva": "^1.1.0",
     "dva-loading": "^0.2.1",
+    "rc-queue-anim": "^0.13.3",
     "react": "^15.4.0",
     "react-dom": "^15.4.0",
     "redux-logger": "^3.0.0"

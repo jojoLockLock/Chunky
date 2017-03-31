@@ -4,7 +4,7 @@ import './index.css';
 import createLoading from 'dva-loading';
 import {message} from 'antd'
 import {GLOBAL_MSG_DURATION} from './config/componentConfig';
-
+import {setTemp,getTemp} from './utils/tools';
 // 1. Initialize
 const app = dva({
   //统计处理所有异常
@@ -20,7 +20,8 @@ app.model(require("./models/login"));
 app.use(createLoading());
 app.use({
   onStateChange() {
-    console.info(app._store.getState());
+    let log=app._store.getState().log;
+    setTemp('loginData',log.loginData);
   }
 });
 // 3. Model

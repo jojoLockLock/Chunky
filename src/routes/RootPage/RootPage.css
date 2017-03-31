@@ -1,0 +1,13 @@
+.root {
+  height: 100%;
+  width: 100%;
+}
+.root .login {
+  position: absolute;
+  left: 50%;
+  top: 25%;
+  width: 400px;
+  margin-left: -200px;
+}
+
+/*# sourceMappingURL=RootPage.css.map */

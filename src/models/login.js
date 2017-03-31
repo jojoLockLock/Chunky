@@ -2,34 +2,39 @@ import * as loginService from '../services/login';
 import {message} from 'antd';
 import {GLOBAL_MSG_DURATION} from '../config/componentConfig';
 
+const initState={
+  isLogin:false,
+  isSuccess:false,
+  isError:false,
+  loginData:null,
+};
+
 export default {
   
-  namespace: 'login',
+  namespace: 'log',
   
-  state: {
-    isLogin:false,
-    isSuccess:false,
-    isError:false,
-    loginData:null,
-  },
+  state: initState,
   
   reducers: {
     
-    success(state,{payload}) {
+    loginSuccess(preState,{payload}) {
       return {
-        ...state,
+        ...preState,
         isLogin:true,
         isSuccess:true,
         loginData:payload,
       };
     },
     
-    error(state,{payload}) {
+    loginError(preState,{payload}) {
       return {
-        ...state,
+        ...preState,
         isError:true,
         loginData:payload,
       }
+    },
+    logout(preState){
+      return initState;
     }
   },
   
@@ -39,7 +44,7 @@ export default {
       const {userName,userKey,message}=result;
       if(result.responseCode==1){
         yield put({
-          type:'success',
+          type:'loginSuccess',
           payload:{
             userName,
             userKey,
@@ -49,7 +54,7 @@ export default {
         message.info(message,GLOBAL_MSG_DURATION);
       }else{
         yield put({
-          type:'error',
+          type:'loginError',
           payload:{
             message
           }
@@ -63,9 +68,7 @@ export default {
   subscriptions: {
     setup({dispatch,history}) {
       return history.listen(({pathname,query})=>{
-          if (pathname === '/login') {
-            dispatch({type:'login',payload:'??'});
-          }
+          
       })
     }
   },

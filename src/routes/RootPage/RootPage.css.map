@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAEA,KAAK;EACH,MAAM,EAAE,IAAI;EACZ,KAAK,EAAE,IAAI;;AACX,YAAM;EACJ,QAAQ,EAAE,QAAQ;EAClB,IAAI,EAAC,GAAG;EACR,GAAG,EAAC,GAAG;EACP,KAAK,EAAE,KAAK;EACZ,WAAW,EAAC,MAAM",
+"sources": ["RootPage.scss"],
+"names": [],
+"file": "RootPage.css"
+}
