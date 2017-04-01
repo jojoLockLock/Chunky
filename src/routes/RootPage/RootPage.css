@@ -9,5 +9,8 @@
   width: 400px;
   margin-left: -200px;
 }
+.root .app-body {
+  padding: 60px 15px 15px;
+}
 
 /*# sourceMappingURL=RootPage.css.map */

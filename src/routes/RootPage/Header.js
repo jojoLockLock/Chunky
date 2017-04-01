@@ -10,12 +10,12 @@ const Header=({logoutHandle,userName})=>{
   
   
   return (
-    <div className={styles.header}>
-        <QueueAnim type="right"
+    <div className={styles['app-header']}>
+        <QueueAnim animConfig={{ opacity: [1, 0], translateX: [0,500] }}
                    component="ul"
                    className={styles.nav}
                    delay={300}>
-          <li key="app"><Link to="/app">App</Link></li>
+          <li key="home"><Link to="/home">Home</Link></li>
           <li key="404"><Link to="/404">404</Link></li>
           <li key="logout">
             <Popconfirm onConfirm={logoutHandle} title={"确定退出？"}>

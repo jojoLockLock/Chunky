@@ -27,7 +27,9 @@ const RootPage=({loading=false,log,dispatch,children})=>{
           ?
           <div key="app" className={styles.app}>
             <Header logoutHandle={logoutHandle} userName={log.loginData.userName}/>
-            {children}
+            <div className={styles['app-body']}>
+              {children}
+            </div>
           </div>
           :
           <div key="login" className={styles.login}>
