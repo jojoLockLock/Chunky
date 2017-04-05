@@ -1,8 +1,10 @@
 {
   "login": {
     "responseCode":1,
-    "userName":"piggy manno",
-    "userKey":"123",
-    "message":"登录成功"
+    "userData":{
+      "userName":"piggy manno",
+      "userKey":"123",
+      "message":"登录成功"
+    }
   }
 }

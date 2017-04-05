@@ -18,7 +18,7 @@ const RootPage=({loading=false,log,dispatch,children})=>{
     dispatch({type:'log/logout'});
     message.info("退出登录成功",GLOBAL_MSG_DURATION)
   };
-  
+
   return <div className={styles.root}>
     <QueueAnim duration={800}
                animConfig={{ opacity: [1, 0], translateY: [0, 100] }}>
@@ -36,7 +36,7 @@ const RootPage=({loading=false,log,dispatch,children})=>{
             <LoginModal loading={loading}
                         loginHandle={loginHandle}/>
           </div>
-          
+
       }
     </QueueAnim>
   </div>

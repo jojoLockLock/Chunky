@@ -10,13 +10,13 @@ const initState={
 };
 
 export default {
-  
+
   namespace: 'log',
-  
+
   state: initState,
-  
+
   reducers: {
-    
+
     loginSuccess(preState,{payload}) {
       return {
         ...preState,
@@ -25,7 +25,7 @@ export default {
         loginData:payload,
       };
     },
-    
+
     loginError(preState,{payload}) {
       return {
         ...preState,
@@ -37,11 +37,11 @@ export default {
       return initState;
     }
   },
-  
+
   effects: {
     *login({payload:userData},{call,put}) {
       const result = yield call(loginService.login,userData);
-      const {userName,userKey,message}=result;
+      const {userName,userKey,message}=result.userData;
       if(result.responseCode==1){
         yield put({
           type:'loginSuccess',
@@ -61,10 +61,10 @@ export default {
         });
         throw new Error(result.message);
       }
-      
+
     }
   },
-  
+
   subscriptions: {
     setup({dispatch,history}) {
       return history.listen(({pathname,query})=>{
