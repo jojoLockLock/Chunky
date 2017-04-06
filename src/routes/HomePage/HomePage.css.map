@@ -1,6 +1,6 @@
 {
 "version": 3,
-"mappings": "AAEA,SAAS;EACP,gBAAgB,EAAE,OAAO",
+"mappings": "AAEA,SAAS;EACP,gBAAgB,EAAE,KAAK",
 "sources": ["HomePage.scss"],
 "names": [],
 "file": "HomePage.css"
