@@ -21,6 +21,7 @@
   bottom: 20%;
   background-color: white;
   overflow-Y: scroll;
+  overflow-X: hidden;
 }
 .chat-box .chat-input-wrap {
   position: absolute;

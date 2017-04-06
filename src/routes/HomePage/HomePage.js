@@ -103,9 +103,9 @@ class AppPage extends React.Component{
                    text={this.state.text}
                    title={"Chat with..."}
           >
-            {messages.map((msg,index)=>
-               <ChatMessage type={msg.type} key={`message${index}`}>{msg.content}</ChatMessage>
-            )}
+              {messages.map((msg,index)=>
+                <ChatMessage type={msg.type} key={`message${index}`}>{msg.content}</ChatMessage>
+              )}
           </ChatBox>
         </div>
       </QueueAnim>

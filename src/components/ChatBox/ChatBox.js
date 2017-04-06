@@ -5,6 +5,8 @@ import React from 'react';
 import styles from './ChatBox.css';
 import classnames from 'classnames';
 import {Input,Button} from 'antd';
+import QueueAnim from 'rc-queue-anim';
+import ReactDOM from 'react-dom';
 const ChatBox=({className,onChangeHandle,sendHandle,children,text,title})=>{
   const classes=classnames({
     [className]:className||false,
@@ -43,92 +45,68 @@ class ChatPanel extends React.Component{
     this.scrollChatPanelToBottom();
   };
   componentDidUpdate=()=>{
+    console.info('did');
     this.scrollChatPanelToBottom();
   };
   scrollChatPanelToBottom=()=>{
-    let chatPanel=this.chatPanel;
-    chatPanel.scrollTop = chatPanel.scrollHeight;
+    let chatPanel=ReactDOM.findDOMNode(this.refs.chatPanel);
+    //延迟执行..
+    setTimeout(()=>{
+      chatPanel.scrollTop = chatPanel.scrollHeight;
+    },0)
   };
-  getChatMessage=()=>{
-    const {message} =this.props.children;
-    return React.Children.map(message,(child,index)=>{
-      // if(!child){
-      //   return null;
-      // }
-      //
-      // const {order}=child.props;
-      // // const key='123';
-      // let classes=classnames({
-      //   [`${classPrefix}-tab`]:true,
-      //   [`${classPrefix}-active`]:activeOrder==order,
-      //   [`${classPrefix}-disabled`]:child.props.disabled
-      // });
-      //
-      // let event={};
-      // if(!child.props.disabled){
-      //   event={
-      //     onClick:this.props.onTabClick.bind(this,order)
-      //   }
-      // }
-      //
-      // const ref={};
-      // if(activeOrder === order){
-      //   ref.ref='activeTab';
-      // }
-      //
-      // return (
-      //   <li role="tab"
-      //
-      //       aria-disabled={child.props.disabled?'true':'false'}
-      //       aria-selected={activeOrder === order?'true':'false'}
-      //       {...event}
-      //       className={classes}
-      //       key={order}
-      //       {...ref}
-      //   >
-      //     {child.props.tab}
-      //   </li>
-      // )
-    })
+  getNextMessageType=()=>{
+    const messages =this.props.children;
+    return messages.length==0?"right":(messages[messages.length-1].props.type||"left");
   };
   render() {
     const classes=classnames({
       [styles['chat-panel']]:true
     });
     return (
-      <div className={classes} ref={target=>this.chatPanel=target}>
-        {this.props.children}
+      <QueueAnim className={classes}
+                 type={this.getNextMessageType()}
+                 component="div"
+                 ref={"chatPanel"}>
+          {this.props.children}
+      </QueueAnim>
+    )
+  }
+}
+class ChatMessage extends React.Component{
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    const {type="left",children}=this.props;
+    const classes=classnames({
+      [styles['chat-message']]:true,
+    });
+    const contentClasses=classnames({
+      [styles['chat-message-content']]:true,
+      [styles['chat-message-content-right']]:type=='right',
+      [styles['chat-message-content-left']]:type=='left',
+    });
+    return (
+      <div className={classes}>
+        <p className={contentClasses}>
+          {children}&nbsp;
+        </p>
       </div>
     )
   }
 }
-const ChatMessage=({type="left",children})=>{
-  const classes=classnames({
-    [styles['chat-message']]:true,
-  });
-  const contentClasses=classnames({
-    [styles['chat-message-content']]:true,
-    [styles['chat-message-content-right']]:type=='right',
-    [styles['chat-message-content-left']]:type=='left',
-  });
-  return (
-    <div className={classes}>
-      <p className={contentClasses}>
-        {children}&nbsp;
-      </p>
-    </div>
-  )
-};
+
 const ChatInput=({onChangeHandle,sendHandle,value})=>{
   const classes=classnames({
     [styles['chat-input-wrap']]:true,
   });
   const onKeyPress=(e)=>{
     if(e.keyCode==13){
-      
+
     }
   };
-  
+
   return (
     <div className={classes}>
       <Input type="textarea"

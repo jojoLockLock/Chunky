@@ -20,7 +20,8 @@
     left:0;
     bottom:20%;
     background-color: white;
-    overflow-Y: scroll;
+    overflow-Y:scroll;
+    overflow-X:hidden;
   }
   .chat-input-wrap{
     position: absolute;
