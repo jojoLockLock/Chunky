@@ -21,6 +21,7 @@
   bottom: 20%;
   background-color: white;
   overflow-Y: scroll;
+  overflow-X: hidden;
 }
 .chat-box .chat-input-wrap {
   position: absolute;
@@ -52,14 +53,16 @@
   overflow: hidden;
 }
 .chat-box .chat-message .chat-message-content {
-  max-width: 60%;
   color: #00a2ae;
   background: #cfedf0;
   border-color: #cfedf0;
   padding: 5px 10px;
   position: relative;
   cursor: pointer;
-  word-break: break-all;
+  display: table-cell;
+  max-width: 60%;
+  table-layout: fixed;
+  word-wrap: break-word;
 }
 .chat-box .chat-message .chat-message-content:hover {
   background-color: rgba(207, 237, 240, 0.8);

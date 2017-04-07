@@ -18,7 +18,7 @@ class AppPage extends React.Component{
       text:"",
       messages:[]
     };
-    
+
   }
   componentDidMount=()=>{
     this.linkToSocket();
@@ -33,7 +33,7 @@ class AppPage extends React.Component{
   };
   sendMessage=(e)=>{
     const {text,messages}=this.state;
-    
+
     if(text==''){
       return;
     }
@@ -74,7 +74,7 @@ class AppPage extends React.Component{
           message.info("非文本消息");
         }
       };
-      
+
       socket.onclose = (msg)=> {
         message.warn(msg.data,3);
       };
@@ -103,9 +103,9 @@ class AppPage extends React.Component{
                    text={this.state.text}
                    title={"Chat with..."}
           >
-            {messages.map((msg,index)=>
-               <ChatMessage type={msg.type} key={`message${index}`}>{msg.content}</ChatMessage>
-            )}
+              {messages.map((msg,index)=>
+                <ChatMessage type={msg.type} key={`message${index}`}>{msg.content}</ChatMessage>
+              )}
           </ChatBox>
         </div>
       </QueueAnim>
