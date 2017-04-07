@@ -6,7 +6,9 @@ const initState={
   isLogin:false,
   isSuccess:false,
   isError:false,
-  loginData:null,
+  loginData:{
+    addressList:[]
+  },
 };
 
 export default {
@@ -41,14 +43,16 @@ export default {
   effects: {
     *login({payload:userData},{call,put}) {
       const result = yield call(loginService.login,userData);
-      const {userName,userKey,message}=result.userData;
+      const {userId,userName,userKey,message,addressList}=result.userData;
       if(result.responseCode==1){
         yield put({
           type:'loginSuccess',
           payload:{
+            userId,
             userName,
             userKey,
             message,
+            addressList,
           }
         });
         message.info(message,GLOBAL_MSG_DURATION);
@@ -68,7 +72,7 @@ export default {
   subscriptions: {
     setup({dispatch,history}) {
       return history.listen(({pathname,query})=>{
-          console.info(pathname,query);
+          // console.info(pathname,query);
       })
     }
   },

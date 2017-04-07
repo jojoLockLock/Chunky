@@ -11,20 +11,26 @@ import ChatBox from '../../components/ChatBox/ChatBox';
 import {socketHost} from '../../config/apiConfig';
 //message 与组件名字冲突！！！！！！！！！！！
 const ChatMessage =ChatBox.ChatMessage;
-class AppPage extends React.Component{
+class HomePage extends React.Component{
   constructor(props) {
     super(props);
     this.state={
       text:"",
+      isConnecting:false,
       messages:[]
     };
 
   }
   componentDidMount=()=>{
+    console.info('ddd');
     this.linkToSocket();
   };
+  componentWillUnmount=()=>{
+    this.socket.onclose=null;
+    this.closeLink();
+  };
   componentWillReceiveProps=(nextProps)=>{
-    // console.info('...');
+    
   };
   messageOnChange=(e)=>{
     this.setState({
@@ -33,7 +39,6 @@ class AppPage extends React.Component{
   };
   sendMessage=(e)=>{
     const {text,messages}=this.state;
-
     if(text==''){
       return;
     }
@@ -54,8 +59,14 @@ class AppPage extends React.Component{
     this.socket=socket;
     try {
       socket.onopen = (msg)=>{
-        socket.send(JSON.stringify({"operaCode":1,"userName":this.props.log.loginData.userName}));
+        let userId=this.props.log.loginData.userId;
+        socket.send(JSON.stringify({"operaCode":1,"userId":userId}));
+        this.setState({
+          isConnecting:true
+        });
+        message.info("连接成功",3);
       };
+      
       socket.onmessage = (msg)=>{
         if (typeof msg.data == "string") {
           const {messages} =this.state;
@@ -71,42 +82,64 @@ class AppPage extends React.Component{
           }
         }
         else {
-          message.info("非文本消息");
+          message.info("非文本消息",3);
         }
       };
-
-      socket.onclose = (msg)=> {
-        message.warn(msg.data,3);
+      socket.onclose = ()=> {
+        this.setState({
+          isConnecting:false,
+        });
+        message.warn("连接已关闭",3);
       };
+      
     }
     catch (ex) {
       message.error(ex,3);
     }
     window.onbeforeunload = ()=> {
-      try {
-        socket.close();
-        socket = null;
-      }
-      catch (ex) {
-      }
+        this.closeLink();
     };
   };
+  closeLink=()=>{
+    let socket=this.socket;
+    try {
+      socket.close();
+      socket = null;
+    }
+    catch (ex) {
+      new Error(ex);
+    }
+  };
   render() {
-    const {messages} = this.state;
-    console.info(messages);
+    const {messages,isConnecting} = this.state;
+    const {addressList}=this.props.log.loginData;
+    let target=addressList[addressList.length-1];
+    
     return (
       <QueueAnim duration={800} animConfig={{ opacity: [1, 0], translateY: [0, 100] }}>
         <div className={styles["app-home"]} key="home">
-          <h1>home Page</h1>
+          <div>
+            <h1>状态{isConnecting?"在线":"离线"}
+              <Button type="primary"
+                      onClick={this.linkToSocket}
+                      disabled={isConnecting}>
+                连接
+              </Button>
+            </h1>
+            <pre style={{float:'right'}}>
+              {JSON.stringify(this.props.log.loginData.addressList,null,4)}
+            </pre>
+          </div>
           <ChatBox onChangeHandle={this.messageOnChange}
                    sendHandle={this.sendMessage}
                    text={this.state.text}
-                   title={"Chat with..."}
+                   title={`Chat with ${target?target.userName:"= ="}`}
           >
               {messages.map((msg,index)=>
                 <ChatMessage type={msg.type} key={`message${index}`}>{msg.content}</ChatMessage>
               )}
           </ChatBox>
+          
         </div>
       </QueueAnim>
     )
@@ -123,7 +156,7 @@ const select=(state)=>{
   }
 };
 
-export default connect(select)(AppPage);
+export default connect(select)(HomePage);
 
 
 

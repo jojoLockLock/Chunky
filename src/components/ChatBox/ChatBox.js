@@ -45,7 +45,6 @@ class ChatPanel extends React.Component{
     this.scrollChatPanelToBottom();
   };
   componentDidUpdate=()=>{
-    console.info('did');
     this.scrollChatPanelToBottom();
   };
   scrollChatPanelToBottom=()=>{

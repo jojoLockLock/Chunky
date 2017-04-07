@@ -11,8 +11,8 @@ import LoginModal from './LoginModal';
 import Header from './Header';
 import {GLOBAL_MSG_DURATION} from '../../config/componentConfig';
 const RootPage=({loading=false,log,dispatch,children})=>{
-  const loginHandle=()=>{
-    dispatch({type:'log/login'});
+  const loginHandle=(userData)=>{
+    dispatch({type:'log/login',payload:userData});
   };
   const logoutHandle=()=>{
     dispatch({type:'log/logout'});
