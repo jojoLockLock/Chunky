@@ -7,7 +7,7 @@ import classnames from 'classnames';
 import {Input,Button} from 'antd';
 import QueueAnim from 'rc-queue-anim';
 import ReactDOM from 'react-dom';
-const ChatBox=({className,onChangeHandle,sendHandle,children,text,title})=>{
+const ChatBox=({className,onChangeHandle,sendHandle,children,text,title,isAnimate=true})=>{
   const classes=classnames({
     [className]:className||false,
     [styles['chat-box']]:true,
@@ -15,17 +15,27 @@ const ChatBox=({className,onChangeHandle,sendHandle,children,text,title})=>{
   return (
     <div className={classes}>
       <ChatTitle>{title}</ChatTitle>
-      <ChatPanel >
+      <ChatPanel isAnimate={isAnimate}>
         {children}
       </ChatPanel>
       <ChatInput onChangeHandle={onChangeHandle} sendHandle={sendHandle} value={text}/>
     </div>
   )
 };
-
+//进行属性校验
 const {PropTypes} =React;
 ChatBox.propTypes={
   className:PropTypes.string,
+  isAnimate:PropTypes.bool,
+  onChangeHandle:PropTypes.func,
+  sendHandle:PropTypes.func,
+  text:PropTypes.string,
+  title:PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.node,
+    PropTypes.element,
+    PropTypes.number,
+  ])
 };
 const ChatTitle=({children})=>{
   const classes=classnames({
@@ -62,14 +72,26 @@ class ChatPanel extends React.Component{
     const classes=classnames({
       [styles['chat-panel']]:true
     });
-    return (
-      <QueueAnim className={classes}
-                 type={this.getNextMessageType()}
-                 component="div"
-                 ref={"chatPanel"}>
+    const {isAnimate}=this.props;
+    if(isAnimate){
+      return (
+        <QueueAnim className={classes}
+                   type={this.getNextMessageType()}
+                   component="div"
+                   ref={"chatPanel"}>
           {this.props.children}
-      </QueueAnim>
-    )
+        </QueueAnim>
+      )
+    }else{
+      return (
+        <div className={classes}
+             type={this.getNextMessageType()}
+             ref={"chatPanel"}>
+          {this.props.children}
+        </div>
+      )
+    }
+    
   }
 }
 class ChatMessage extends React.Component{
@@ -105,7 +127,6 @@ const ChatInput=({onChangeHandle,sendHandle,value})=>{
 
     }
   };
-
   return (
     <div className={classes}>
       <Input type="textarea"

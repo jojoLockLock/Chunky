@@ -23,7 +23,10 @@ app.use(createLoading());
 app.use({
   onStateChange() {
     let log=app._store.getState().log;
-    setTemp('loginData',log.loginData);
+    if(log.isLogin){
+      setTemp('loginData',log.loginData);
+    }
+    
   }
 });
 // 3. Model

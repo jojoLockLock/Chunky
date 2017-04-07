@@ -8,21 +8,29 @@ import {Button,Spin,message} from 'antd';
 import QueueAnim from 'rc-queue-anim';
 import styles from './HomePage.css';
 import ChatBox from '../../components/ChatBox/ChatBox';
+import SideBar from '../../components/Sidebar/SideBar';
 import {socketHost} from '../../config/apiConfig';
 //message 与组件名字冲突！！！！！！！！！！！
 const ChatMessage =ChatBox.ChatMessage;
+const SideBarItem=SideBar.Item;
 class HomePage extends React.Component{
   constructor(props) {
     super(props);
     this.state={
       text:"",
       isConnecting:false,
-      messages:[]
+      messages:[{
+        type: 'left',
+        content: "123123"
+      },{
+        type: 'right',
+        content: "123123"
+      }
+      ]
     };
 
   }
   componentDidMount=()=>{
-    console.info('ddd');
     this.linkToSocket();
   };
   componentWillUnmount=()=>{
@@ -96,9 +104,13 @@ class HomePage extends React.Component{
     catch (ex) {
       message.error(ex,3);
     }
-    window.onbeforeunload = ()=> {
-        this.closeLink();
-    };
+    
+    if (window.addEventListener) {
+      window.addEventListener('beforeunload', this.closeLink);
+      
+    } else {
+      window.attachEvent('onbeforeunload', this.closeLink);
+    }
   };
   closeLink=()=>{
     let socket=this.socket;
@@ -118,28 +130,38 @@ class HomePage extends React.Component{
     return (
       <QueueAnim duration={800} animConfig={{ opacity: [1, 0], translateY: [0, 100] }}>
         <div className={styles["app-home"]} key="home">
-          <div>
-            <h1>状态{isConnecting?"在线":"离线"}
-              <Button type="primary"
-                      onClick={this.linkToSocket}
-                      disabled={isConnecting}>
-                连接
-              </Button>
-            </h1>
-            <pre style={{float:'right'}}>
-              {JSON.stringify(this.props.log.loginData.addressList,null,4)}
-            </pre>
-          </div>
-          <ChatBox onChangeHandle={this.messageOnChange}
-                   sendHandle={this.sendMessage}
-                   text={this.state.text}
-                   title={`Chat with ${target?target.userName:"= ="}`}
-          >
+          {/*<div>*/}
+            {/*<h1>状态{isConnecting?"在线":"离线"}*/}
+              {/*<Button type="primary"*/}
+                      {/*onClick={this.linkToSocket}*/}
+                      {/*disabled={isConnecting}>*/}
+                {/*连接*/}
+              {/*</Button>*/}
+            {/*</h1>*/}
+            {/*<pre style={{float:'right'}}>*/}
+              {/*{JSON.stringify(this.props.log.loginData.addressList,null,4)}*/}
+            {/*</pre>*/}
+          {/*</div>*/}
+          
+          <div style={{width:'300px'}}>
+            <ChatBox onChangeHandle={this.messageOnChange}
+                     sendHandle={this.sendMessage}
+                     text={this.state.text}
+                     title={<p style={{textAlign:'center'}}>{`Chat with ${target?target.userName:"= ="}`}</p>}
+            >
               {messages.map((msg,index)=>
                 <ChatMessage type={msg.type} key={`message${index}`}>{msg.content}</ChatMessage>
               )}
-          </ChatBox>
-          
+            </ChatBox>
+            
+          </div>
+          <div>
+            <SideBar activeKey={['one']}>
+              <SideBarItem key="one">123</SideBarItem>
+              <SideBarItem key="two">123</SideBarItem>
+              <SideBarItem key="three">123</SideBarItem>
+            </SideBar>
+          </div>
         </div>
       </QueueAnim>
     )

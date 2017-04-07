@@ -10,37 +10,54 @@ import styles from './RootPage.css';
 import LoginModal from './LoginModal';
 import Header from './Header';
 import {GLOBAL_MSG_DURATION} from '../../config/componentConfig';
-const RootPage=({loading=false,log,dispatch,children})=>{
-  const loginHandle=(userData)=>{
-    dispatch({type:'log/login',payload:userData});
-  };
-  const logoutHandle=()=>{
-    dispatch({type:'log/logout'});
-    message.info("退出登录成功",GLOBAL_MSG_DURATION)
-  };
+import {getTemp} from '../../utils/tools';
 
-  return <div className={styles.root}>
-    <QueueAnim duration={800}
-               animConfig={{ opacity: [1, 0], translateY: [0, 100] }}>
-      {
-        log.isLogin
-          ?
-          <div key="app" className={styles.app}>
-            <Header logoutHandle={logoutHandle} userName={log.loginData.userName}/>
-            <div className={styles['app-body']}>
-              {children}
+class RootPage extends React.Component{
+  constructor(props) {
+    super(props);
+    this.dispatch=props.dispatch;
+  }
+  loginHandle=(userData)=>{
+    this.dispatch({type:'log/login',payload:userData});
+  };
+  logoutHandle=()=>{
+    this.dispatch({type:'log/logout'});
+    message.info("退出登录成功",GLOBAL_MSG_DURATION);
+    window.sessionStorage.clear();
+  };
+  componentDidMount=()=>{
+    let loginData=getTemp('loginData');
+    if(loginData!==null){
+        this.dispatch({type:'log/sessionLogin',payload:loginData});
+    }
+    
+  };
+  render() {
+    const {loading=false,log,children}=this.props;
+    const {loginHandle,logoutHandle} =this;
+    return <div className={styles.root}>
+      <QueueAnim duration={800}
+                 animConfig={{ opacity: [1, 0], translateY: [0, 100] }}>
+        {
+          log.isLogin
+            ?
+            <div key="app" className={styles.app}>
+              <Header logoutHandle={logoutHandle} userName={log.loginData.userName}/>
+              <div className={styles['app-body']}>
+                {children}
+              </div>
             </div>
-          </div>
-          :
-          <div key="login" className={styles.login}>
-            <LoginModal loading={loading}
-                        loginHandle={loginHandle}/>
-          </div>
-
-      }
-    </QueueAnim>
-  </div>
-};
+            :
+            <div key="login" className={styles.login}>
+              <LoginModal loading={loading}
+                          loginHandle={loginHandle}/>
+            </div>
+        
+        }
+      </QueueAnim>
+    </div>
+  }
+}
 const select=(state)=>{
   const {log}=state;
   return {

@@ -37,6 +37,14 @@ export default {
     },
     logout(preState){
       return initState;
+    },
+    sessionLogin(preState,{payload}) {
+      return {
+        ...preState,
+        isLogin:true,
+        isSuccess:true,
+        loginData:payload,
+      }
     }
   },
 

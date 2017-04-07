@@ -1,0 +1,51 @@
+//
+$primary-color-level-1:rgba(207,237,240,0.4);
+$primary-color-level-2:rgb(207,237,240);
+$primary-color-level-3:rgb(0,162,174);
+
+$secondary-color-level-1:rgba(233 ,233 ,233 ,0.8);
+$secondary-color-level-2:rgb(233 ,233 ,233);
+$secondary-color-level-3:rgb(145 ,145 ,145);
+
+.side-bar{
+  padding:30px 0;
+  width: 200px;
+  background-color: rgb(247,247,247);;
+  border: 1px solid $secondary-color-level-1;
+  box-shadow: 0 0 20px rgba(204,204,204,0.8);
+  list-style: none;
+  &-item{
+    cursor: pointer;
+    text-indent: 2em;
+    padding:5px;
+    position: relative;
+    background: transparent;
+    .item-content{
+      position: relative;
+      z-index: 11;
+      color:$secondary-color-level-3;
+    }
+  }
+
+  .active{
+    position: relative;
+    text-indent: 2em;
+    padding:5px;
+    background: linear-gradient(to right, white 10px,transparent);
+    .item-content{
+      color:$primary-color-level-3;
+    }
+  }
+  .active:before{
+    z-index: 10;
+    content:"";
+    position: absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    width:6px;
+    background: $primary-color-level-3;
+    opacity: 0.5;
+    //background: linear-gradient(to right, $primary-color-level-2 5px,  $primary-color-level-2 10px , transparent);
+  }
+}
