@@ -10,6 +10,7 @@ import styles from './HomePage.css';
 import ChatBox from '../../components/ChatBox/ChatBox';
 import SideBar from '../../components/Sidebar/SideBar';
 import {socketHost} from '../../config/apiConfig';
+import {GLOBAL_MSG_DURATION} from '../../config/componentConfig';
 //message 与组件名字冲突！！！！！！！！！！！
 const ChatMessage =ChatBox.ChatMessage;
 const SideBarItem=SideBar.Item;
@@ -18,7 +19,7 @@ class HomePage extends React.Component{
     super(props);
     this.state={
       text:"",
-      isConnecting:false,
+      isConnect:false,
       messages:[
       ]
     };
@@ -44,15 +45,19 @@ class HomePage extends React.Component{
     })
   };
   sendMessage=(e)=>{
-    const {text,messages}=this.state;
+    const {text,messages,isConnect}=this.state;
     if(text==''){
       return;
     }
-    messages.push({
-      content:text,
-      type:'right',
-    });
-    this.socket.send(JSON.stringify({'operaCode':2,content:text}));
+    if(isConnect===true){
+        messages.push({
+            content:text,
+            type:'right',
+        });
+        this.socket.send(JSON.stringify({'operaCode':2,content:text}));
+    }else{
+      message.error('socket未连接',GLOBAL_MSG_DURATION)
+    }
     setTimeout(()=>{
       this.setState({
         text:"",
@@ -68,7 +73,7 @@ class HomePage extends React.Component{
         let userId=this.props.log.loginData.userId;
         socket.send(JSON.stringify({"operaCode":1,"userId":userId}));
         this.setState({
-          isConnecting:true
+          isConnect:true
         });
         message.info("连接成功",3);
       };
@@ -88,14 +93,14 @@ class HomePage extends React.Component{
           }
         }
         else {
-          message.info("非文本消息",3);
+          message.info("非文本消息",GLOBAL_MSG_DURATION);
         }
       };
       socket.onclose = ()=> {
         this.setState({
-          isConnecting:false,
+          isConnect:false,
         });
-        message.warn("连接已关闭",3);
+        message.warn("连接已关闭",GLOBAL_MSG_DURATION);
       };
 
     }
@@ -121,7 +126,7 @@ class HomePage extends React.Component{
     }
   };
   render() {
-    const {messages,isConnecting} = this.state;
+    const {messages,isConnect} = this.state;
     const {addressList}=this.props.log.loginData;
     const {loading=false} =this.props;
     let target=addressList[0];
@@ -129,10 +134,10 @@ class HomePage extends React.Component{
       <QueueAnim duration={800} animConfig={{ opacity: [1, 0], translateY: [0, 100] }}>
         <div className={styles["app-home"]} key="home">
           {/*<div>*/}
-            {/*<h1>状态{isConnecting?"在线":"离线"}*/}
+            {/*<h1>状态{isConnect?"在线":"离线"}*/}
               {/*<Button type="primary"*/}
                       {/*onClick={this.linkToSocket}*/}
-                      {/*disabled={isConnecting}>*/}
+                      {/*disabled={isConnect}>*/}
                 {/*连接*/}
               {/*</Button>*/}
             {/*</h1>*/}

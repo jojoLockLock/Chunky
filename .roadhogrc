@@ -10,7 +10,7 @@
     }
   },
   "extraBabelPlugins": [
-    "transform-runtime",["import", { "libraryName": "antd", "style": "css" }]
+    "transform-runtime",["import", { "libraryName": "antd", "style": true }]
   ],
   "env": {
     "development": {
@@ -18,5 +18,10 @@
         "dva-hmr"
       ]
     }
+  },
+  "theme":{
+      "primary-color": "#3db8c1",
+      "link-color": "#3db8c1",
+      "border-radius-base": "2px"
   }
 }

@@ -136,6 +136,7 @@ const ChatInput=({onChangeHandle,sendHandle,value})=>{
              onPressEnter={sendHandle}
       />
       <Button className={styles['chat-button']}
+              type="primary"
               onClick={sendHandle}
               size="small">发送</Button>
     </div>
