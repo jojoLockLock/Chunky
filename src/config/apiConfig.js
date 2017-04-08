@@ -2,13 +2,13 @@
  * Created by Administrator on 2017/3/29.
  */
 export const  mockConfig={
-  isMocking:false,
+  isMocking:true,
   url:{
     login:'/api/login'
   }
 };
 if(mockConfig.isMocking){
-  console.warn('当前为测试模式');
+  console.warn('mocking pattern');
 }
 //web socket服务器的地址
 export const socketServer={

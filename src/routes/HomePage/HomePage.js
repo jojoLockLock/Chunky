@@ -34,6 +34,10 @@ class HomePage extends React.Component{
   componentWillReceiveProps=(nextProps)=>{
 
   };
+  shouldComponentUpdate=(nextProps)=>{
+    //由于动画效果产生的延迟，导致promise错误，没登录时不重新render
+    return nextProps.log.isLogin;
+  };
   messageOnChange=(e)=>{
     this.setState({
       text:e.target.value
@@ -121,8 +125,6 @@ class HomePage extends React.Component{
     const {addressList}=this.props.log.loginData;
     const {loading=false} =this.props;
     let target=addressList[0];
-    console.info(addressList,loading);
-
     return (
       <QueueAnim duration={800} animConfig={{ opacity: [1, 0], translateY: [0, 100] }}>
         <div className={styles["app-home"]} key="home">
@@ -140,7 +142,6 @@ class HomePage extends React.Component{
           {/*</div>*/}
           <Spin spinning={loading}>
             <Row style={{width:'500px'}} className={styles['vertical-projection']}>
-
               <Col span={6}  style={{height:'500px'}}>
                 <SideBar activeKey={[`address${target.userId}`]}>
                   {addressList.map(item=>{

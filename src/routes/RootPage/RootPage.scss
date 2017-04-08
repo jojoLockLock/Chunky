@@ -1,5 +1,5 @@
 //
-
+@import "../../styles/common";
 .root{
   height: 100%;
   width: 100%;
@@ -9,6 +9,7 @@
     top:25%;
     width: 400px;
     margin-left:-200px;
+    border-radius: 5px;
   }
   .login-title{
     text-align: center;

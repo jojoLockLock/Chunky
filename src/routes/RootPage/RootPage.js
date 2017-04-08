@@ -2,7 +2,7 @@
  * Created by Administrator on 2017/3/28.
  */
 import React from 'react';
-
+import classnames from 'classnames';
 import { connect } from 'dva';
 import {Button,Spin,message} from 'antd';
 import QueueAnim from 'rc-queue-anim';
@@ -21,9 +21,9 @@ class RootPage extends React.Component{
     this.dispatch({type:'log/login',payload:userData});
   };
   logoutHandle=()=>{
+    window.sessionStorage.clear();
     this.dispatch({type:'log/logout'});
     message.info("退出登录成功",GLOBAL_MSG_DURATION);
-    window.sessionStorage.clear();
   };
   componentDidMount=()=>{
     //Uncaught (in promise) undefined  自动登录时 异常 未解决
@@ -35,8 +35,12 @@ class RootPage extends React.Component{
   render() {
     const {loading=false,log,children}=this.props;
     const {loginHandle,logoutHandle} =this;
+
     return <div className={styles.root}>
       <QueueAnim duration={800}
+                 onEnd={({key,type})=>{
+                   console.info(`onEnd:${key} ${type}`);
+                 }}
                  animConfig={{ opacity: [1, 0], translateY: [0, 100] }}>
         {
           log.isLogin
@@ -48,7 +52,10 @@ class RootPage extends React.Component{
               </div>
             </div>
             :
-            <div key="login" className={styles.login}>
+            <div key="login" className={classnames({
+              [styles['login']]:true,
+              [styles['vertical-projection']]:true
+            })}>
               <LoginModal loading={loading}
                           loginHandle={loginHandle}/>
             </div>
