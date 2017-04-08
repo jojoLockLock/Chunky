@@ -35,7 +35,7 @@ export default {
         loginData:payload,
       }
     },
-    logout(preState){
+    logout(){
       return initState;
     },
     sessionLogin(preState,{payload}) {

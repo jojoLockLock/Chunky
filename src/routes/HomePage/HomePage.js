@@ -4,7 +4,7 @@
 import React from 'react';
 import { connect } from 'dva';
 import { Link} from 'dva/router';
-import {Button,Spin,message} from 'antd';
+import {Button,Spin,message,Row,Col} from 'antd';
 import QueueAnim from 'rc-queue-anim';
 import styles from './HomePage.css';
 import ChatBox from '../../components/ChatBox/ChatBox';
@@ -19,13 +19,7 @@ class HomePage extends React.Component{
     this.state={
       text:"",
       isConnecting:false,
-      messages:[{
-        type: 'left',
-        content: "123123"
-      },{
-        type: 'right',
-        content: "123123"
-      }
+      messages:[
       ]
     };
 
@@ -38,7 +32,7 @@ class HomePage extends React.Component{
     this.closeLink();
   };
   componentWillReceiveProps=(nextProps)=>{
-    
+
   };
   messageOnChange=(e)=>{
     this.setState({
@@ -74,7 +68,7 @@ class HomePage extends React.Component{
         });
         message.info("连接成功",3);
       };
-      
+
       socket.onmessage = (msg)=>{
         if (typeof msg.data == "string") {
           const {messages} =this.state;
@@ -99,15 +93,15 @@ class HomePage extends React.Component{
         });
         message.warn("连接已关闭",3);
       };
-      
+
     }
     catch (ex) {
       message.error(ex,3);
     }
-    
+
     if (window.addEventListener) {
       window.addEventListener('beforeunload', this.closeLink);
-      
+
     } else {
       window.attachEvent('onbeforeunload', this.closeLink);
     }
@@ -125,8 +119,10 @@ class HomePage extends React.Component{
   render() {
     const {messages,isConnecting} = this.state;
     const {addressList}=this.props.log.loginData;
-    let target=addressList[addressList.length-1];
-    
+    const {loading=false} =this.props;
+    let target=addressList[0];
+    console.info(addressList,loading);
+
     return (
       <QueueAnim duration={800} animConfig={{ opacity: [1, 0], translateY: [0, 100] }}>
         <div className={styles["app-home"]} key="home">
@@ -142,26 +138,36 @@ class HomePage extends React.Component{
               {/*{JSON.stringify(this.props.log.loginData.addressList,null,4)}*/}
             {/*</pre>*/}
           {/*</div>*/}
-          
-          <div style={{width:'300px'}}>
-            <ChatBox onChangeHandle={this.messageOnChange}
-                     sendHandle={this.sendMessage}
-                     text={this.state.text}
-                     title={<p style={{textAlign:'center'}}>{`Chat with ${target?target.userName:"= ="}`}</p>}
-            >
-              {messages.map((msg,index)=>
-                <ChatMessage type={msg.type} key={`message${index}`}>{msg.content}</ChatMessage>
-              )}
-            </ChatBox>
-            
-          </div>
-          <div>
-            <SideBar activeKey={['one']}>
-              <SideBarItem key="one">123</SideBarItem>
-              <SideBarItem key="two">123</SideBarItem>
-              <SideBarItem key="three">123</SideBarItem>
-            </SideBar>
-          </div>
+          <Spin spinning={loading}>
+            <Row style={{width:'500px'}} className={styles['vertical-projection']}>
+
+              <Col span={6}  style={{height:'500px'}}>
+                <SideBar activeKey={[`address${target.userId}`]}>
+                  {addressList.map(item=>{
+                    return <SideBarItem key={`address${item.userId}`}>{item.userName}</SideBarItem>
+                  })}
+                </SideBar>
+              </Col>
+              <Col span={18} style={{height:'500px'}}>
+                <ChatBox onChangeHandle={this.messageOnChange}
+                         sendHandle={this.sendMessage}
+                         text={this.state.text}
+                         title={<p style={{textAlign:'center'}}>{`Chat with ${target?target.userName:"= ="}`}</p>}
+                >
+                  {messages.map((msg,index)=>
+                    <ChatMessage type={msg.type} key={`message${index}`}>{msg.content}</ChatMessage>
+                  )}
+                </ChatBox>
+              </Col>
+            </Row>
+          </Spin>
+          {/*<div style={{width:'300px'}}>*/}
+
+
+          {/*</div>*/}
+          {/*<div>*/}
+
+          {/*</div>*/}
         </div>
       </QueueAnim>
     )
@@ -171,6 +177,7 @@ class HomePage extends React.Component{
 }
 const select=(state)=>{
   const {log,message}=state;
+
   return {
     loading:state.loading.models.log,
     log,
