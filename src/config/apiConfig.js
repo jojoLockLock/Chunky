@@ -7,6 +7,9 @@ export const  mockConfig={
     login:'/api/login'
   }
 };
+if(mockConfig.isMocking){
+  console.warn('当前为测试模式');
+}
 //web socket服务器的地址
 export const socketServer={
   ip:"127.0.0.1",

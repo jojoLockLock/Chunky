@@ -26,11 +26,11 @@ class RootPage extends React.Component{
     window.sessionStorage.clear();
   };
   componentDidMount=()=>{
-    let loginData=getTemp('loginData');
-    if(loginData!==null){
+    //Uncaught (in promise) undefined  自动登录时 异常 未解决
+      let loginData=getTemp('loginData');
+      if(loginData!==null){
         this.dispatch({type:'log/sessionLogin',payload:loginData});
-    }
-    
+      }
   };
   render() {
     const {loading=false,log,children}=this.props;
@@ -52,7 +52,7 @@ class RootPage extends React.Component{
               <LoginModal loading={loading}
                           loginHandle={loginHandle}/>
             </div>
-        
+
         }
       </QueueAnim>
     </div>
