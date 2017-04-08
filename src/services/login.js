@@ -5,9 +5,7 @@ import request from '../utils/request';
 import {mockConfig} from '../config/apiConfig';
 
 
-
 export async function login(userData) {
-  
   const options=mockConfig.isMocking
     ?
     {method:'GET'}

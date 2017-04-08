@@ -43,7 +43,7 @@ class NormalLoginForm extends React.Component {
           )}
         </FormItem>
         <FormItem>
-          {getFieldDecorator('password', {
+          {getFieldDecorator('userPassword', {
             rules: [{ required: true, message: 'Please input your Password!' }],
           })(
             <Input onPressEnter={this.handleSubmit}
