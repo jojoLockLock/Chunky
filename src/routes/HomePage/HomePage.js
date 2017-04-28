@@ -4,7 +4,7 @@
 import React from 'react';
 import { connect } from 'dva';
 import { Link} from 'dva/router';
-import {Button,Spin,message,Row,Col} from 'antd';
+import {Button,Spin,message as Message,Row,Col} from 'antd';
 import QueueAnim from 'rc-queue-anim';
 import styles from './HomePage.css';
 import ChatBox from '../../components/ChatBox/ChatBox';
@@ -26,6 +26,7 @@ class HomePage extends React.Component{
 
   }
   componentDidMount=()=>{
+
     this.linkToSocket();
   };
   componentWillUnmount=()=>{
@@ -56,7 +57,7 @@ class HomePage extends React.Component{
         });
         this.socket.send(JSON.stringify({'operaCode':2,content:text}));
     }else{
-      message.error('socket未连接',GLOBAL_MSG_DURATION)
+      Message.error('socket未连接',GLOBAL_MSG_DURATION)
     }
     setTimeout(()=>{
       this.setState({
@@ -66,7 +67,7 @@ class HomePage extends React.Component{
     },0)
   };
   linkToSocket=()=>{
-    let socket = new WebSocket( socketHost);
+    let socket = new WebSocket(socketHost);
     this.socket=socket;
     try {
       socket.onopen = ()=>{
@@ -75,38 +76,22 @@ class HomePage extends React.Component{
         this.setState({
           isConnect:true
         });
-        message.info("连接成功",3);
+        Message.info("连接成功",3);
       };
 
       socket.onmessage = (msg)=>{
         console.info(msg);
-        // if (typeof msg.data == "string") {
-        //   const {messages} =this.state;
-        //   let res=JSON.parse(msg.data);
-        //   if(res['responseCode']==3){
-        //     messages.push({
-        //       content:res.content,
-        //       type:'left',
-        //     });
-        //     this.setState({
-        //       messages,
-        //     })
-        //   }
-        // }
-        // else {
-        //   message.info("非文本消息",GLOBAL_MSG_DURATION);
-        // }
       };
       socket.onclose = ()=> {
         this.setState({
           isConnect:false,
         });
-        message.warn("连接已关闭",GLOBAL_MSG_DURATION);
+        Message.warn("连接已关闭",GLOBAL_MSG_DURATION);
       };
 
     }
     catch (ex) {
-      message.error(ex,3);
+      Message.error(ex,3);
     }
 
     if (window.addEventListener) {
@@ -129,25 +114,11 @@ class HomePage extends React.Component{
   render() {
     const {messages,isConnect} = this.state;
     const {addressList}=this.props.log.loginData;
-    console.info(this.props.log.loginData);
-    const {loading=false} =this.props;
     let target=addressList[0];
+
     return (
       <QueueAnim duration={800} animConfig={{ opacity: [1, 0], translateY: [0, 100] }}>
         <div className={styles["app-home"]} key="home">
-          {/*<div>*/}
-            {/*<h1>状态{isConnect?"在线":"离线"}*/}
-              {/*<Button type="primary"*/}
-                      {/*onClick={this.linkToSocket}*/}
-                      {/*disabled={isConnect}>*/}
-                {/*连接*/}
-              {/*</Button>*/}
-            {/*</h1>*/}
-            {/*<pre style={{float:'right'}}>*/}
-              {/*{JSON.stringify(this.props.log.loginData.addressList,null,4)}*/}
-            {/*</pre>*/}
-          {/*</div>*/}
-          <Spin spinning={loading}>
             <Row style={{width:'500px'}} className={styles['vertical-projection']}>
               <Col span={6}  style={{height:'500px'}}>
                 <SideBar activeKey={[`address${target.userAccount}`]}>
@@ -168,7 +139,6 @@ class HomePage extends React.Component{
                 </ChatBox>
               </Col>
             </Row>
-          </Spin>
           {/*<div style={{width:'300px'}}>*/}
 
 
@@ -185,7 +155,7 @@ class HomePage extends React.Component{
 }
 const select=(state)=>{
   const {log,message}=state;
-
+  console.info(state.loading.models.log);
   return {
     loading:state.loading.models.log,
     log,

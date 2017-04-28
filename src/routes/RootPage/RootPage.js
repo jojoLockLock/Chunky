@@ -16,9 +16,15 @@ class RootPage extends React.Component{
   constructor(props) {
     super(props);
     this.dispatch=props.dispatch;
+    this.state={
+      isLogin:false,
+    }
   }
   loginHandle=(userData)=>{
     this.dispatch({type:'log/login',payload:userData});
+    this.setState({
+      isLogin:true
+    })
   };
   logoutHandle=()=>{
     window.sessionStorage.clear();
@@ -31,19 +37,18 @@ class RootPage extends React.Component{
       if(loginData!==null){
         this.dispatch({type:'log/sessionLogin',payload:loginData});
       }
+
   };
   render() {
     const {loading=false,log,children}=this.props;
     const {loginHandle,logoutHandle} =this;
+    const {isLogin}=this.state;
 
     return <div className={styles.root}>
       <QueueAnim duration={800}
-                 onEnd={({key,type})=>{
-                   console.info(`onEnd:${key} ${type}`);
-                 }}
                  animConfig={{ opacity: [1, 0], translateY: [0, 100] }}>
         {
-          log.isLogin
+          isLogin
             ?
             <div key="app" className={styles.app}>
               <Header logoutHandle={logoutHandle} userName={log.loginData.userName}/>

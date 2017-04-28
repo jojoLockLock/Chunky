@@ -1,5 +1,5 @@
 import * as loginService from '../services/login';
-import {message} from 'antd';
+import {message as Message} from 'antd';
 import {GLOBAL_MSG_DURATION} from '../config/componentConfig';
 
 const initState={
@@ -50,8 +50,9 @@ export default {
 
   effects: {
     *login({payload},{call,put}) {
+
       const result = yield call(loginService.login,payload);
-      const {token,userData,addressList,status}=result;
+      const {token,userData,addressList,status,message}=result;
       if(Object.is(status,1)){
         yield put({
           type:'loginSuccess',
@@ -62,7 +63,7 @@ export default {
             userAccount:payload.userAccount
           }
         });
-        message.info(message,GLOBAL_MSG_DURATION);
+        Message.info(message,GLOBAL_MSG_DURATION);
       }else{
         yield put({
           type:'loginError',
@@ -70,7 +71,7 @@ export default {
             message
           }
         });
-        throw new Error(result.message);
+        throw new Error(message);
       }
 
     }
