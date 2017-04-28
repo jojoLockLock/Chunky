@@ -69,9 +69,9 @@ class HomePage extends React.Component{
     let socket = new WebSocket( socketHost);
     this.socket=socket;
     try {
-      socket.onopen = (msg)=>{
-        let userId=this.props.log.loginData.userId;
-        socket.send(JSON.stringify({"operaCode":1,"userId":userId}));
+      socket.onopen = ()=>{
+        const {token,userAccount}=this.props.log.loginData;
+        socket.send(JSON.stringify({"type":"auth",userAccount,token}));
         this.setState({
           isConnect:true
         });
@@ -79,22 +79,23 @@ class HomePage extends React.Component{
       };
 
       socket.onmessage = (msg)=>{
-        if (typeof msg.data == "string") {
-          const {messages} =this.state;
-          let res=JSON.parse(msg.data);
-          if(res['responseCode']==3){
-            messages.push({
-              content:res.content,
-              type:'left',
-            });
-            this.setState({
-              messages,
-            })
-          }
-        }
-        else {
-          message.info("非文本消息",GLOBAL_MSG_DURATION);
-        }
+        console.info(msg);
+        // if (typeof msg.data == "string") {
+        //   const {messages} =this.state;
+        //   let res=JSON.parse(msg.data);
+        //   if(res['responseCode']==3){
+        //     messages.push({
+        //       content:res.content,
+        //       type:'left',
+        //     });
+        //     this.setState({
+        //       messages,
+        //     })
+        //   }
+        // }
+        // else {
+        //   message.info("非文本消息",GLOBAL_MSG_DURATION);
+        // }
       };
       socket.onclose = ()=> {
         this.setState({
@@ -128,6 +129,7 @@ class HomePage extends React.Component{
   render() {
     const {messages,isConnect} = this.state;
     const {addressList}=this.props.log.loginData;
+    console.info(this.props.log.loginData);
     const {loading=false} =this.props;
     let target=addressList[0];
     return (
@@ -148,9 +150,9 @@ class HomePage extends React.Component{
           <Spin spinning={loading}>
             <Row style={{width:'500px'}} className={styles['vertical-projection']}>
               <Col span={6}  style={{height:'500px'}}>
-                <SideBar activeKey={[`address${target.userId}`]}>
+                <SideBar activeKey={[`address${target.userAccount}`]}>
                   {addressList.map(item=>{
-                    return <SideBarItem key={`address${item.userId}`}>{item.userName}</SideBarItem>
+                    return <SideBarItem key={`address${item.userAccount}`}>{item.userName}</SideBarItem>
                   })}
                 </SideBar>
               </Col>

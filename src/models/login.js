@@ -49,18 +49,17 @@ export default {
   },
 
   effects: {
-    *login({payload:userData},{call,put}) {
-      const result = yield call(loginService.login,userData);
-      const {userId,userName,userKey,message,addressList}=result.userData;
-      if(result.responseCode==1){
+    *login({payload},{call,put}) {
+      const result = yield call(loginService.login,payload);
+      const {token,userData,addressList,status}=result;
+      if(Object.is(status,1)){
         yield put({
           type:'loginSuccess',
           payload:{
-            userId,
-            userName,
-            userKey,
-            message,
+            userData,
+            token,
             addressList,
+            userAccount:payload.userAccount
           }
         });
         message.info(message,GLOBAL_MSG_DURATION);

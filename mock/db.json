@@ -1,29 +1,16 @@
 {
   "login": {
-    "responseCode":1,
-    "userData":{
-      "userId":1,
-      "userName":"piggy manno",
-      "userKey":"123",
-      "message":"登录成功",
-      "addressList":[
-        {
-          "userId":2,
-          "userName":"tester2"
-        },
-        {
-          "userId":3,
-          "userName":"tester3"
-        },
-        {
-          "userId":4,
-          "userName":"tester4"
-        },
-        {
-          "userId":5,
-          "userName":"tester5"
-        }
-      ]
-    }
+    "message": "login success",
+    "token": "eyJhbGciOiJIUzI1NiJ9.MjE0OTMzNjYwNjI4MzI.dR_0x-TwUrXKNKajSITHY7Cy58AkJD46L6xop6waZ70",
+    "userData": {
+      "userName": "one"
+    },
+    "addressList": [
+      {
+        "userName": "one",
+        "userAccount": "1"
+      }
+    ],
+    "status": 1
   }
 }

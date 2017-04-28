@@ -13,7 +13,8 @@ if(mockConfig.isMocking){
 //web socket服务器的地址
 export const socketServer={
   ip:"127.0.0.1",
-  port:8001,
+  port:3000,
+  path:"chat"
 };
 
-export const socketHost=`ws://${socketServer.ip}:${socketServer.port}/`;
+export const socketHost=`ws://${socketServer.ip}:${socketServer.port}/${socketServer.path}`;
