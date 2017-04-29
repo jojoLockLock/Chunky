@@ -1,7 +1,7 @@
 {
 "version": 3,
-"mappings": "AAAA,oBAAoB;EAClB,UAAU,EAAE,iCAA8B;;;ACC5C,SAAS;EACP,gBAAgB,EAAE,KAAK",
-"sources": ["../../styles/common.scss","HomePage.scss"],
+"mappings": "AACA,SAAS;EACP,gBAAgB,EAAE,KAAK",
+"sources": ["HomePage.scss"],
 "names": [],
 "file": "HomePage.css"
 }

@@ -1,6 +1,7 @@
 import dva from 'dva';
 import './index.html';
 import './index.css';
+import './styles/common.css';
 import { browserHistory } from 'dva/router';
 import createLoading from 'dva-loading';
 import {message} from 'antd'
