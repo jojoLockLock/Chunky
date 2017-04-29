@@ -25,8 +25,16 @@ class HomePage extends React.Component{
     };
 
   }
+  getChangeActiveChat=(activeChat)=>{
+     return ()=>{
+       this.props.dispatch({type:"chat/setActiveChat",payload:{activeChat}})
+       this.getChatRecords(activeChat.userAccount);
+     }
+  };
+  getChatRecords=(targetAccount)=>{
+      this.props.dispatch({type:"chat/getChatRecords",payload:{targetAccount}});
+  };
   componentDidMount=()=>{
-
     this.linkToSocket();
   };
   componentWillUnmount=()=>{
@@ -51,11 +59,14 @@ class HomePage extends React.Component{
       return;
     }
     if(isConnect===true){
-        messages.push({
-            content:text,
-            type:'right',
-        });
-        this.socket.send(JSON.stringify({'operaCode':2,content:text}));
+      const userAccount=this.props.log.loginData.userAccount;
+      const targetAccount=this.props.chat.activeChat.userAccount;
+      this.props.dispatch({type:"chat/addChatRecords",payload:{targetAccount,message:{
+        content:text,
+        senderAccount:userAccount
+      }}});
+
+      this.socket.send(JSON.stringify({type:"boardCast",content:text,targetAccount}));
     }else{
       Message.error('socket未连接',GLOBAL_MSG_DURATION)
     }
@@ -80,8 +91,37 @@ class HomePage extends React.Component{
       };
 
       socket.onmessage = (msg)=>{
-        console.info(msg);
+        const {userAccount}=this.props.log.loginData;
+        const {messages}=this.state;
+        try{
+          const analysis=JSON.parse(msg.data);
+          const type=analysis.type;
+          switch (type){
+            case "newMessage":
+              messages.push({
+                type:"left",
+                content:analysis.content
+              });
+              this.setState({
+                messages
+              });
+              break;
+            default:
+              Message.info(msg.data,3);
+          }
+
+
+        }catch(e){
+          Message.error(e.message,3);
+        }
+
       };
+
+
+
+
+
+
       socket.onclose = ()=> {
         this.setState({
           isConnect:false,
@@ -112,18 +152,22 @@ class HomePage extends React.Component{
     }
   };
   render() {
-    const {messages,isConnect} = this.state;
-    const {addressList}=this.props.log.loginData;
-    let target=addressList[0];
-
+    const {log,chat}=this.props;
+    const {addressList=[]}=log.loginData;
+    const {activeChat,chatRecords}=chat;
+    const {userAccount}=log.loginData;
+    const messages=chatRecords[activeChat.userAccount]||[];
     return (
       <QueueAnim duration={800} animConfig={{ opacity: [1, 0], translateY: [0, 100] }}>
         <div className={styles["app-home"]} key="home">
             <Row style={{width:'500px'}} className={styles['vertical-projection']}>
               <Col span={6}  style={{height:'500px'}}>
-                <SideBar activeKey={[`address${target.userAccount}`]}>
+
+                <SideBar activeKey={[`address${activeChat?activeChat.userAccount:"nullActive"}`]}>
                   {addressList.map(item=>{
-                    return <SideBarItem key={`address${item.userAccount}`}>{item.userName}</SideBarItem>
+                    return <SideBarItem key={`address${item.userAccount}`}
+                                        onClick={this.getChangeActiveChat({userAccount:item.userAccount,userName:item.userName})}
+                    >{item.userName}</SideBarItem>
                   })}
                 </SideBar>
               </Col>
@@ -131,21 +175,16 @@ class HomePage extends React.Component{
                 <ChatBox onChangeHandle={this.messageOnChange}
                          sendHandle={this.sendMessage}
                          text={this.state.text}
-                         title={<p style={{textAlign:'center'}}>{`Chat with ${target?target.userName:"= ="}`}</p>}
+                         isAnimate={false}
+                         title={<p style={{textAlign:'center'}}>{`Chat with ${activeChat?activeChat.userName:""}`}</p>}
                 >
                   {messages.map((msg,index)=>
-                    <ChatMessage type={msg.type} key={`message${index}`}>{msg.content}</ChatMessage>
+                    <ChatMessage type={msg.senderAccount==userAccount?"right":"left"} key={`message${index}`}>{msg.content}</ChatMessage>
                   )}
                 </ChatBox>
               </Col>
             </Row>
-          {/*<div style={{width:'300px'}}>*/}
-
-
-          {/*</div>*/}
-          {/*<div>*/}
-
-          {/*</div>*/}
+          <Button onClick={this.getChatRecords}>获得</Button>
         </div>
       </QueueAnim>
     )
@@ -154,12 +193,12 @@ class HomePage extends React.Component{
   }
 }
 const select=(state)=>{
-  const {log,message}=state;
-  console.info(state.loading.models.log);
+  const {log,chat}=state;
+
   return {
     loading:state.loading.models.log,
     log,
-    message,
+    chat,
   }
 };
 

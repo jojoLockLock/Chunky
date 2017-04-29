@@ -16,15 +16,11 @@ class RootPage extends React.Component{
   constructor(props) {
     super(props);
     this.dispatch=props.dispatch;
-    this.state={
-      isLogin:false,
-    }
+
   }
   loginHandle=(userData)=>{
     this.dispatch({type:'log/login',payload:userData});
-    this.setState({
-      isLogin:true
-    })
+
   };
   logoutHandle=()=>{
     window.sessionStorage.clear();
@@ -33,25 +29,32 @@ class RootPage extends React.Component{
   };
   componentDidMount=()=>{
     //Uncaught (in promise) undefined  自动登录时 异常 未解决
-      let loginData=getTemp('loginData');
+      let loginData=getTemp('loginData'),
+          activeChat=getTemp('activeChat');
+
       if(loginData!==null){
         this.dispatch({type:'log/sessionLogin',payload:loginData});
+      }
+
+      if(activeChat!==null){
+        this.dispatch({type:'chat/setActiveChat',payload:{activeChat}});
+        this.dispatch({type:"chat/getChatRecords",payload:{targetAccount:activeChat.userAccount}});
       }
 
   };
   render() {
     const {loading=false,log,children}=this.props;
     const {loginHandle,logoutHandle} =this;
-    const {isLogin}=this.state;
+    const {userData={}}=log.loginData;
 
     return <div className={styles.root}>
       <QueueAnim duration={800}
                  animConfig={{ opacity: [1, 0], translateY: [0, 100] }}>
         {
-          isLogin
+          log.isLogin
             ?
             <div key="app" className={styles.app}>
-              <Header logoutHandle={logoutHandle} userName={log.loginData.userName}/>
+              <Header logoutHandle={logoutHandle} userName={userData.userName}/>
               <div className={styles['app-body']}>
                 {children}
               </div>

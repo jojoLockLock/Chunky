@@ -8,7 +8,7 @@ import {Input,Button} from 'antd';
 import QueueAnim from 'rc-queue-anim';
 import ReactDOM from 'react-dom';
 const SideBar=({children,activeKey})=>{
-    
+
     return(
       <ul className={styles['side-bar']}>
         {children.map((child,index)=>{
@@ -25,13 +25,13 @@ const {PropTypes} =React;
 SideBar.propTypes={
   activeKey:PropTypes.arrayOf(PropTypes.string)
 };
-const Item=({children,isActive})=>{
+const Item=({children,isActive,onClick})=>{
     const classes=classnames({
       [styles['active']]:isActive,
       [styles['side-bar-item']]:true
     });
     return (
-      <li className={classes}><span className={styles['item-content']}>{children}</span></li>
+      <li className={classes} onClick={onClick}><span className={styles['item-content']}>{children}</span></li>
     )
 };
 SideBar.Item=Item;

@@ -4,7 +4,8 @@
 export const  mockConfig={
   isMocking:true,
   url:{
-    login:'/api/login'
+    login:'/api/login',
+    getChatRecords:'/api/chatrecords'
   }
 };
 if(mockConfig.isMocking){

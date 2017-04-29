@@ -16,17 +16,22 @@ const app = dva({
 });
 
 app.model(require("./models/login"));
-
+app.model(require("./models/chat"));
 
 // 2. Plugins
 app.use(createLoading());
 app.use({
   onStateChange() {
-    let log=app._store.getState().log;
+    let store=app._store.getState(),
+        log=store.log,
+        chat=store.chat;
+
     if(log.isLogin){
       setTemp('loginData',log.loginData);
     }
-
+    if(chat.activeChat){
+      setTemp("activeChat",chat.activeChat);
+    }
   }
 });
 // 3. Model

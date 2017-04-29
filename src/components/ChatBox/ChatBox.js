@@ -78,7 +78,11 @@ class ChatPanel extends React.Component{
         <QueueAnim className={classes}
                    type={this.getNextMessageType()}
                    component="div"
+                   duration={300}
+                   interval={0}
+                   onEnd={this.scrollChatPanelToBottom}
                    ref={"chatPanel"}>
+
           {this.props.children}
         </QueueAnim>
       )
@@ -91,7 +95,7 @@ class ChatPanel extends React.Component{
         </div>
       )
     }
-    
+
   }
 }
 class ChatMessage extends React.Component{

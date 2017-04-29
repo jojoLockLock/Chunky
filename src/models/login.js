@@ -12,11 +12,8 @@ const initState={
 };
 
 export default {
-
   namespace: 'log',
-
   state: initState,
-
   reducers: {
 
     loginSuccess(preState,{payload}) {
@@ -45,7 +42,8 @@ export default {
         isSuccess:true,
         loginData:payload,
       }
-    }
+    },
+
   },
 
   effects: {
@@ -63,6 +61,22 @@ export default {
             userAccount:payload.userAccount
           }
         });
+        const activeChat=addressList[0];
+
+        if(activeChat){
+          yield put({
+            type:"chat/setActiveChat",
+            payload:{
+              activeChat:activeChat
+            }
+          });
+          yield put({
+            type:"chat/getChatRecords",
+            payload:{
+              targetAccount:activeChat.targetAccount
+            }})
+        }
+
         Message.info(message,GLOBAL_MSG_DURATION);
       }else{
         yield put({
