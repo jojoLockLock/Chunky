@@ -38,7 +38,7 @@ class RootPage extends React.Component{
 
       if(activeChat!==null){
         this.dispatch({type:'chat/setActiveChat',payload:{activeChat}});
-        this.dispatch({type:"chat/getChatRecords",payload:{targetAccount:activeChat.userAccount}});
+        this.dispatch({type:"chat/getChatRecords",payload:{targetAccount:activeChat.userAccount,token:loginData.token,userAccount:loginData.userAccount}});
       }
 
   };
@@ -62,7 +62,7 @@ class RootPage extends React.Component{
             :
             <div key="login" className={classnames({
               [styles['login']]:true,
-              [styles['vertical-projection']]:true
+              ['vertical-projection']:true
             })}>
               <LoginModal loading={loading}
                           loginHandle={loginHandle}/>

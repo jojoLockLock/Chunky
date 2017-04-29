@@ -62,7 +62,6 @@ export default {
           }
         });
         const activeChat=addressList[0];
-
         if(activeChat){
           yield put({
             type:"chat/setActiveChat",
@@ -73,7 +72,9 @@ export default {
           yield put({
             type:"chat/getChatRecords",
             payload:{
-              targetAccount:activeChat.targetAccount
+              targetAccount:activeChat.userAccount,
+              token,
+              userAccount:payload.userAccount,
             }})
         }
 

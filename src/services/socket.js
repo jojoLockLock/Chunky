@@ -1,22 +1,7 @@
 /**
  * Created by JoJo on 2017/4/29.
  */
-const linkToSocket=(socketHost)=>{
-  return new Promise((resolve,reject)=>{
-    try {
-      let socket = new WebSocket(socketHost);
-      socket.onopen = ()=>{
-        resolve(socket);
-      };
-    }
-    catch (err) {
-      reject(err);
-    }
-  })
-};
-const sendMessage=(type)=>{
 
-};
 class Socket {
   constructor(socketHost) {
     this.socketHost=socketHost;
@@ -101,15 +86,6 @@ class Socket {
     this.controllers[type]=controller;
   }
 }
-let socket=new Socket('ws://127.0.0.1:3000/chat');
-socket.link().then((socket)=>{
-  console.info(socket);
-  socket.send("auth",{"token":"","userAccount":1})
-  socket.addController('auth',(data)=>{
-    console.info(data);
-  })
-}).catch(err=>{
-  console.info(err);
-});
+
 
 export default Socket

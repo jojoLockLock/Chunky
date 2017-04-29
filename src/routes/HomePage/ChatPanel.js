@@ -92,35 +92,32 @@ class ChatPanel extends React.Component{
 
       socket.onmessage = (msg)=>{
         const {userAccount}=this.props.log.loginData;
-        const {messages}=this.state;
+
         try{
           const analysis=JSON.parse(msg.data);
           const type=analysis.type;
           switch (type){
             case "newMessage":
-              messages.push({
-                type:"left",
-                content:analysis.content
-              });
-              this.setState({
-                messages
+              this.props.dispatch({
+                type:"chat/addChatRecords",
+                payload:{
+                  targetAccount:analysis.senderAccount,
+                  message:{
+                    content:analysis.content,
+                    senderAccount:analysis.senderAccount,
+                    date:new Date().toString()
+                  }
+                }
               });
               break;
             default:
-              Message.info(msg.data,3);
+              console.info(msg.data);
           }
-
-
         }catch(e){
           Message.error(e.message,3);
         }
 
       };
-
-
-
-
-
 
       socket.onclose = ()=> {
         this.setState({
@@ -157,7 +154,7 @@ class ChatPanel extends React.Component{
     const {activeChat,chatRecords}=chat;
     const {userAccount}=log.loginData;
     const messages=chatRecords[activeChat.userAccount]||[];
-
+    console.info(activeChat);
     return (
       <Row style={{width:'500px'}} className={'vertical-projection'}>
         <Col span={6}  style={{height:'500px'}}>
@@ -174,7 +171,6 @@ class ChatPanel extends React.Component{
           <ChatBox onChangeHandle={this.messageOnChange}
                    sendHandle={this.sendMessage}
                    text={this.state.text}
-                   isAnimate={false}
                    title={<p style={{textAlign:'center'}}>{`Chat with ${activeChat?activeChat.userName:""}`}</p>}
           >
             {messages.map((msg,index)=>
