@@ -27,12 +27,16 @@ class ChatPanel extends React.Component{
   }
   getChangeActiveChat=(activeChat)=>{
     return ()=>{
-      this.props.dispatch({type:"chat/setActiveChat",payload:{activeChat}})
-      this.getChatRecords(activeChat.userAccount);
+      this.props.dispatch({type:"chat/setActiveChat",payload:{activeChat}});
+      if(!this.props.chat.chatRecords[activeChat.userAccount]){
+        const {userAccount,token}=this.props.log.loginData;
+        this.getChatRecords(activeChat.userAccount,token,userAccount);
+      }
+
     }
   };
-  getChatRecords=(targetAccount)=>{
-    this.props.dispatch({type:"chat/getChatRecords",payload:{targetAccount}});
+  getChatRecords=(targetAccount,token,userAccount)=>{
+    this.props.dispatch({type:"chat/getChatRecords",payload:{targetAccount,token,userAccount}});
   };
   componentDidMount=()=>{
     this.linkToSocket();
