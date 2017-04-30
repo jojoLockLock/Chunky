@@ -24,20 +24,29 @@
 </div>
 <button onclick="add()">add</button>
 <script>
+  let box=document.getElementsByClassName("con")[0];
   let con=document.getElementsByClassName("box2")[0];
+  let con2=document.getElementsByClassName('box1')[0];
   let aList="";
   for(let i=0;i<=30;i++){
     aList+=`<a name="${i}">${i}</a>`
   }
-  con.innerHTML=aList;
+  con2.innerHTML=aList;
   let flag=30;
   location.href = "#10";
-  let con2=document.getElementsByClassName('box1')[0];
-  function add() {
 
-    con2.innerHTML+=`<a name="${flag}">${flag}</a>`;
+  function add() {
+//    location.href = "#11";
+    console.info(box.scrollHeight,"before");
+    let before=box.scrollHeight;
+//    setTimeout(()=>{
+      con2.innerHTML=`<a name="${flag}">${flag}</a><a name="${flag}">${flag}</a><a name="${flag}">${flag}</a><a name="${flag}">${flag}</a>`+con2.innerHTML;
+//    })
+
+      box.scrollTop=box.scrollHeight-before;
+
 //    console.info(con2);
-    location.href = "#11";
+//    console.info(box.scrollHeight,'after');
     flag++;
   }
 </script>

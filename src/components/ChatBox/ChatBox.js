@@ -107,7 +107,7 @@ class ChatPanel extends React.Component{
   };
   componentWillReceiveProps=(nextProps)=>{
     this.preScrollHeight=this.chatPanel.scrollHeight;
-
+    console.info('will')
 
     if(this.props.keepScrollLocation){
       this.lastLength=this.props.children.length;
@@ -128,6 +128,9 @@ class ChatPanel extends React.Component{
     })
   };
 
+  shouldComponentUpdate=(nextProps)=>{
+    return true;
+  };
   getNextMessageType=()=>{
     const messages =this.props.children;
     return messages.length==0?"right":(messages[messages.length-1].props.type||"left");
