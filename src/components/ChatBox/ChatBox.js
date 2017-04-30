@@ -7,7 +7,16 @@ import classnames from 'classnames';
 import {Input,Button,Spin} from 'antd';
 import QueueAnim from 'rc-queue-anim';
 import ReactDOM from 'react-dom';
-const ChatBox=({className,onChangeHandle,sendHandle,children,text,title,isAnimate=true,isPulling=false})=>{
+const ChatBox=({scrollToTopCallBack,
+    className,
+    onChangeHandle,
+    sendHandle,
+    children,
+    text,
+    title,
+    keepScrollLocation,
+    onScroll,
+    isAnimate=true})=>{
   const classes=classnames({
     [className]:className||false,
     [styles['chat-box']]:true,
@@ -15,7 +24,11 @@ const ChatBox=({className,onChangeHandle,sendHandle,children,text,title,isAnimat
   return (
     <div className={classes}>
       <ChatTitle>{title}</ChatTitle>
-        <ChatPanel isAnimate={isAnimate} isPulling={isPulling}>
+        <ChatPanel isAnimate={isAnimate}
+                   onScroll={onScroll}
+
+                   keepScrollLocation={keepScrollLocation}
+                   scrollToTopCallBack={scrollToTopCallBack}>
           {children}
         </ChatPanel>
       <ChatInput onChangeHandle={onChangeHandle} sendHandle={sendHandle} value={text}/>
@@ -51,29 +64,55 @@ class ChatPanel extends React.Component{
     super(props);
     this.chatPanel=null;
     this.preScrollHeight=0;
+    this.state={
+      isPulling:false
+    }
   }
   componentDidMount=()=>{
-    this.scrollChatPanelToBottom();
+    this.chatPanel=ReactDOM.findDOMNode(this.refs.chatPanel);
+    let chatPanel=this.chatPanel;
+    if (window.addEventListener) {
+      chatPanel.addEventListener('scroll', this.panelOnScroll);
+
+    } else {
+      chatPanel.attachEvent('onscroll', this.panelOnScroll);
+    }
+    this.onEnd();
+  };
+  componentWillUnmount=()=>{
+  };
+  panelOnScroll=()=>{
+    let chatPanel=this.chatPanel;
+    if(chatPanel.scrollTop==0){
+      if(this.props.scrollToTopCallBack){
+        this.props.scrollToTopCallBack();
+      }
+      //弹性
+      // chatPanel.style.paddingTop="20px";
+      // setTimeout(()=>{
+      //   chatPanel.style.paddingTop="0px";
+      //   chatPanel.scrollTop=1;
+      // },500)
+    }
   };
   componentDidUpdate=()=>{
-    this.scrollChatPanelToBottom();
+    this.onEnd();
   };
   componentWillReceiveProps=(nextProps)=>{
     this.preScrollHeight=this.chatPanel.scrollHeight;
   };
-  scrollChatPanelToBottom=()=>{
-    let chatPanel=ReactDOM.findDOMNode(this.refs.chatPanel);
-    this.chatPanel=chatPanel;
-    //延迟执行..
+  onEnd=()=>{
+    let chatPanel=this.chatPanel;
     setTimeout(()=>{
 
-      if(this.props.isPulling){
+      if(this.props.keepScrollLocation){
         chatPanel.scrollTop=chatPanel.scrollHeight-this.preScrollHeight;
       }else{
         chatPanel.scrollTop = chatPanel.scrollHeight;
       }
     },0)
   };
+
   getNextMessageType=()=>{
     const messages =this.props.children;
     return messages.length==0?"right":(messages[messages.length-1].props.type||"left");
@@ -82,16 +121,15 @@ class ChatPanel extends React.Component{
     const classes=classnames({
       [styles['chat-panel']]:true
     });
-    const {isAnimate}=this.props;
-    const duration=isAnimate?500:0;
-
+    const {isAnimate,isPulling}=this.props;
+    let duration=isAnimate?500:0;
       return (
         <QueueAnim className={classes}
                    type={this.getNextMessageType()}
                    component="div"
                    duration={duration}
                    interval={0}
-                   onEnd={this.scrollChatPanelToBottom}
+                   onEnd={this.onEnd}
                    ref={"chatPanel"}>
 
           {this.props.children}

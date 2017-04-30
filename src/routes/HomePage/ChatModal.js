@@ -22,6 +22,7 @@ class ChatModal extends React.Component{
     this.state={
       text:"",
       isConnect:false,
+      isPulling:true,
       messages:[
       ],
       count:1
@@ -39,13 +40,17 @@ class ChatModal extends React.Component{
     }
   };
   getChatRecords=(targetAccount,token,userAccount)=>{
-    // this.props.dispatch({type:"chat/getChatRecords",payload:{targetAccount,token,userAccount}});
+    this.props.dispatch({type:"chat/getChatRecords",payload:{targetAccount,token,userAccount}});
   };
   test=()=>{
+    this.setState({
+      isPulling:true
+    });
     const {userAccount,token}=this.props.log.loginData;
 
     const targetAccount=this.props.chat.activeChat.userAccount;
     this.props.dispatch({type:"chat/test",payload:{targetAccount,token,userAccount}});
+
   };
   componentDidMount=()=>{
     this.linkToSocket();
@@ -63,6 +68,7 @@ class ChatModal extends React.Component{
   };
   messageOnChange=(e)=>{
     this.setState({
+      isPulling:false,
       text:e.target.value
     })
   };
@@ -175,6 +181,7 @@ class ChatModal extends React.Component{
       })}
     </SideBar>)
   };
+
   //获得chatBox
   getChatBox=()=>{
     const {log,chat}=this.props;
@@ -185,25 +192,15 @@ class ChatModal extends React.Component{
                      sendHandle={this.sendMessage}
                      text={this.state.text}
                      isAnimate={isAnimate}
-
+                     keepScrollLocation={this.state.isPulling}
+                     scrollToTopCallBack={this.test}
                      title={<p style={{textAlign:'center'}}>{`Chat with ${activeChat?activeChat.userName:""}`}</p>}>
       {messages.map((msg,index)=>
         <ChatMessage type={msg.senderAccount==userAccount?"right":"left"} key={`message${index}`}>{msg.content}</ChatMessage>
       )}
     </ChatBox>)
   };
-  increase = () => {
-    const count = this.state.count + 1;
-    this.setState({ count });
-  };
 
-  decline = () => {
-    let count = this.state.count - 1;
-    if (count < 0) {
-      count = 0;
-    }
-    this.setState({ count });
-  };
   render() {
 
     return (
