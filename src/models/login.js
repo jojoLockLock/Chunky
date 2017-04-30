@@ -70,9 +70,8 @@ export default {
             }
           });
           yield put({
-            type:"chat/getChatRecords",
+            type:"chat/getChatRecordsAll",
             payload:{
-              targetAccount:activeChat.userAccount,
               token,
               userAccount:payload.userAccount,
             }})

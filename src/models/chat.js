@@ -106,7 +106,7 @@ export default {
             chatRecords
           }
         });
-        Message.info(message,GLOBAL_MSG_DURATION);
+        // Message.info(message,GLOBAL_MSG_DURATION);
       }else{
         yield put({
           type:'getChatRecordsError',
@@ -130,7 +130,7 @@ export default {
             chatRecords
           }
         });
-        Message.info(message,GLOBAL_MSG_DURATION);
+        // Message.info(message,GLOBAL_MSG_DURATION);
       }else{
         yield put({
           type:'getChatRecordsError',
@@ -141,32 +141,7 @@ export default {
         throw new Error(message);
       }
     },
-    *test({payload},{call,put,select}) {
 
-      const result = yield call(getChatRecordsService.getChatRecords,payload);
-      const {targetAccount}=payload;
-      const {chatRecords,status,message}=result;
-      if(Object.is(status,1)){
-        yield put({
-          type:'getChatRecordsSuccess',
-          isAnimate:false,
-          payload:{
-            targetAccount,
-            chatRecords
-          }
-        });
-        Message.info(message,GLOBAL_MSG_DURATION);
-      }else{
-        yield put({
-          type:'getChatRecordsError',
-          payload:{
-            message
-          }
-        });
-        throw new Error(message);
-      }
-
-    }
   },
 
   subscriptions: {

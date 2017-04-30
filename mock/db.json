@@ -22,12 +22,12 @@
     "message": "get chat records success",
     "chatRecords": [
       {
-        "senderAccount": "2",
+        "senderAccount": "1",
         "content": "hello",
         "date": "Thu Apr 27 2017 00:53:32 GMT+0800 (中国标准时间)"
       },
       {
-        "senderAccount": "2",
+        "senderAccount": "1",
         "content": "hello",
         "date": "Thu Apr 27 2017 00:53:35 GMT+0800 (中国标准时间)"
       },
@@ -37,22 +37,12 @@
         "date": "Thu Apr 27 2017 00:53:42 GMT+0800 (中国标准时间)"
       },
       {
-        "senderAccount": "2",
-        "content": "2",
-        "date": "Sat Apr 29 2017 11:01:37 GMT+0800 (中国标准时间)"
-      },
-      {
-        "senderAccount": "2",
-        "content": "= =",
-        "date": "Sat Apr 29 2017 11:01:39 GMT+0800 (中国标准时间)"
-      },
-      {
-        "senderAccount": "2",
+        "senderAccount": "1",
         "content": "hello",
         "date": "Thu Apr 27 2017 00:53:32 GMT+0800 (中国标准时间)"
       },
       {
-        "senderAccount": "2",
+        "senderAccount": "1",
         "content": "hello",
         "date": "Thu Apr 27 2017 00:53:35 GMT+0800 (中国标准时间)"
       },
@@ -62,15 +52,66 @@
         "date": "Thu Apr 27 2017 00:53:42 GMT+0800 (中国标准时间)"
       },
       {
-        "senderAccount": "2",
-        "content": "2",
-        "date": "Sat Apr 29 2017 11:01:37 GMT+0800 (中国标准时间)"
+        "senderAccount": "1",
+        "content": "hello",
+        "date": "Thu Apr 27 2017 00:53:32 GMT+0800 (中国标准时间)"
       },
       {
-        "senderAccount": "2",
-        "content": "= =",
-        "date": "Sat Apr 29 2017 11:01:39 GMT+0800 (中国标准时间)"
+        "senderAccount": "1",
+        "content": "hello",
+        "date": "Thu Apr 27 2017 00:53:35 GMT+0800 (中国标准时间)"
+      },
+      {
+        "senderAccount": "1",
+        "content": "hello",
+        "date": "Thu Apr 27 2017 00:53:42 GMT+0800 (中国标准时间)"
+      },
+      {
+        "senderAccount": "1",
+        "content": "hello",
+        "date": "Thu Apr 27 2017 00:53:32 GMT+0800 (中国标准时间)"
+      },
+      {
+        "senderAccount": "1",
+        "content": "hello",
+        "date": "Thu Apr 27 2017 00:53:35 GMT+0800 (中国标准时间)"
+      },
+      {
+        "senderAccount": "1",
+        "content": "hello",
+        "date": "Thu Apr 27 2017 00:53:42 GMT+0800 (中国标准时间)"
+      },
+      {
+        "senderAccount": "1",
+        "content": "hello",
+        "date": "Thu Apr 27 2017 00:53:32 GMT+0800 (中国标准时间)"
+      },
+      {
+        "senderAccount": "1",
+        "content": "hello",
+        "date": "Thu Apr 27 2017 00:53:35 GMT+0800 (中国标准时间)"
+      },
+      {
+        "senderAccount": "1",
+        "content": "hello",
+        "date": "Thu Apr 27 2017 00:53:42 GMT+0800 (中国标准时间)"
+      },
+      {
+        "senderAccount": "1",
+        "content": "hello",
+        "date": "Thu Apr 27 2017 00:53:32 GMT+0800 (中国标准时间)"
+      },
+      {
+        "senderAccount": "1",
+        "content": "hello",
+        "date": "Thu Apr 27 2017 00:53:35 GMT+0800 (中国标准时间)"
+      },
+      {
+        "senderAccount": "1",
+        "content": "hello",
+        "date": "Thu Apr 27 2017 00:53:42 GMT+0800 (中国标准时间)"
       }
+
     ]
   },
   "chatrecordsall":{

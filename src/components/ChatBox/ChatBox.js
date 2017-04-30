@@ -94,25 +94,13 @@ class ChatPanel extends React.Component{
         this.props.scrollToTopCallBack();
       }
       //弹性
-      // chatPanel.style.paddingTop="20px";
-      // setTimeout(()=>{
-      //   chatPanel.style.paddingTop="0px";
-      //   chatPanel.scrollTop=1;
-      // },500)
     }
   };
   componentDidUpdate=()=>{
     this.onEnd();
-
   };
   componentWillReceiveProps=(nextProps)=>{
     this.preScrollHeight=this.chatPanel.scrollHeight;
-    console.info('will')
-
-    if(this.props.keepScrollLocation){
-      this.lastLength=this.props.children.length;
-      console.info(this.lastLength);
-    }
   };
   onEnd=()=>{
     let chatPanel=this.chatPanel;
@@ -120,7 +108,6 @@ class ChatPanel extends React.Component{
     setTimeout(()=>{
 
       if(this.props.keepScrollLocation){
-
         chatPanel.scrollTop=chatPanel.scrollHeight-this.preScrollHeight;
       }else{
         chatPanel.scrollTop = chatPanel.scrollHeight;

@@ -22,7 +22,7 @@ class ChatModal extends React.Component{
     this.state={
       text:"",
       isConnect:false,
-      isPulling:true,
+      isPulling:false,
       messages:[
       ],
       count:1
@@ -194,7 +194,7 @@ class ChatModal extends React.Component{
                      scrollToTopCallBack={this.getPastChatRecords}
                      title={<p style={{textAlign:'center'}}>{`Chat with ${activeChat?activeChat.userName:""}`}</p>}>
       {messages.map((msg,index)=>
-        <ChatMessage type={msg.senderAccount==userAccount?"right":"left"} key={`message${index}`}>{msg.content}</ChatMessage>
+        <ChatMessage type={msg.senderAccount==userAccount?"right":"left"} key={`message${messages.length-index}`}>{msg.content}</ChatMessage>
       )}
     </ChatBox>)
   };
@@ -219,8 +219,6 @@ class ChatModal extends React.Component{
               {/*<Icon type="plus" />*/}
               {/*</Button>*/}
               {/*</ButtonGroup>*/}
-              <a href="">test</a>
-              <Button onClick={this.test}>test</Button>
             </Col>
           </Row>
       </div>
