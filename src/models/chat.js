@@ -9,6 +9,7 @@ const initState={
   isSuccess:false,
   isError:false,
   activeChat:null,
+  isAnimate:false,
   chatRecords:{
 
   },
@@ -42,10 +43,35 @@ export default {
         }
       };
     },
+    addToTop(preState,{payload}) {
+      const {chatRecords}=preState;
+      const {targetAccount}=payload;
+      const targetChatRecords=chatRecords[targetAccount]||[];
+      return {
+        ...preState,
+        chatRecords:{
+          ...preState.chatRecords,
+          [targetAccount]:[...payload.chatRecords,...targetChatRecords]
+
+        }
+      }
+    },
     getChatRecordsError(preState,{payload}) {
       return {
         ...preState,
         isError:true
+      }
+    },
+    openAnimate(preState) {
+      return {
+        ...preState,
+        isAnimate:true
+      }
+    },
+    closeAnimate(preState) {
+      return {
+        ...preState,
+        isAnimate:false,
       }
     },
     addChatRecords(preState,{payload}) {
@@ -73,6 +99,32 @@ export default {
       if(Object.is(status,1)){
         yield put({
           type:'getChatRecordsSuccess',
+          isAnimate:false,
+          payload:{
+            targetAccount,
+            chatRecords
+          }
+        });
+        Message.info(message,GLOBAL_MSG_DURATION);
+      }else{
+        yield put({
+          type:'getChatRecordsError',
+          payload:{
+            message
+          }
+        });
+        throw new Error(message);
+      }
+
+    },
+    *test({payload},{call,put}) {
+      const result = yield call(getChatRecordsService.getChatRecords,payload);
+      const {targetAccount}=payload;
+      const {chatRecords,status,message}=result;
+      if(Object.is(status,1)){
+        yield put({
+          type:'addToTop',
+          isAnimate:false,
           payload:{
             targetAccount,
             chatRecords

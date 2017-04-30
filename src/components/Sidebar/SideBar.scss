@@ -21,6 +21,10 @@ $secondary-color-level-3:rgb(145 ,145 ,145);
     padding:5px;
     position: relative;
     background: transparent;
+    *{
+      text-indent:0;
+    }
+
     .item-content{
       position: relative;
       z-index: 11;
@@ -29,6 +33,9 @@ $secondary-color-level-3:rgb(145 ,145 ,145);
   }
 
   .active{
+    *{
+      text-indent: 0;
+    }
     position: relative;
     text-indent: 2em;
     padding:5px;

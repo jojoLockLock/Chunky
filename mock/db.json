@@ -45,42 +45,8 @@
         "senderAccount": "2",
         "content": "= =",
         "date": "Sat Apr 29 2017 11:01:39 GMT+0800 (中国标准时间)"
-      },
-      {
-        "senderAccount": "2",
-        "content": "hello fuck you",
-        "date": "Sat Apr 29 2017 11:01:43 GMT+0800 (中国标准时间)"
-      },
-      {
-        "senderAccount": "1",
-        "content": "fuck you too",
-        "date": "Sat Apr 29 2017 11:01:50 GMT+0800 (中国标准时间)"
-      },
-      {
-        "senderAccount": "2",
-        "content": "123",
-        "date": "Sat Apr 29 2017 11:36:38 GMT+0800 (中国标准时间)"
-      },
-      {
-        "senderAccount": "2",
-        "content": "= =",
-        "date": "Sat Apr 29 2017 11:36:44 GMT+0800 (中国标准时间)"
-      },
-      {
-        "senderAccount": "2",
-        "content": "2134",
-        "date": "Sat Apr 29 2017 11:36:45 GMT+0800 (中国标准时间)"
-      },
-      {
-        "senderAccount": "2",
-        "content": "234== == =",
-        "date": "Sat Apr 29 2017 11:36:47 GMT+0800 (中国标准时间)"
-      },
-      {
-        "senderAccount": "1",
-        "content": "操你妈逼",
-        "date": "Sat Apr 29 2017 11:37:15 GMT+0800 (中国标准时间)"
       }
     ]
   }
+
 }

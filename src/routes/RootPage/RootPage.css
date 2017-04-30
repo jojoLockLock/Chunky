@@ -1,6 +1,14 @@
 :global .vertical-projection {
   box-shadow: 0 0 20px rgba(204, 204, 204, 0.8);
 }
+:global #root .ant-badge-count {
+  top: -5px;
+  transform: translateX(55%);
+}
+:global #root .ant-badge-dot {
+  top: 0;
+  transform: translateX(120%);
+}
 
 .root {
   height: 100%;

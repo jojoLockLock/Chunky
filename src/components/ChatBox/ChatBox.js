@@ -4,10 +4,10 @@
 import React from 'react';
 import styles from './ChatBox.css';
 import classnames from 'classnames';
-import {Input,Button} from 'antd';
+import {Input,Button,Spin} from 'antd';
 import QueueAnim from 'rc-queue-anim';
 import ReactDOM from 'react-dom';
-const ChatBox=({className,onChangeHandle,sendHandle,children,text,title,isAnimate=true})=>{
+const ChatBox=({className,onChangeHandle,sendHandle,children,text,title,isAnimate=true,isPulling=false})=>{
   const classes=classnames({
     [className]:className||false,
     [styles['chat-box']]:true,
@@ -15,9 +15,9 @@ const ChatBox=({className,onChangeHandle,sendHandle,children,text,title,isAnimat
   return (
     <div className={classes}>
       <ChatTitle>{title}</ChatTitle>
-      <ChatPanel isAnimate={isAnimate}>
-        {children}
-      </ChatPanel>
+        <ChatPanel isAnimate={isAnimate} isPulling={isPulling}>
+          {children}
+        </ChatPanel>
       <ChatInput onChangeHandle={onChangeHandle} sendHandle={sendHandle} value={text}/>
     </div>
   )
@@ -50,6 +50,7 @@ class ChatPanel extends React.Component{
   constructor(props) {
     super(props);
     this.chatPanel=null;
+    this.preScrollHeight=0;
   }
   componentDidMount=()=>{
     this.scrollChatPanelToBottom();
@@ -57,11 +58,20 @@ class ChatPanel extends React.Component{
   componentDidUpdate=()=>{
     this.scrollChatPanelToBottom();
   };
+  componentWillReceiveProps=(nextProps)=>{
+    this.preScrollHeight=this.chatPanel.scrollHeight;
+  };
   scrollChatPanelToBottom=()=>{
     let chatPanel=ReactDOM.findDOMNode(this.refs.chatPanel);
+    this.chatPanel=chatPanel;
     //延迟执行..
     setTimeout(()=>{
-      chatPanel.scrollTop = chatPanel.scrollHeight;
+
+      if(this.props.isPulling){
+        chatPanel.scrollTop=chatPanel.scrollHeight-this.preScrollHeight;
+      }else{
+        chatPanel.scrollTop = chatPanel.scrollHeight;
+      }
     },0)
   };
   getNextMessageType=()=>{
@@ -73,12 +83,13 @@ class ChatPanel extends React.Component{
       [styles['chat-panel']]:true
     });
     const {isAnimate}=this.props;
-    if(isAnimate){
+    const duration=isAnimate?500:0;
+
       return (
         <QueueAnim className={classes}
                    type={this.getNextMessageType()}
                    component="div"
-                   duration={300}
+                   duration={duration}
                    interval={0}
                    onEnd={this.scrollChatPanelToBottom}
                    ref={"chatPanel"}>
@@ -86,15 +97,7 @@ class ChatPanel extends React.Component{
           {this.props.children}
         </QueueAnim>
       )
-    }else{
-      return (
-        <div className={classes}
-             type={this.getNextMessageType()}
-             ref={"chatPanel"}>
-          {this.props.children}
-        </div>
-      )
-    }
+
 
   }
 }

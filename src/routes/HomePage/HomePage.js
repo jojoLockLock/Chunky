@@ -9,7 +9,7 @@ import QueueAnim from 'rc-queue-anim';
 import styles from './HomePage.css';
 
 
-import ChatPanel from './ChatPanel';
+import ChatModal from './ChatModal';
 //message 与组件名字冲突！！！！！！！！！！！
 
 class HomePage extends React.Component{
@@ -24,7 +24,7 @@ class HomePage extends React.Component{
     return (
       <QueueAnim duration={800} animConfig={{ opacity: [1, 0], translateY: [0, 100] }}>
         <div className={styles["app-home"]} key="home">
-            <ChatPanel/>
+            <ChatModal/>
         </div>
       </QueueAnim>
     )
