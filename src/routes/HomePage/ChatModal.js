@@ -30,27 +30,25 @@ class ChatModal extends React.Component{
   }
   getChangeActiveChat=(activeChat)=>{
     return ()=>{
+      this.setState({
+        isPulling:false
+      });
       this.props.dispatch({type:'chat/closeAnimate'});
       this.props.dispatch({type:"chat/setActiveChat",payload:{activeChat}});
-      if(!this.props.chat.chatRecords[activeChat.userAccount]){
-        const {userAccount,token}=this.props.log.loginData;
-        this.getChatRecords(activeChat.userAccount,token,userAccount);
-      }
+
 
     }
   };
-  getChatRecords=(targetAccount,token,userAccount)=>{
-    this.props.dispatch({type:"chat/getChatRecords",payload:{targetAccount,token,userAccount}});
+  getChatRecords=(targetAccount)=>{
+    this.props.dispatch({type:"chat/getChatRecords",payload:{targetAccount}});
   };
-  test=()=>{
+  getPastChatRecords=()=>{
     this.setState({
       isPulling:true
     });
-    const {userAccount,token}=this.props.log.loginData;
-
     const targetAccount=this.props.chat.activeChat.userAccount;
-    this.props.dispatch({type:"chat/test",payload:{targetAccount,token,userAccount}});
-
+    // this.props.dispatch({type:"chat/test",payload:{targetAccount}});
+    this.getChatRecords(targetAccount);
   };
   componentDidMount=()=>{
     this.linkToSocket();
@@ -193,7 +191,7 @@ class ChatModal extends React.Component{
                      text={this.state.text}
                      isAnimate={isAnimate}
                      keepScrollLocation={this.state.isPulling}
-                     scrollToTopCallBack={this.test}
+                     scrollToTopCallBack={this.getPastChatRecords}
                      title={<p style={{textAlign:'center'}}>{`Chat with ${activeChat?activeChat.userName:""}`}</p>}>
       {messages.map((msg,index)=>
         <ChatMessage type={msg.senderAccount==userAccount?"right":"left"} key={`message${index}`}>{msg.content}</ChatMessage>
@@ -205,7 +203,6 @@ class ChatModal extends React.Component{
 
     return (
       <div style={{width:"500px"}}>
-        <Spin spinning={this.props.loading} size="default" tip="正在获取聊天记录...">
           <Row style={{width:'500px'}} className={'vertical-projection'}>
             <Col span={6}  style={{height:'500px'}}>
               {this.getSideBar()}
@@ -222,10 +219,10 @@ class ChatModal extends React.Component{
               {/*<Icon type="plus" />*/}
               {/*</Button>*/}
               {/*</ButtonGroup>*/}
+              <a href="">test</a>
               <Button onClick={this.test}>test</Button>
             </Col>
           </Row>
-        </Spin>
       </div>
     )
   }

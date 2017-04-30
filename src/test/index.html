@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <style>
+    .con{
+      height:500px;
+      background-color: #00a2ae;
+      width: 30%;
+      overflow-y: scroll;
+    }
+    a{
+      display: block;
+      padding:5px 20px;
+    }
+  </style>
+</head>
+<body>
+<div class="con">
+  <div class="box1"></div>
+  <div class="box2"></div>
+
+</div>
+<button onclick="add()">add</button>
+<script>
+  let con=document.getElementsByClassName("box2")[0];
+  let aList="";
+  for(let i=0;i<=30;i++){
+    aList+=`<a name="${i}">${i}</a>`
+  }
+  con.innerHTML=aList;
+  let flag=30;
+  location.href = "#10";
+  let con2=document.getElementsByClassName('box1')[0];
+  function add() {
+
+    con2.innerHTML+=`<a name="${flag}">${flag}</a>`;
+//    console.info(con2);
+    location.href = "#11";
+    flag++;
+  }
+</script>
+</body>
+</html>

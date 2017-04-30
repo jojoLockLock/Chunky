@@ -29,7 +29,9 @@ const ChatBox=({scrollToTopCallBack,
 
                    keepScrollLocation={keepScrollLocation}
                    scrollToTopCallBack={scrollToTopCallBack}>
-          {children}
+          {children.map((child,index)=>{
+            return <ChatMessage {...child.props} name={children.length-index} key={child.key}/>
+          })}
         </ChatPanel>
       <ChatInput onChangeHandle={onChangeHandle} sendHandle={sendHandle} value={text}/>
     </div>
@@ -59,11 +61,15 @@ const ChatTitle=({children})=>{
   )
 };
 
+
+
+
 class ChatPanel extends React.Component{
   constructor(props) {
     super(props);
     this.chatPanel=null;
     this.preScrollHeight=0;
+    this.lastLength=0;
     this.state={
       isPulling:false
     }
@@ -97,20 +103,29 @@ class ChatPanel extends React.Component{
   };
   componentDidUpdate=()=>{
     this.onEnd();
+
   };
   componentWillReceiveProps=(nextProps)=>{
     this.preScrollHeight=this.chatPanel.scrollHeight;
+
+
+    if(this.props.keepScrollLocation){
+      this.lastLength=this.props.children.length;
+      console.info(this.lastLength);
+    }
   };
   onEnd=()=>{
     let chatPanel=this.chatPanel;
+
     setTimeout(()=>{
 
       if(this.props.keepScrollLocation){
+
         chatPanel.scrollTop=chatPanel.scrollHeight-this.preScrollHeight;
       }else{
         chatPanel.scrollTop = chatPanel.scrollHeight;
       }
-    },0)
+    })
   };
 
   getNextMessageType=()=>{
@@ -139,6 +154,7 @@ class ChatPanel extends React.Component{
 
   }
 }
+
 class ChatMessage extends React.Component{
   constructor(props) {
     super(props);
@@ -153,11 +169,12 @@ class ChatMessage extends React.Component{
       [styles['chat-message-content-right']]:type=='right',
       [styles['chat-message-content-left']]:type=='left',
     });
+
     return (
       <div className={classes}>
-        <p className={contentClasses}>
+        <a className={contentClasses} name={`${this.props.name}`}>
           {children}&nbsp;
-        </p>
+        </a>
       </div>
     )
   }

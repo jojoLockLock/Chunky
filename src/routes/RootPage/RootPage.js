@@ -38,7 +38,7 @@ class RootPage extends React.Component{
 
       if(activeChat!==null){
         this.dispatch({type:'chat/setActiveChat',payload:{activeChat}});
-        this.dispatch({type:"chat/getChatRecords",payload:{targetAccount:activeChat.userAccount,token:loginData.token,userAccount:loginData.userAccount}});
+        this.dispatch({type:"chat/getChatRecordsAll"});
       }
 
   };
