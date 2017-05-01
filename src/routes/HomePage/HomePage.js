@@ -11,7 +11,7 @@ import styles from './HomePage.css';
 
 import ChatModal from './ChatModal';
 //message 与组件名字冲突！！！！！！！！！！！
-
+import Test from '../../components/Test/Test';
 class HomePage extends React.Component{
   constructor(props) {
     super(props);
@@ -24,7 +24,8 @@ class HomePage extends React.Component{
     return (
       <QueueAnim duration={800} animConfig={{ opacity: [1, 0], translateY: [0, 100] }}>
         <div className={styles["app-home"]} key="home">
-            <ChatModal/>
+
+          <ChatModal/>
         </div>
       </QueueAnim>
     )

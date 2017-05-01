@@ -20,9 +20,9 @@
   left: 0;
   bottom: 20%;
   background-color: white;
-  overflow-Y: scroll;
-  overflow-X: hidden;
+  overflow: hidden;
   transition: padding-top 0.3s ease-out;
+  transform: rotate(180deg);
 }
 .chat-box .chat-input-wrap {
   position: absolute;
@@ -51,6 +51,7 @@
 .chat-box .chat-message {
   padding: 10px;
   overflow: hidden;
+  transform: rotate(180deg);
 }
 .chat-box .chat-message .chat-message-content {
   padding: 5px 10px;
@@ -68,6 +69,7 @@
   float: left;
   margin-left: 10px;
   border-radius: 0 10px 0 0;
+  animation: leftIn 0.5s;
 }
 .chat-box .chat-message .chat-message-content-right {
   color: #00a2ae;
@@ -76,6 +78,7 @@
   float: right;
   margin-right: 10px;
   border-radius: 10px 0 0 0;
+  animation: rightIn 0.5s;
 }
 .chat-box .chat-message .chat-message-content-left:before, .chat-box .chat-message .chat-message-content-right:before {
   z-index: 11;
@@ -105,6 +108,26 @@
 }
 .chat-box .chat-message .chat-message-content-right:hover:before {
   border-bottom-color: rgba(207, 237, 240, 0.8);
+}
+@keyframes rightIn {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}
+@keyframes leftIn {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 /*# sourceMappingURL=ChatBox.css.map */

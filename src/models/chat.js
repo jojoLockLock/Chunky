@@ -34,6 +34,10 @@ export default {
       const {chatRecords}=preState;
       const {targetAccount}=payload;
       const targetChatRecords=chatRecords[targetAccount]||[];
+      //给每条信息都加上唯一的key
+      payload.chatRecords.forEach((item,index)=>{
+        item.key=`${targetAccount}${targetChatRecords.length+index}`;
+      });
       return {
         ...preState,
         isSuccess:true,
@@ -44,11 +48,18 @@ export default {
       };
     },
     getChatRecordsAllSuccess(preState,{payload}) {
+      //给每条信息加上唯一的key
+      const {chatRecords}=payload;
+      Object.keys(chatRecords).forEach(key=>{
+        chatRecords[key].forEach((item,index)=>{
+          item.key=`${key}${index}`
+        })
+      });
       return {
         ...preState,
         isSuccess:true,
         chatRecords:{
-          ...payload.chatRecords
+          ...chatRecords
         }
       }
     },

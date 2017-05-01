@@ -33,9 +33,11 @@ $secondary-color-level-3:rgb(145,145,145);
     left:0;
     bottom:20%;
     background-color: white;
-    overflow-Y:scroll;
-    overflow-X:hidden;
+    //overflow-Y:scroll;
+    //overflow-X:hidden;
+    overflow:hidden;
     transition:padding-top 0.3s ease-out;
+    transform: rotate(180deg);
   }
   .chat-input-wrap{
     position: absolute;
@@ -61,9 +63,11 @@ $secondary-color-level-3:rgb(145,145,145);
       margin-right:4px;
     }
   }
+
   .chat-message{
     padding:10px;
     overflow: hidden;
+    transform: rotate(180deg);
     .chat-message-content{
       padding:5px 10px;
       position: relative;
@@ -82,7 +86,10 @@ $secondary-color-level-3:rgb(145,145,145);
       float:left;
       margin-left:10px;
       border-radius: 0 10px 0 0;
+      animation: leftIn 0.5s;
+
     }
+
     .chat-message-content-right{
       color: $primary-color-level-3;
       background: $primary-color-level-2;
@@ -90,6 +97,7 @@ $secondary-color-level-3:rgb(145,145,145);
       float:right;
       margin-right:10px;
       border-radius: 10px 0 0 0;
+      animation: rightIn 0.5s;
     }
     .chat-message-content-left:before,.chat-message-content-right:before{
       z-index: 11;
@@ -122,5 +130,22 @@ $secondary-color-level-3:rgb(145,145,145);
       border-bottom-color:$primary-color-level-1;
     }
   }
+  @keyframes rightIn {
+    from {
+      opacity: 0;
+      transform: translateX(30px);
 
+    }to{
+      opacity: 1;
+      transform: translateX(0px);  }
+  }
+  @keyframes leftIn {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }to{
+      opacity: 1;
+      transform: translateX(0);  }
+
+  }
 }

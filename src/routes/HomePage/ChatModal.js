@@ -78,10 +78,15 @@ class ChatModal extends React.Component{
     if(isConnect===true){
       const userAccount=this.props.log.loginData.userAccount;
       const targetAccount=this.props.chat.activeChat.userAccount;
+      const chatRecords=this.props.chat.chatRecords;
       this.props.dispatch({type:"chat/openAnimate"});
-      this.props.dispatch({type:"chat/addChatRecords",payload:{targetAccount,message:{
-        content:text,
-        senderAccount:userAccount
+      this.props.dispatch({type:"chat/addChatRecords",
+        payload:
+          {targetAccount,
+            message:{
+              content:text,
+              senderAccount:userAccount,
+              key:`${targetAccount}${chatRecords[targetAccount].length}`
       }}});
 
       this.socket.send(JSON.stringify({type:"boardCast",content:text,targetAccount}));
@@ -110,7 +115,7 @@ class ChatModal extends React.Component{
 
       socket.onmessage = (msg)=>{
         const {userAccount}=this.props.log.loginData;
-
+        const {chatRecords}=this.props.chat;
         try{
           const analysis=JSON.parse(msg.data);
           const type=analysis.type;
@@ -123,7 +128,8 @@ class ChatModal extends React.Component{
                   message:{
                     content:analysis.content,
                     senderAccount:analysis.senderAccount,
-                    date:new Date().toString()
+                    date:new Date().toString(),
+                    key:`${analysis.senderAccount}${chatRecords[analysis.senderAccount].length}`
                   }
                 }
               });
@@ -185,6 +191,7 @@ class ChatModal extends React.Component{
     const {log,chat}=this.props;
     const {activeChat={},chatRecords,isAnimate}=chat;
     const {userAccount}=log.loginData;
+    console.info(chatRecords);
     const messages=chatRecords[activeChat.userAccount]||[];
     return (<ChatBox onChangeHandle={this.messageOnChange}
                      sendHandle={this.sendMessage}
@@ -194,7 +201,7 @@ class ChatModal extends React.Component{
                      scrollToTopCallBack={this.getPastChatRecords}
                      title={<p style={{textAlign:'center'}}>{`Chat with ${activeChat?activeChat.userName:""}`}</p>}>
       {messages.map((msg,index)=>
-        <ChatMessage type={msg.senderAccount==userAccount?"right":"left"} key={`message${messages.length-index}`}>{msg.content}</ChatMessage>
+        <ChatMessage type={msg.senderAccount==userAccount?"right":"left"} key={`message${msg.key}`}>{msg.content}</ChatMessage>
       )}
     </ChatBox>)
   };
