@@ -9,6 +9,7 @@ import QueueAnim from 'rc-queue-anim';
 import ReactDOM from 'react-dom';
 import TweenOne from 'rc-tween-one';
 import $ from 'jquery';
+//解决鼠标滚轮事件兼容问题
 import 'jquery-mousewheel';
 const ChatBox=({scrollToTopCallBack,
     className,
@@ -17,8 +18,6 @@ const ChatBox=({scrollToTopCallBack,
     children,
     text,
     title,
-    keepScrollLocation,
-    onScroll,
     isAnimate=true})=>{
   const classes=classnames({
     [className]:className||false,
@@ -28,9 +27,6 @@ const ChatBox=({scrollToTopCallBack,
     <div className={classes}>
       <ChatTitle>{title}</ChatTitle>
         <ChatPanel isAnimate={isAnimate}
-                   onScroll={onScroll}
-
-                   keepScrollLocation={keepScrollLocation}
                    scrollToTopCallBack={scrollToTopCallBack}>
           {children.map((child,index)=>{
             let reverseChild=children[children.length-1-index];
@@ -72,85 +68,77 @@ class ChatPanel extends React.Component{
   constructor(props) {
     super(props);
     this.chatPanel=null;
-    this.preScrollHeight=0;
-    this.lastLength=0;
-    this.scrollToBottom=false;
-    this.state={
-      isPulling:false
-    }
+    this.shouldScrollToBottom=false;
   }
   componentDidMount=()=>{
     this.chatPanel=ReactDOM.findDOMNode(this.refs.chatPanel);
+    this.scrollBlock=ReactDOM.findDOMNode(this.refs.scrollBlock);
     let chatPanel=this.chatPanel;
-    $(chatPanel).on('mousewheel', (event)=> {
-      if(event.deltaY==-1){
-        chatPanel.scrollTop-=30;
-      }else{
-        chatPanel.scrollTop+=30;
-      }
-      this.panelOnScroll();
+    //添加滚轮事件
+    this.setScrollBlockHeight();
+    $(chatPanel).on('mousewheel', this.panelOnScroll);
+  };
 
-    });
-    // if (window.addEventListener) {
-    //   chatPanel.addEventListener('scroll', this.panelOnScroll);
-    //
-    // } else {
-    //   chatPanel.attachEvent('onscroll', this.panelOnScroll);
-    // }
-    // this.onEnd();
-  };
-  componentWillUnmount=()=>{
-  };
-  panelOnScroll=()=>{
-    let chatPanel=this.chatPanel;
-    if(chatPanel.scrollTop+chatPanel.clientHeight==chatPanel.scrollHeight){
+  panelOnScroll=(event)=>{
+    let chatPanel=this.chatPanel,
+        scrollBlock=this.scrollBlock,
+        {scrollHeight,scrollTop,clientHeight}=chatPanel,
+      //翻转后的高度
+        reverseTop=scrollHeight-clientHeight-scrollTop;
+    scrollBlock.style.opacity=1;
+    //清楚隐藏计时器
+    clearTimeout(this.hideScrollBlockTimer);
+    //开启隐藏计时器
+    this.hideScrollBlockTimer=setTimeout(()=>{
+      scrollBlock.style.opacity=0;
+    },1000);
+
+    scrollBlock.style.top=reverseTop/scrollHeight*100+"%";
+    if(event.deltaY==-1){
+      chatPanel.scrollTop-=30;
+    }else{
+      chatPanel.scrollTop+=30;
+    }
+    //到达顶部时回调
+    if(reverseTop==0){
       if(this.props.scrollToTopCallBack){
         this.props.scrollToTopCallBack();
-        console.info("loading");
+        scrollBlock.style.opacity=0;
       }
-      //弹性
     }
-    // if(chatPanel.scrollTop==0&&(!chatPanel.flag)){
-    //   chatPanel.flag=true;
-    //   chatPanel.style.paddingTop="30px";
-    //   setTimeout(()=>{
-    //     console.info("..");
-    //     chatPanel.style.paddingTop="0";
-    //     chatPanel.flag=false;
-    //   })
-    // }
+    //到达底部时的回调
+    if(chatPanel.scrollTop==0){
+
+    }
   };
   componentDidUpdate=()=>{
-    this.onEnd();
+    if(this.shouldScrollToBottom){
+      this.scrollToBottom();
+    }
+    this.setScrollBlockHeight();
   };
   componentWillReceiveProps=(nextProps)=>{
-    this.preScrollHeight=this.chatPanel.scrollHeight;
-    //暂时使用...
+
+    //判定新信息是否为加入底部. 是则更新后跳转到底部
     if(this.props.children.length!=0&&nextProps.children.length!=0){
       if(nextProps.children[0].key!=this.props.children[0].key){
-        this.scrollToBottom=true;
+        this.shouldScrollToBottom=true;
       }
     }
 
   };
-  onEnd=()=>{
-    let chatPanel=this.chatPanel;
+  setScrollBlockHeight=()=>{
+    let {chatPanel,scrollBlock}=this,
+        {scrollHeight,clientHeight}=chatPanel;
+        scrollBlock.style.height=clientHeight*clientHeight/scrollHeight+'px';
 
-    setTimeout(()=>{
-      if(this.scrollToBottom){
-        chatPanel.scrollTop=0;
-        this.scrollToBottom=false;
-      }
-      // if(this.props.keepScrollLocation){
-      //   chatPanel.scrollTop=chatPanel.scrollHeight-this.preScrollHeight;
-      // }else{
-      //   chatPanel.scrollTop = chatPanel.scrollHeight;
-      // }
-    })
   };
-
-  shouldComponentUpdate=(nextProps)=>{
-    return true;
+  scrollToBottom=()=>{
+    let chatPanel=this.chatPanel;
+    setTimeout(()=>{
+        chatPanel.scrollTop=0;
+        this.shouldScrollToBottom=false;
+    })
   };
   getNextMessageType=()=>{
     const messages =this.props.children;
@@ -160,15 +148,15 @@ class ChatPanel extends React.Component{
     const classes=classnames({
       [styles['chat-panel']]:true
     });
-    const {isAnimate,isPulling}=this.props;
-    let duration=isAnimate?500:0;
       return (
-        <div className={classes}
-                   type={this.getNextMessageType()}
+        <div className={styles["chat-panel-wrap"]}>
+          <div className={styles["chat-panel-scroll-block"]} ref={"scrollBlock"}></div>
+          <div className={classes}
+               type={this.getNextMessageType()}
+               ref={"chatPanel"}>
 
-                   ref={"chatPanel"}>
-
-          {this.props.children}
+            {this.props.children}
+          </div>
         </div>
       )
 
@@ -194,7 +182,7 @@ class ChatMessage extends React.Component{
     return (
       <div>
         <div className={classes} >
-          <a className={contentClasses} name={`${this.props.name}`} >
+          <a className={contentClasses}>
             {children}&nbsp;
           </a>
         </div>

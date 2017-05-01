@@ -22,7 +22,6 @@ class ChatModal extends React.Component{
     this.state={
       text:"",
       isConnect:false,
-      isPulling:false,
       messages:[
       ],
       count:1
@@ -43,11 +42,10 @@ class ChatModal extends React.Component{
     this.props.dispatch({type:"chat/getChatRecords",payload:{targetAccount}});
   };
   getPastChatRecords=()=>{
-    this.setState({
-      isPulling:true
-    });
+    if(this.props.loading){
+      return false;
+    }
     const targetAccount=this.props.chat.activeChat.userAccount;
-    // this.props.dispatch({type:"chat/test",payload:{targetAccount}});
     this.getChatRecords(targetAccount);
   };
   componentDidMount=()=>{
@@ -197,7 +195,6 @@ class ChatModal extends React.Component{
                      sendHandle={this.sendMessage}
                      text={this.state.text}
                      isAnimate={isAnimate}
-                     keepScrollLocation={this.state.isPulling}
                      scrollToTopCallBack={this.getPastChatRecords}
                      title={<p style={{textAlign:'center'}}>{`Chat with ${activeChat?activeChat.userName:""}`}</p>}>
       {messages.map((msg,index)=>
