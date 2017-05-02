@@ -11,16 +11,32 @@ import LoginModal from './LoginModal';
 import Header from './Header';
 import {GLOBAL_MSG_DURATION} from '../../config/componentConfig';
 import {getTemp} from '../../utils/tools';
-
+import RegisterModal from './RegisterModal';
 class RootPage extends React.Component{
   constructor(props) {
     super(props);
     this.dispatch=props.dispatch;
-
+    this.state={
+      isRegister:false,
+    }
   }
+  registerHandle=(userData)=>{
+
+  };
   loginHandle=(userData)=>{
     this.dispatch({type:'log/login',payload:userData});
 
+  };
+  changeToRegister=()=>{
+    this.setState({
+      isRegister:true
+    })
+  };
+  changeToLogin=()=>{
+    console.info("...");
+    this.setState({
+      isRegister:false
+    })
   };
   logoutHandle=()=>{
     window.sessionStorage.clear();
@@ -44,9 +60,9 @@ class RootPage extends React.Component{
   };
   render() {
     const {loading=false,log,children}=this.props;
+    const {isRegister}=this.state;
     const {loginHandle,logoutHandle} =this;
     const {userData={}}=log.loginData;
-
     return <div className={styles.root}>
       <QueueAnim duration={800}
                  animConfig={{ opacity: [1, 0], translateY: [0, 100] }}>
@@ -59,16 +75,25 @@ class RootPage extends React.Component{
                 {children}
               </div>
             </div>
-            :
-            <div key="login" className={classnames({
-              [styles['login']]:true,
-              ['vertical-projection']:true
-            })}>
-              <LoginModal loading={loading}
-                          loginHandle={loginHandle}/>
-            </div>
-
-        }
+            :(
+              isRegister
+                ?<div key="register" className={classnames(
+                {
+                  [styles['register']]:true,
+                  ['vertical-projection']:true
+                })}>
+                  <RegisterModal loading={loading} changeToLogin={this.changeToLogin}/>
+                </div>
+                :<div key="login" className={classnames(
+                  {
+                     [styles['login']]:true,
+                    ['vertical-projection']:true
+                  })}>
+                  <LoginModal loading={loading}
+                              loginHandle={loginHandle}
+                              changeToRegister={this.changeToRegister}/>
+              </div>)}
+            )
       </QueueAnim>
     </div>
   }

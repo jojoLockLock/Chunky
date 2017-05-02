@@ -22,6 +22,14 @@
   margin-left: -200px;
   border-radius: 5px;
 }
+.root .register {
+  position: absolute;
+  left: 50%;
+  top: 10%;
+  width: 400px;
+  margin-left: -200px;
+  border-radius: 5px;
+}
 .root .login-title {
   text-align: center;
   font-size: 40px;

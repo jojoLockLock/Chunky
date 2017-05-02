@@ -4,7 +4,7 @@
 import React from 'react';
 import styles from './ChatModal.css';
 import classnames from 'classnames';
-import {Input,Button,Row,Col,message as Message,Badge,Icon,Spin} from 'antd';
+import {Input,Button,Row,Col,message as Message,Badge,Icon,Spin,notification as Notification} from 'antd';
 import QueueAnim from 'rc-queue-anim';
 import ReactDOM from 'react-dom';
 import {socketHost} from '../../config/apiConfig';
@@ -16,6 +16,9 @@ const ChatMessage =ChatBox.ChatMessage;
 const SideBarItem=SideBar.Item;
 const ButtonGroup = Button.Group;
 import { connect } from 'dva';
+Notification.config({
+  placement: "bottomRight",
+});
 class ChatModal extends React.Component{
   constructor(props){
     super(props);
@@ -92,7 +95,11 @@ class ChatModal extends React.Component{
               date:Date.now(),
               key:`${targetAccount}${chatRecords[targetAccount].length}`
       }}});
-
+      Notification.info({
+        message:"New Chat Message",
+        description:`you get a new message from ${userAccount}`,
+        icon:<Icon type="smile-circle" style={{ color: '#3db8c1' }} />,
+      });
       this.socket.send(JSON.stringify({type:"boardCast",content:text,targetAccount}));
     }else{
       Message.error('socket未连接',GLOBAL_MSG_DURATION)
@@ -136,6 +143,10 @@ class ChatModal extends React.Component{
                     key:`${analysis.senderAccount}${chatRecords[analysis.senderAccount].length}`
                   }
                 }
+              });
+              Notification.open({
+                message:"New Chat Message",
+                description:`you get a new message from ${analysis.senderAccount}`
               });
               break;
             default:

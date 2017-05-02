@@ -6,15 +6,7 @@ import styles from './LoginModal.css';
 import {Spin,Button,Form, Icon, Input, Checkbox } from 'antd';
 import classnames from 'classnames';
 const FormItem = Form.Item;
-const LoginModal=({loading,loginHandle})=>{
-  return (
-    <div className={styles['login-modal']}>
-        <Spin spinning={loading} tip="正在登录">
-            <WrappedNormalLoginForm loginHandle={loginHandle}/>
-        </Spin>
-    </div>
-  )
-};
+
 
 class NormalLoginForm extends React.Component {
   handleSubmit = (e) => {
@@ -29,7 +21,6 @@ class NormalLoginForm extends React.Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     let classes=classnames({
-      ["login-form"]:true,
       [styles["login-form"]]:true
     });
     return (
@@ -50,7 +41,9 @@ class NormalLoginForm extends React.Component {
                    prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type="password" placeholder="Password" />
           )}
         </FormItem>
+
         <FormItem>
+
           <Button type="primary"
                   style={{width:"100%"}}
                   htmlType="button"
@@ -59,11 +52,20 @@ class NormalLoginForm extends React.Component {
 
             Log in
           </Button >
-
+          Don't have an account? &nbsp;<a onClick={this.props.changeToRegister}>Go to register</a>
         </FormItem>
       </Form>
     );
   }
 }
 const WrappedNormalLoginForm = Form.create()(NormalLoginForm);
+const LoginModal=({loading,loginHandle,changeToRegister})=>{
+  return (
+    <div className={styles['login-modal']}>
+      <Spin spinning={loading} tip="正在登录">
+        <WrappedNormalLoginForm loginHandle={loginHandle} changeToRegister={changeToRegister}/>
+      </Spin>
+    </div>
+  )
+};
 export default LoginModal;
