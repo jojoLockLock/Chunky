@@ -67,7 +67,7 @@ const ChatTitle=({children})=>{
 
 
 
-
+//信息内容面板
 class ChatPanel extends React.Component{
   constructor(props) {
     super(props);
@@ -88,9 +88,9 @@ class ChatPanel extends React.Component{
     let chatPanel=this.chatPanel,
         scrollBlock=this.scrollBlock,
         {scrollHeight,scrollTop,clientHeight}=chatPanel,
-      //翻转后的高度
+        //翻转后的高度
         reverseTop=scrollHeight-clientHeight-scrollTop;
-
+    //如果可滚动高度 大于可视区域高度加填充，则显示滚动条
     if(scrollHeight>clientHeight+30){
       scrollBlock.style.opacity=1;
     }
@@ -100,9 +100,9 @@ class ChatPanel extends React.Component{
     this.hideScrollBlockTimer=setTimeout(()=>{
       scrollBlock.style.opacity=0;
     },1000);
-
+    //计算滑块位置
     scrollBlock.style.top=reverseTop/scrollHeight*100+"%";
-    if(event.deltaY==-1){
+    if(Object.is(event.deltaY,-1)){
       chatPanel.scrollTop-=30;
     }else{
       chatPanel.scrollTop+=30;
@@ -119,10 +119,10 @@ class ChatPanel extends React.Component{
 
     }
   };
+  //当内容高度不足 可视区域高度 充填padding 使信息置顶
   addEmpty=()=>{
     let chatPanel=this.chatPanel,
       {scrollHeight,clientHeight,children}=chatPanel;
-
     if(scrollHeight<=clientHeight+30){
       let child=children[children.length-1];
       if(child){
@@ -137,13 +137,14 @@ class ChatPanel extends React.Component{
     }
     this.setScrollBlockHeight();
     this.addEmpty();
+    //如果状态为不可以拉取 则不添加空白填充
     if(!this.props.pull){
       this.chatPanel.style.paddingBottom="0px";
     }
   };
   componentWillReceiveProps=(nextProps)=>{
     this.chatPanel.style.paddingTop=0;
-    //判定新信息是否为加入底部. 是则更新后跳转到底部
+    //判定新信息是否为加入底部且信息type为right. 是则更新后跳转到底部
     if((!Object.is(this.props.children.length,0))&&(!Object.is(nextProps.children.length,0))){
       if(!Object.is(nextProps.children[0].key,this.props.children[0].key)){
         if(Object.is(nextProps.children[0].props.type,'right')){
@@ -153,12 +154,14 @@ class ChatPanel extends React.Component{
     }
 
   };
+  //设置滑块的高度
   setScrollBlockHeight=()=>{
     let {chatPanel,scrollBlock}=this,
         {scrollHeight,clientHeight}=chatPanel;
         scrollBlock.style.height=clientHeight*clientHeight/scrollHeight+'px';
 
   };
+  //滚动到底部
   scrollToBottom=()=>{
     let chatPanel=this.chatPanel;
     setTimeout(()=>{
@@ -168,7 +171,7 @@ class ChatPanel extends React.Component{
   };
   getNextMessageType=()=>{
     const messages =this.props.children;
-    return messages.length==0?"right":(messages[messages.length-1].props.type||"left");
+    return Object.is(messages.length,0)?"right":(messages[messages.length-1].props.type||"left");
   };
   render() {
     const classes=classnames({
@@ -182,7 +185,6 @@ class ChatPanel extends React.Component{
           <div className={classes}
                type={this.getNextMessageType()}
                ref={"chatPanel"}>
-
             {this.props.children}
           </div>
         </div>
@@ -191,13 +193,13 @@ class ChatPanel extends React.Component{
 
   }
 }
-
+//Message组件
 class ChatMessage extends React.Component{
   constructor(props) {
     super(props);
   }
   render() {
-    const {type="left",children}=this.props;
+    const {type="left",children,isAnimate}=this.props;
     const classes=classnames({
       [styles['chat-message']]:true,
     });
@@ -205,7 +207,9 @@ class ChatMessage extends React.Component{
       [styles['chat-message-content']]:!Object.is(type,"center"),
       [styles['chat-message-content-right']]:Object.is(type,"right"),
       [styles['chat-message-content-left']]:Object.is(type,"left"),
-      [styles['chat-message-content-center']]:Object.is(type,"center")
+      [styles['chat-message-content-center']]:Object.is(type,"center"),
+      [styles['chat-message-animate-left']]:Object.is(type,'left'),
+      [styles['chat-message-animate-right']]:Object.is(type,'right'),
     });
 
     return (
@@ -219,7 +223,7 @@ class ChatMessage extends React.Component{
     )
   }
 }
-
+//输入组件
 const ChatInput=({onChangeHandle,sendHandle,value})=>{
   const classes=classnames({
     [styles['chat-input-wrap']]:true,

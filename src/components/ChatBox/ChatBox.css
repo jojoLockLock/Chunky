@@ -117,7 +117,6 @@
   float: left;
   margin-left: 10px;
   border-radius: 0 10px 0 0;
-  animation: leftIn 0.5s;
 }
 .chat-box .chat-message .chat-message-content-right {
   color: #00a2ae;
@@ -126,6 +125,11 @@
   float: right;
   margin-right: 10px;
   border-radius: 10px 0 0 0;
+}
+.chat-box .chat-message .chat-message-animate-left {
+  animation: leftIn 0.5s;
+}
+.chat-box .chat-message .chat-message-animate-right {
   animation: rightIn 0.5s;
 }
 .chat-box .chat-message .chat-message-content-left:before, .chat-box .chat-message .chat-message-content-right:before {

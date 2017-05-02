@@ -135,7 +135,7 @@ $secondary-color-level-3:rgb(145,145,145);
       float:left;
       margin-left:10px;
       border-radius: 0 10px 0 0;
-      animation: leftIn 0.5s;
+
 
     }
 
@@ -146,6 +146,12 @@ $secondary-color-level-3:rgb(145,145,145);
       float:right;
       margin-right:10px;
       border-radius: 10px 0 0 0;
+
+    }
+    .chat-message-animate-left{
+      animation: leftIn 0.5s;
+    }
+    .chat-message-animate-right{
       animation: rightIn 0.5s;
     }
     .chat-message-content-left:before,.chat-message-content-right:before{
