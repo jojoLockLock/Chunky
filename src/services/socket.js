@@ -9,6 +9,9 @@ class Socket {
     this.isConncet=false;
     this.controllers={};
   }
+  onClose() {
+
+  }
   init() {
     this.socket.onmessage=(msg)=>{
       try{
@@ -16,6 +19,8 @@ class Socket {
         const {controllers}=this;
         if(controllers[data.type]){
           controllers[data.type](data);
+        }else if(controllers["__redirect__"]){
+          controllers["__redirect__"](data);
         }
       }catch (e){
         console.info(e);
@@ -33,6 +38,11 @@ class Socket {
         socket.onopen=()=>{
           this.isConncet=true;
           this.init();
+          socket.onclose=()=>{
+            if(this.onClose){
+              this.onClose()
+            }
+          };
           resolve(this);
           if (window.addEventListener) {
             window.addEventListener('beforeunload', this.close);
@@ -63,7 +73,6 @@ class Socket {
   }
   send(type,payload) {
     return new Promise((resolve,reject)=>{
-      console.info(this.isConncet);
       if(!this.isConncet){
         reject(new Error(`socket have not linking`));
       }
@@ -84,6 +93,12 @@ class Socket {
       throw new Error('controller must a object');
     }
     this.controllers[type]=controller;
+  }
+  addRedirect(controller) {
+    if(!Object.is(typeof controller,'function')){
+      throw new Error('controller must a object');
+    }
+    this.controllers['__redirect__']=controller;
   }
 }
 

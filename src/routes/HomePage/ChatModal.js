@@ -5,16 +5,14 @@ import React from 'react';
 import styles from './ChatModal.css';
 import classnames from 'classnames';
 import {Input,Button,Row,Col,message as Message,Badge,Icon,Spin,notification as Notification} from 'antd';
-import QueueAnim from 'rc-queue-anim';
-import ReactDOM from 'react-dom';
+
 import {socketHost} from '../../config/apiConfig';
 import {GLOBAL_MSG_DURATION} from '../../config/componentConfig';
 import ChatBox from '../../components/ChatBox/ChatBox';
 import SideBar from '../../components/Sidebar/SideBar';
-import socket from '../../services/socket'
+import Socket from '../../services/socket'
 const ChatMessage =ChatBox.ChatMessage;
 const SideBarItem=SideBar.Item;
-const ButtonGroup = Button.Group;
 import { connect } from 'dva';
 Notification.config({
   placement: "bottomRight",
@@ -24,21 +22,13 @@ class ChatModal extends React.Component{
     super(props);
     this.state={
       text:"",
-      isConnect:false,
-      messages:[
-      ],
-      count:1
+      isConnect:false
     };
   }
   getChangeActiveChat=(activeChat)=>{
     return ()=>{
-      this.setState({
-        isPulling:false
-      });
       this.props.dispatch({type:'chat/closeAnimate'});
       this.props.dispatch({type:"chat/setActiveChat",payload:{activeChat}});
-
-
     }
   };
   getChatRecords=(targetAccount)=>{
@@ -56,14 +46,11 @@ class ChatModal extends React.Component{
     this.getChatRecords(targetAccount);
   };
   componentDidMount=()=>{
-    this.linkToSocket();
+    this.initSocket();
   };
   componentWillUnmount=()=>{
     this.socket.onclose=null;
-    this.closeLink();
-  };
-  componentWillReceiveProps=(nextProps)=>{
-
+    this.socket.close();
   };
   shouldComponentUpdate=(nextProps)=>{
     //由于动画效果产生的延迟，导致promise错误，没登录时不重新render
@@ -71,7 +58,6 @@ class ChatModal extends React.Component{
   };
   messageOnChange=(e)=>{
     this.setState({
-      isPulling:false,
       text:e.target.value
     })
   };
@@ -95,12 +81,7 @@ class ChatModal extends React.Component{
               date:Date.now(),
               key:`${targetAccount}${chatRecords[targetAccount].length}`
       }}});
-      Notification.info({
-        message:"New Chat Message",
-        description:`you get a new message from ${userAccount}`,
-        icon:<Icon type="smile-circle" style={{ color: '#3db8c1' }} />,
-      });
-      this.socket.send(JSON.stringify({type:"boardCast",content:text,targetAccount}));
+      this.socket.send("boardCast",{content:text,targetAccount});
     }else{
       Message.error('socket未连接',GLOBAL_MSG_DURATION)
     }
@@ -111,81 +92,54 @@ class ChatModal extends React.Component{
       });
     },0)
   };
-  linkToSocket=()=>{
-    let socket = new WebSocket(socketHost);
+  //初始化 并连接到socket
+  initSocket=()=>{
+    let socket = new Socket(socketHost);
     this.socket=socket;
-    try {
-      socket.onopen = ()=>{
+
+    socket.addController("newMessage",(result)=>{
+      const {chatRecords}=this.props.chat;
+      const {senderAccount,content}=result;
+      this.props.dispatch({
+        type:"chat/addChatRecords",
+        payload:{
+          targetAccount:senderAccount,
+          message:{
+            content,
+            senderAccount,
+            date:Date.now(),
+            key:`${senderAccount}${chatRecords[senderAccount].length}`
+          }
+        }
+      });
+
+      Notification.info({
+        message:"New Chat Message",
+        description:`you get a new message from ${senderAccount}`,
+        icon:<Icon type="smile-circle" style={{ color: '#3db8c1' }} />,
+      });
+    });
+    //
+    socket.link()
+      .then(()=>{
         const {token,userAccount}=this.props.log.loginData;
-        socket.send(JSON.stringify({"type":"auth",userAccount,token}));
+        socket.send("auth",{userAccount,token});
         this.setState({
-          isConnect:true
+          isConnect:true,
         });
         Message.info("连接成功",3);
-      };
+      })
+      .catch(err=>{
+        Message.err(err,3);
+      });
 
-      socket.onmessage = (msg)=>{
-        const {userAccount}=this.props.log.loginData;
-        const {chatRecords}=this.props.chat;
-        try{
-          const analysis=JSON.parse(msg.data);
-          const type=analysis.type;
-          switch (type){
-            case "newMessage":
-              this.props.dispatch({
-                type:"chat/addChatRecords",
-                payload:{
-                  targetAccount:analysis.senderAccount,
-                  message:{
-                    content:analysis.content,
-                    senderAccount:analysis.senderAccount,
-                    date:Date.now(),
-                    key:`${analysis.senderAccount}${chatRecords[analysis.senderAccount].length}`
-                  }
-                }
-              });
-              Notification.open({
-                message:"New Chat Message",
-                description:`you get a new message from ${analysis.senderAccount}`
-              });
-              break;
-            default:
-              console.info(msg.data);
-          }
-        }catch(e){
-          Message.error(e.message,3);
-        }
+    //
+    socket.onClose = ()=> {
+      Message.warn("连接已关闭",GLOBAL_MSG_DURATION);
+    };
 
-      };
 
-      socket.onclose = ()=> {
-        this.setState({
-          isConnect:false,
-        });
-        Message.warn("连接已关闭",GLOBAL_MSG_DURATION);
-      };
 
-    }
-    catch (ex) {
-      Message.error(ex,3);
-    }
-
-    if (window.addEventListener) {
-      window.addEventListener('beforeunload', this.closeLink);
-
-    } else {
-      window.attachEvent('onbeforeunload', this.closeLink);
-    }
-  };
-  closeLink=()=>{
-    let socket=this.socket;
-    try {
-      socket.close();
-      socket = null;
-    }
-    catch (ex) {
-      new Error(ex);
-    }
   };
   //获得侧边栏
   getSideBar=()=>{
@@ -226,7 +180,6 @@ class ChatModal extends React.Component{
   };
 
   render() {
-
     return (
       <div style={{width:"500px"}}>
           <Row style={{width:'500px'}} className={'vertical-projection'}>
@@ -235,16 +188,6 @@ class ChatModal extends React.Component{
             </Col>
             <Col span={18} style={{height:'500px'}}>
               {this.getChatBox()}
-            </Col>
-            <Col span={18}>
-              {/*<ButtonGroup>*/}
-              {/*<Button onClick={this.decline}>*/}
-              {/*<Icon type="minus" />*/}
-              {/*</Button>*/}
-              {/*<Button onClick={this.increase}>*/}
-              {/*<Icon type="plus" />*/}
-              {/*</Button>*/}
-              {/*</ButtonGroup>*/}
             </Col>
           </Row>
       </div>
