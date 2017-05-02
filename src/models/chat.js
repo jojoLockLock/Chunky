@@ -4,12 +4,13 @@
 import * as getChatRecordsService from '../services/getChatRecords';
 import {message as Message} from 'antd';
 import {GLOBAL_MSG_DURATION} from '../config/componentConfig';
-
+import {getTimeString} from '../utils/tools';
 const initState={
   isSuccess:false,
   isError:false,
   activeChat:null,
   isAnimate:false,
+  noMoreChatRecords:{},
   chatRecords:{
 
   },
@@ -38,12 +39,19 @@ export default {
       payload.chatRecords.forEach((item,index)=>{
         item.key=`${targetAccount}${targetChatRecords.length+index}`;
       });
+      const lastTime=getTimeString(targetChatRecords[targetChatRecords.length-1].date);
+
+      const timeMessage={
+        senderAccount:"sys",
+        key:`${lastTime}${targetChatRecords.length}`,
+        content:lastTime,
+      };
       return {
         ...preState,
         isSuccess:true,
         chatRecords:{
           ...chatRecords,
-          [targetAccount]:[...payload.chatRecords,...targetChatRecords]
+          [targetAccount]:[...payload.chatRecords,timeMessage,...targetChatRecords]
         }
       };
     },
@@ -62,6 +70,32 @@ export default {
           ...chatRecords
         }
       }
+    },
+    addNoMoreChatRecords(preState,{payload}){
+      const {chatRecords}=preState;
+      const {targetAccount}=payload;
+      const targetChatRecords=chatRecords[targetAccount]||[];
+
+      const lastTime=getTimeString(targetChatRecords[targetChatRecords.length-1].date);
+      const noMoreMessage={
+        senderAccount:"sys",
+        key:`${lastTime}${targetChatRecords.length} No more`,
+        content:"No more chat records",
+      };
+      const timeMessage={
+        senderAccount:"sys",
+        key:`${lastTime}${targetChatRecords.length}`,
+        content:lastTime,
+      };
+      return {
+        ...preState,
+        isSuccess:true,
+        noMoreChatRecords:{...preState.noMoreChatRecords,[targetAccount]:targetAccount},
+        chatRecords:{
+          ...chatRecords,
+          [targetAccount]:[noMoreMessage,timeMessage,...targetChatRecords]
+        }
+      };
     },
     getChatRecordsError(preState,{payload}) {
       return {
@@ -109,14 +143,25 @@ export default {
 
       const {chatRecords,status,message}=result;
       if(Object.is(status,1)){
-        yield put({
-          type:'getChatRecordsSuccess',
-          isAnimate:false,
-          payload:{
-            targetAccount,
-            chatRecords
-          }
-        });
+        if(Object.is(chatRecords.length,0)){
+          yield put({
+            type:'addNoMoreChatRecords',
+            isAnimate:false,
+            payload:{
+              targetAccount,
+            }
+          });
+        }else{
+          yield put({
+            type:'getChatRecordsSuccess',
+            isAnimate:false,
+            payload:{
+              targetAccount,
+              chatRecords
+            }
+          });
+        }
+
         // Message.info(message,GLOBAL_MSG_DURATION);
       }else{
         yield put({

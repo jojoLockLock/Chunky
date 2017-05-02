@@ -70,7 +70,7 @@ export const getPageSize=()=>{
             break;
         default:
             break;
-        
+
     }
     return pageSize;
 };
@@ -85,7 +85,14 @@ const getMouseMoveDirection=function(pageX,pageY,conDom){
         top=conDom.offsetTop,
         x=(pageX - left - (width / 2)) * (width > height? (height / width) : 1),
         y=(pageY - top - (height / 2)) * (height > width ? (width / height) : 1);
-    
+
     return Math.round((((Math.atan2(y, x) * (180 / Math.PI)) + 180) / 90) + 3) % 4;
     //direction的值为“0,1,2,3”分别对应着“上，右，下，左”
 };
+
+
+export function getTimeString(time) {
+  let dt=new Date(time);
+  return (`${dt.getFullYear()}-${dt.getMonth()+1}-${dt.getDate()} ${dt.getHours()}:${dt.getMinutes()}`);
+
+}

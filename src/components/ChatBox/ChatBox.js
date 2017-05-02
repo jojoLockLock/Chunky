@@ -4,7 +4,7 @@
 import React from 'react';
 import styles from './ChatBox.css';
 import classnames from 'classnames';
-import {Input,Button,Spin} from 'antd';
+import {Input,Button,Spin,Icon} from 'antd';
 import QueueAnim from 'rc-queue-anim';
 import ReactDOM from 'react-dom';
 import TweenOne from 'rc-tween-one';
@@ -18,6 +18,8 @@ const ChatBox=({scrollToTopCallBack,
     children,
     text,
     title,
+    loading,
+    pull,
     isAnimate=true})=>{
   const classes=classnames({
     [className]:className||false,
@@ -27,6 +29,8 @@ const ChatBox=({scrollToTopCallBack,
     <div className={classes}>
       <ChatTitle>{title}</ChatTitle>
         <ChatPanel isAnimate={isAnimate}
+                   loading={loading}
+                   pull={pull}
                    scrollToTopCallBack={scrollToTopCallBack}>
           {children.map((child,index)=>{
             let reverseChild=children[children.length-1-index];
@@ -76,6 +80,7 @@ class ChatPanel extends React.Component{
     let chatPanel=this.chatPanel;
     //添加滚轮事件
     this.setScrollBlockHeight();
+    this.addEmpty();
     $(chatPanel).on('mousewheel', this.panelOnScroll);
   };
 
@@ -85,7 +90,10 @@ class ChatPanel extends React.Component{
         {scrollHeight,scrollTop,clientHeight}=chatPanel,
       //翻转后的高度
         reverseTop=scrollHeight-clientHeight-scrollTop;
-    scrollBlock.style.opacity=1;
+
+    if(scrollHeight>clientHeight+30){
+      scrollBlock.style.opacity=1;
+    }
     //清楚隐藏计时器
     clearTimeout(this.hideScrollBlockTimer);
     //开启隐藏计时器
@@ -100,15 +108,27 @@ class ChatPanel extends React.Component{
       chatPanel.scrollTop+=30;
     }
     //到达顶部时回调
-    if(reverseTop==0){
+    if(Object.is(reverseTop,0)&&Object.is(event.deltaY,1)){
       if(this.props.scrollToTopCallBack){
         this.props.scrollToTopCallBack();
         scrollBlock.style.opacity=0;
       }
     }
     //到达底部时的回调
-    if(chatPanel.scrollTop==0){
+    if(Object.is(chatPanel.scrollTop,0)){
 
+    }
+  };
+  addEmpty=()=>{
+    let chatPanel=this.chatPanel,
+      {scrollHeight,clientHeight,children}=chatPanel;
+
+    if(scrollHeight<=clientHeight+30){
+      let child=children[children.length-1];
+      if(child){
+        chatPanel.style.paddingTop=clientHeight-children.length*child.clientHeight+'px';
+
+      }
     }
   };
   componentDidUpdate=()=>{
@@ -116,13 +136,19 @@ class ChatPanel extends React.Component{
       this.scrollToBottom();
     }
     this.setScrollBlockHeight();
+    this.addEmpty();
+    if(!this.props.pull){
+      this.chatPanel.style.paddingBottom="0px";
+    }
   };
   componentWillReceiveProps=(nextProps)=>{
-
+    this.chatPanel.style.paddingTop=0;
     //判定新信息是否为加入底部. 是则更新后跳转到底部
-    if(this.props.children.length!=0&&nextProps.children.length!=0){
-      if(nextProps.children[0].key!=this.props.children[0].key){
-        this.shouldScrollToBottom=true;
+    if((!Object.is(this.props.children.length,0))&&(!Object.is(nextProps.children.length,0))){
+      if(!Object.is(nextProps.children[0].key,this.props.children[0].key)){
+        if(Object.is(nextProps.children[0].props.type,'right')){
+          this.shouldScrollToBottom=true;
+        }
       }
     }
 
@@ -150,7 +176,9 @@ class ChatPanel extends React.Component{
     });
       return (
         <div className={styles["chat-panel-wrap"]}>
-          <div className={styles["chat-panel-scroll-block"]} ref={"scrollBlock"}></div>
+          {/*<div className={styles["chat-panel-anchor"]}><Icon type="arrow-down" /></div>*/}
+          {this.props.loading?<span className={styles["chat-panel-loading"]}><Icon type="loading" /></span>:null}
+          <div className={styles["chat-panel-scroll-block"]} ref={"scrollBlock"}> </div>
           <div className={classes}
                type={this.getNextMessageType()}
                ref={"chatPanel"}>
@@ -174,9 +202,10 @@ class ChatMessage extends React.Component{
       [styles['chat-message']]:true,
     });
     const contentClasses=classnames({
-      [styles['chat-message-content']]:true,
-      [styles['chat-message-content-right']]:type=='right',
-      [styles['chat-message-content-left']]:type=='left',
+      [styles['chat-message-content']]:!Object.is(type,"center"),
+      [styles['chat-message-content-right']]:Object.is(type,"right"),
+      [styles['chat-message-content-left']]:Object.is(type,"left"),
+      [styles['chat-message-content-center']]:Object.is(type,"center")
     });
 
     return (

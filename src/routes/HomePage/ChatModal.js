@@ -46,6 +46,10 @@ class ChatModal extends React.Component{
       return false;
     }
     const targetAccount=this.props.chat.activeChat.userAccount;
+    if(targetAccount in this.props.chat.noMoreChatRecords){
+
+      return false;
+    }
     this.getChatRecords(targetAccount);
   };
   componentDidMount=()=>{
@@ -68,9 +72,10 @@ class ChatModal extends React.Component{
       text:e.target.value
     })
   };
+  //发送信息
   sendMessage=(e)=>{
     const {text,messages,isConnect}=this.state;
-    if(text==''){
+    if(Object.is(text,'')){
       return;
     }
     if(isConnect===true){
@@ -84,6 +89,7 @@ class ChatModal extends React.Component{
             message:{
               content:text,
               senderAccount:userAccount,
+              date:Date.now(),
               key:`${targetAccount}${chatRecords[targetAccount].length}`
       }}});
 
@@ -126,7 +132,7 @@ class ChatModal extends React.Component{
                   message:{
                     content:analysis.content,
                     senderAccount:analysis.senderAccount,
-                    date:new Date().toString(),
+                    date:Date.now(),
                     key:`${analysis.senderAccount}${chatRecords[analysis.senderAccount].length}`
                   }
                 }
@@ -186,20 +192,25 @@ class ChatModal extends React.Component{
 
   //获得chatBox
   getChatBox=()=>{
-    const {log,chat}=this.props;
-    const {activeChat={},chatRecords,isAnimate}=chat;
+    const {log,chat,loading}=this.props;
+    const {activeChat={},chatRecords,isAnimate,noMoreChatRecords}=chat;
     const {userAccount}=log.loginData;
-    console.info(chatRecords);
     const messages=chatRecords[activeChat.userAccount]||[];
     return (<ChatBox onChangeHandle={this.messageOnChange}
                      sendHandle={this.sendMessage}
                      text={this.state.text}
                      isAnimate={isAnimate}
+                     loading={loading}
+                     pull={!(activeChat.userAccount in noMoreChatRecords)}
                      scrollToTopCallBack={this.getPastChatRecords}
                      title={<p style={{textAlign:'center'}}>{`Chat with ${activeChat?activeChat.userName:""}`}</p>}>
-      {messages.map((msg,index)=>
-        <ChatMessage type={msg.senderAccount==userAccount?"right":"left"} key={`message${msg.key}`}>{msg.content}</ChatMessage>
-      )}
+      {messages.map((msg,index)=>{
+        let type=Object.is(msg.senderAccount,"sys")?"center":(Object.is(msg.senderAccount,userAccount)?"right":"left");
+        return <ChatMessage type={type}
+                            key={`message${msg.key}`}>
+          {msg.content}</ChatMessage>
+
+      })}
     </ChatBox>)
   };
 
