@@ -12,33 +12,50 @@ import $ from 'jquery';
 //解决鼠标滚轮事件兼容问题
 import 'jquery-mousewheel';
 
+//进行属性校验
+const {PropTypes} =React;
+
 
 class ChatBox2 extends React.Component{
   constructor(props) {
     super(props);
+    this.preScrollHeight=0;
   }
+
   componentDidMount() {
     let chatPanel=this._chatPanel,
         scrollBlock=this._scrollBlock;
     $(chatPanel).on('mousewheel', this.panelOnMouseWheel);
-    // this._scrollBlock.addEventListener('mousedown',(e)=> {
-    //   console.info(e);
-    //
-    //   window.addEventListener('mousemove',move);
-    //   window.addEventListener('mouseup',(e)=>{
-    //     console.info("up");
-    //     window.removeEventListener('mousemove',move);
-    //   })
-    // });
-    // function move(e) {
-    //   console.info(e);
-    // }
+    scrollBlock.addEventListener('mousedown',()=> {
+      let preClass=chatPanel.className;
+      chatPanel.className+=` ${styles["ban-select-text"]}`;
+      const move=(e)=> {
+        this.scrollPanelTo(e.clientY-chatPanel.getBoundingClientRect().top)
+      };
+      window.addEventListener('mousemove',move);
+      window.addEventListener('mouseup',()=>{
+        chatPanel.className=preClass;
+        window.removeEventListener('mousemove',move);
+      })
+    });
+
     this.addEmpty();
     this.scrollPanelTo(100000);
-
   }
   componentDidUpdate() {
     this.addEmpty();
+    this.updateChatPanelScrollTop();
+    if(this.props.shouldScrollToBottom){
+      this.scrollPanelTo(100000);
+    }
+    this._scrollBlock.style.opacity=0;
+  }
+  //添加信息后，chatPanelScrollTop调整
+  updateChatPanelScrollTop() {
+    let chatPanel=this._chatPanel;
+    this._chatPanelScrollTop+=(chatPanel.scrollHeight-this.preScrollHeight);
+    this.preScrollHeight=chatPanel.scrollHeight;
+
   }
   panelOnMouseWheel=(e)=>{
     if(Object.is(e.deltaY,1)){
@@ -62,6 +79,9 @@ class ChatBox2 extends React.Component{
 
 
     if(chatPanelScrollTop===0){
+      if(this.props.scrollToTopCallBack){
+        this.props.scrollToTopCallBack();
+      }
 
     }
     if(chatPanelScrollTop===maxScrollTop){
@@ -95,41 +115,36 @@ class ChatBox2 extends React.Component{
       scrollBlock.style.opacity=0;
     }
   };
+  //添加空白..
   addEmpty=()=>{
     let chatPanel=this._chatPanel,
         childList=Array.from(chatPanel.children),
         totalHeight=0,
         paddingTop,
-        {scrollTopCallBack}=this.props;
+        {canPull}=this.props;
     childList.forEach(child=>{
       totalHeight+=child.clientHeight;
     });
     paddingTop=chatPanel.clientHeight-totalHeight;
+
     if(paddingTop>0){
       chatPanel.style.paddingTop=paddingTop+"px";
-    }else if(scrollTopCallBack){
+    }else if(canPull){
       chatPanel.style.paddingBottom="30px";
+
+    }else{
+      chatPanel.style.paddingTop=0;
     }
   };
   render() {
+    const {children=[]}=this.props;
     return (<div className={styles["chat-box"]}>
+
       <div className={styles["chat-panel"]} ref={(target)=>{ this._chatPanel=target  }}>
-        <ChatMessage type="right" content="1111111111111111111111111111===========..................................................."/>
-        <ChatMessage type="left" content="222"/>
-        <ChatMessage type="left" content="222"/>
-        <ChatMessage type="left" content="222"/>
-        <ChatMessage type="left" content="222"/>
-        <ChatMessage type="left" content="222"/>
-        <ChatMessage type="left" content="222"/>
-        <ChatMessage type="left" content="222"/>
-        <ChatMessage type="left" content="222"/>
-        <ChatMessage type="left" content="222"/>
-        <ChatMessage type="left" content="222"/>
-        <ChatMessage type="left" content="222"/>
-        <ChatMessage type="left" content="222"/>
-        <ChatMessage type="left" content="222"/>
-        <ChatMessage type="left" content="222"/>
-        <ChatMessage type="left" content="222"/>
+        {children.map((child,index)=>{
+          let reverseChild=children[children.length-1-index];
+          return <ChatMessage {...reverseChild.props}  key={reverseChild.key}/>
+        })}
       </div>
       <div className={styles["chat-scroll-block"]} ref={(target)=>{ this._scrollBlock=target  }}>
       </div>
@@ -137,7 +152,7 @@ class ChatBox2 extends React.Component{
   }
 }
 
-const ChatMessage=({content,type})=>{
+const ChatMessage=({content,type,children})=>{
   const contentClasses=classnames({
     [styles["chat-message-content-center"]]:type==="center"||false,
     [styles["chat-message-content-right"]]:type==="right"||false,
@@ -149,11 +164,17 @@ const ChatMessage=({content,type})=>{
   return (
     <div className={styles["chat-message"]}>
       <div className={contentClasses}>
-        {content}
+        {content||children}
       </div>
     </div>
   )
 };
+ChatBox2.propTypes={
+    className:PropTypes.string,
+    canPull:PropTypes.bool,
+    shouldScrollToBottom:PropTypes.bool,
+    scrollToTopCallBack:PropTypes.func,
 
-
+};
+ChatBox2.ChatMessage=ChatMessage;
 export default ChatBox2;

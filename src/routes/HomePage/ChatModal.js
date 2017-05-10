@@ -181,6 +181,10 @@ class ChatModal extends React.Component{
   };
 
   render() {
+    const {log,chat,loading}=this.props;
+    const {activeChat={},chatRecords,isAnimate,noMoreChatRecords}=chat;
+    const {userAccount}=log.loginData;
+    const messages=chatRecords[activeChat.userAccount]||[];
     return (
       <div style={{width:"500px"}}>
           <Row style={{width:'1100px'}} className={'vertical-projection'}>
@@ -189,7 +193,16 @@ class ChatModal extends React.Component{
             {/*</Col>*/}
             <Col span={12} style={{height:'500px'}}>
               {/*{this.getChatBox()}*/}
-              <ChatBox2/>
+              <ChatBox2  canPull={true} shouldScrollToBottom={true}>
+                {messages.map((msg,index)=>{
+                  let type=Object.is(msg.senderAccount,"sys")?"center":(Object.is(msg.senderAccount,userAccount)?"right":"left");
+                  return <ChatMessage type={type}
+                                      key={`message${msg.key}`}>
+                    {msg.content}</ChatMessage>
+
+                })}
+
+              </ChatBox2>
             </Col>
             <Col span={12} style={{height:'500px'}}>
               {this.getChatBox()}

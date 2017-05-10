@@ -1,6 +1,7 @@
 /**
  * Created by jojo on 2017/5/2.
  */
+import React from 'react';
 import { Form, Input, Tooltip, Icon, Cascader, Row, Col, Checkbox, Button ,Spin} from 'antd';
 const FormItem = Form.Item;
 

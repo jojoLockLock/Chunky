@@ -94,6 +94,10 @@
   float: left;
 }
 
+.ban-select-text {
+  user-select: none;
+}
+
 .chat-scroll-block {
   position: absolute;
   width: 5px;

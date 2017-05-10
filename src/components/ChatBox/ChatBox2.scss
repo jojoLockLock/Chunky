@@ -19,6 +19,7 @@ $secondary-color-level-3:rgb(145,145,145);
   @include full();
   transform: rotate(180deg);
   overflow: hidden;
+
   .chat-message{
     width: 100%;
     transform: rotate(180deg);
@@ -106,6 +107,9 @@ $secondary-color-level-3:rgb(145,145,145);
   .test{
     float:left;
   }
+}
+.ban-select-text{
+  user-select:none;
 }
 //滑块...
 .chat-scroll-block{
