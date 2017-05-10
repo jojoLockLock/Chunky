@@ -9,6 +9,7 @@ import {Input,Button,Row,Col,message as Message,Badge,Icon,Spin,notification as 
 import {socketHost} from '../../config/apiConfig';
 import {GLOBAL_MSG_DURATION} from '../../config/componentConfig';
 import ChatBox from '../../components/ChatBox/ChatBox';
+import ChatBox2 from '../../components/ChatBox/ChatBox2';
 import SideBar from '../../components/Sidebar/SideBar';
 import Socket from '../../services/socket'
 const ChatMessage =ChatBox.ChatMessage;
@@ -182,12 +183,17 @@ class ChatModal extends React.Component{
   render() {
     return (
       <div style={{width:"500px"}}>
-          <Row style={{width:'500px'}} className={'vertical-projection'}>
-            <Col span={6}  style={{height:'500px'}}>
-              {this.getSideBar()}
+          <Row style={{width:'1100px'}} className={'vertical-projection'}>
+            {/*<Col span={6}  style={{height:'500px'}}>*/}
+              {/*/!*{this.getSideBar()}*!/*/}
+            {/*</Col>*/}
+            <Col span={12} style={{height:'500px'}}>
+              {/*{this.getChatBox()}*/}
+              <ChatBox2/>
             </Col>
-            <Col span={18} style={{height:'500px'}}>
+            <Col span={12} style={{height:'500px'}}>
               {this.getChatBox()}
+
             </Col>
           </Row>
       </div>

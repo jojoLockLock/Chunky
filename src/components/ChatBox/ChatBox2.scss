@@ -1,0 +1,144 @@
+$primary-color-level-1:rgba(207,237,240,0.8);
+$primary-color-level-2:rgb(207,237,240);
+$primary-color-level-3:rgb(0,162,174);
+$secondary-color-level-1:rgba(233,233,233,0.8);
+$secondary-color-level-2:rgb(233,233,233);
+$secondary-color-level-3:rgb(145,145,145);
+
+@mixin full(){
+  height: 100%;
+  width: 100%;
+}
+.chat-box{
+  @include full();
+  position: relative;
+  overflow:hidden;
+
+}
+.chat-panel{
+  @include full();
+  transform: rotate(180deg);
+  overflow: hidden;
+  .chat-message{
+    width: 100%;
+    transform: rotate(180deg);
+    overflow: hidden;
+    padding:10px;
+  }
+  .chat-message-content{
+    padding:5px 10px;
+    position: relative;
+
+  }
+  //信息样式
+  .chat-message-content-left,.chat-message-content-right{
+    cursor: pointer;
+    display:table-cell;
+    max-width: 60%;
+    table-layout:fixed;
+    word-wrap:break-word;
+  }
+  .chat-message-content-left{
+    float:left;
+    margin-left:10px;
+    color: $secondary-color-level-3;
+    background: $secondary-color-level-2;
+    border-color: $secondary-color-level-2;
+    border-radius: 0 10px 0 10px;
+  }
+  .chat-message-content-right{
+    float:right;
+    margin-right:10px;
+    color: $primary-color-level-3;
+    background: $primary-color-level-2;
+    border-color: $primary-color-level-2;
+    border-radius: 10px 0 10px 0;
+  }
+  .chat-message-content-center{
+    color: #d9d9d9;
+    width: 100%;
+    display: block;
+    text-align: center;
+    font-size:12px;
+  }
+
+  .chat-message-content-left:before,.chat-message-content-right:before{
+    z-index: 11;
+    position:absolute;
+    width: 0;
+    height: 0;
+    bottom:0;
+    border-color:transparent;
+    border-style:solid;
+    border-width: 5px 10px 5px 10px;
+    content:'';
+  }
+  .chat-message-content-left:before{
+    left:-20px;
+    top:5px;
+    border-right-color:$secondary-color-level-2;
+  }
+  .chat-message-content-right:before{
+    right:-20px;
+    top:5px;
+    border-left-color:$primary-color-level-2;
+  }
+  .chat-message-content-left:hover{
+    background-color:$secondary-color-level-1;
+  }
+  .chat-message-content-left:hover:before{
+    border-right-color:$secondary-color-level-1;
+  }
+  .chat-message-content-right:hover{
+    background-color:$primary-color-level-1;
+  }
+  .chat-message-content-right:hover:before{
+    border-left-color:$primary-color-level-1;
+  }
+
+  //动画
+  .chat-message-animate-left{
+    animation: leftIn 0.5s;
+  }
+  .chat-message-animate-right{
+    animation: rightIn 0.5s;
+  }
+  .test{
+    float:left;
+  }
+}
+//滑块...
+.chat-scroll-block{
+  position: absolute;
+  width: 5px;
+  height: 50px;
+  right:2px;
+  top:2px;
+  z-index: 11;
+  opacity: 0;
+  border-radius: 20px;
+  background-color: #cccccc;
+  cursor: pointer;
+  transition:opacity 0.5s ease-out;
+}
+
+
+
+@keyframes rightIn {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+
+  }to{
+     opacity: 1;
+     transform: translateX(0px);  }
+}
+@keyframes leftIn {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }to{
+     opacity: 1;
+     transform: translateX(0);  }
+
+}

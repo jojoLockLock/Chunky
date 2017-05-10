@@ -11,23 +11,32 @@ import TweenOne from 'rc-tween-one';
 import $ from 'jquery';
 //解决鼠标滚轮事件兼容问题
 import 'jquery-mousewheel';
-const ChatBox=({scrollToTopCallBack,
-    className,
-    onChangeHandle,
-    sendHandle,
-    children,
-    text,
-    title,
-    loading,
-    pull,
-    isAnimate=true})=>{
-  const classes=classnames({
-    [className]:className||false,
-    [styles['chat-box']]:true,
-  });
-  return (
-    <div className={classes}>
-      <ChatTitle>{title}</ChatTitle>
+
+class ChatBox extends React.Component{
+  constructor(props) {
+    super(props);
+  }
+  chatPanelScrollToBottom=()=>{
+
+  }
+  render() {
+    const {scrollToTopCallBack,
+      className,
+      onChangeHandle,
+      sendHandle,
+      children,
+      text,
+      title,
+      loading,
+      pull,
+      isAnimate=true}=this.props;
+    const classes=classnames({
+      [className]:className||false,
+      [styles['chat-box']]:true,
+    });
+    return (
+      <div className={classes}>
+        <ChatTitle>{title}</ChatTitle>
         <ChatPanel isAnimate={isAnimate}
                    loading={loading}
                    pull={pull}
@@ -37,10 +46,11 @@ const ChatBox=({scrollToTopCallBack,
             return <ChatMessage {...reverseChild.props}  key={reverseChild.key}/>
           })}
         </ChatPanel>
-      <ChatInput onChangeHandle={onChangeHandle} sendHandle={sendHandle} value={text}/>
-    </div>
-  )
-};
+        <ChatInput onChangeHandle={onChangeHandle} sendHandle={sendHandle} value={text}/>
+      </div>
+    )
+  }
+}
 //进行属性校验
 const {PropTypes} =React;
 ChatBox.propTypes={
@@ -179,7 +189,7 @@ class ChatPanel extends React.Component{
     });
       return (
         <div className={styles["chat-panel-wrap"]}>
-          {/*<div className={styles["chat-panel-anchor"]}><Icon type="arrow-down" /></div>*/}
+
           {this.props.loading?<span className={styles["chat-panel-loading"]}><Icon type="loading" /></span>:null}
           <div className={styles["chat-panel-scroll-block"]} ref={"scrollBlock"}> </div>
           <div className={classes}
@@ -240,6 +250,9 @@ const ChatInput=({onChangeHandle,sendHandle,value})=>{
              onChange={onChangeHandle}
              className={styles['chat-input']}
              onPressEnter={sendHandle}
+             onFocus={()=>{
+               console.info("...");
+             }}
              placeholder="your message..."
       />
       <Button className={styles['chat-button']}
