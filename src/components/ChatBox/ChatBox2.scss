@@ -126,7 +126,15 @@ $secondary-color-level-3:rgb(145,145,145);
   transition:opacity 0.5s ease-out;
 }
 
-
+.chat-panel-loading{
+  position: absolute;
+  top:0;
+  left:0;
+  right:0;
+  height: 20px;
+  z-index: 111;
+  text-align: center;
+}
 
 @keyframes rightIn {
   from {

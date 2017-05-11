@@ -23,7 +23,8 @@ class ChatModal extends React.Component{
     super(props);
     this.state={
       text:"",
-      isConnect:false
+      isConnect:false,
+      shouldScrollToBottom:true
     };
   }
   getChangeActiveChat=(activeChat)=>{
@@ -39,6 +40,9 @@ class ChatModal extends React.Component{
     if(this.props.loading){
       return false;
     }
+    this.setState({
+      shouldScrollToBottom:false,
+    });
     const targetAccount=this.props.chat.activeChat.userAccount;
     if(targetAccount in this.props.chat.noMoreChatRecords){
 
@@ -58,8 +62,10 @@ class ChatModal extends React.Component{
     return nextProps.log.isLogin;
   };
   messageOnChange=(e)=>{
+
     this.setState({
-      text:e.target.value
+      text:e.target.value,
+      shouldScrollToBottom:true
     })
   };
   //发送信息
@@ -179,12 +185,29 @@ class ChatModal extends React.Component{
       })}
     </ChatBox>)
   };
-
-  render() {
+  getChatBox2=()=>{
     const {log,chat,loading}=this.props;
     const {activeChat={},chatRecords,isAnimate,noMoreChatRecords}=chat;
     const {userAccount}=log.loginData;
     const messages=chatRecords[activeChat.userAccount]||[];
+    const {shouldScrollToBottom}=this.state;
+    const ChatMessage=ChatBox2.ChatMessage;
+    return <ChatBox2  canPull={!(activeChat.userAccount in noMoreChatRecords)}
+                      shouldScrollToBottom={shouldScrollToBottom}
+                      scrollToTopCallBack={this.getPastChatRecords}
+                      loading={loading}>
+      {messages.map((msg,index)=>{
+        let type=Object.is(msg.senderAccount,"sys")?"center":(Object.is(msg.senderAccount,userAccount)?"right":"left");
+        return <ChatMessage type={type}
+                            key={`message${msg.key}`}>
+          {msg.content}</ChatMessage>
+
+      })}
+
+    </ChatBox2>
+  };
+  render() {
+
     return (
       <div style={{width:"500px"}}>
           <Row style={{width:'1100px'}} className={'vertical-projection'}>
@@ -193,16 +216,7 @@ class ChatModal extends React.Component{
             {/*</Col>*/}
             <Col span={12} style={{height:'500px'}}>
               {/*{this.getChatBox()}*/}
-              <ChatBox2  canPull={true} shouldScrollToBottom={true}>
-                {messages.map((msg,index)=>{
-                  let type=Object.is(msg.senderAccount,"sys")?"center":(Object.is(msg.senderAccount,userAccount)?"right":"left");
-                  return <ChatMessage type={type}
-                                      key={`message${msg.key}`}>
-                    {msg.content}</ChatMessage>
-
-                })}
-
-              </ChatBox2>
+              {this.getChatBox2()}
             </Col>
             <Col span={12} style={{height:'500px'}}>
               {this.getChatBox()}

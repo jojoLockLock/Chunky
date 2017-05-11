@@ -23,14 +23,29 @@ class ChatBox2 extends React.Component{
   }
 
   componentDidMount() {
-    let chatPanel=this._chatPanel,
-        scrollBlock=this._scrollBlock;
+    let chatPanel=this._chatPanel;
+
     $(chatPanel).on('mousewheel', this.panelOnMouseWheel);
-    scrollBlock.addEventListener('mousedown',()=> {
-      let preClass=chatPanel.className;
+    // this.addTouchEvent();
+    this.addMouseDragEvent();
+    this.addEmpty();
+    this.scrollPanelTo(100000);
+  }
+  addMouseDragEvent=()=>{
+    let scrollBlock=this._scrollBlock,
+        chatPanel=this._chatPanel;
+    scrollBlock.addEventListener('mousedown',(e)=> {
+      let preClass=chatPanel.className,
+        startY=e.offsetY;
       chatPanel.className+=` ${styles["ban-select-text"]}`;
       const move=(e)=> {
-        this.scrollPanelTo(e.clientY-chatPanel.getBoundingClientRect().top)
+        let targetTop=e.clientY-chatPanel.getBoundingClientRect().top-startY;
+        //按照比例滚动..
+        if(targetTop>0){
+          this.scrollPanelTo(targetTop/chatPanel.clientHeight*chatPanel.scrollHeight)
+        }else{
+          this.scrollPanelTo(0);
+        }
       };
       window.addEventListener('mousemove',move);
       window.addEventListener('mouseup',()=>{
@@ -38,10 +53,29 @@ class ChatBox2 extends React.Component{
         window.removeEventListener('mousemove',move);
       })
     });
-
-    this.addEmpty();
-    this.scrollPanelTo(100000);
-  }
+  };
+  addTouchEvent=()=>{
+    let chatPanel=this._chatPanel;
+    chatPanel.addEventListener('touchstart',(e)=> {
+      let preClass=chatPanel.className,
+        startY=e.offsetY;
+      chatPanel.className+=` ${styles["ban-select-text"]}`;
+      const move=(e)=> {
+        let targetTop=e.clientY-chatPanel.getBoundingClientRect().top-startY;
+        //按照比例滚动..
+        if(targetTop>0){
+          this.scrollPanelTo(targetTop/chatPanel.clientHeight*chatPanel.scrollHeight)
+        }else{
+          this.scrollPanelTo(0);
+        }
+      };
+      window.addEventListener('touchmove',move);
+      window.addEventListener('touchend',()=>{
+        chatPanel.className=preClass;
+        window.removeEventListener('touchmove',move);
+      })
+    });
+  };
   componentDidUpdate() {
     this.addEmpty();
     this.updateChatPanelScrollTop();
@@ -64,7 +98,7 @@ class ChatBox2 extends React.Component{
       this.scrollPanelTo(this._chatPanelScrollTop+30);
     }
   };
-  //移动到响应的高度
+  //移动chatPanel到指定的高度
   scrollPanelTo=(top)=>{
     let chatPanel=this._chatPanel,
         scrollBlock=this._scrollBlock,
@@ -126,33 +160,39 @@ class ChatBox2 extends React.Component{
       totalHeight+=child.clientHeight;
     });
     paddingTop=chatPanel.clientHeight-totalHeight;
-
     if(paddingTop>0){
       chatPanel.style.paddingTop=paddingTop+"px";
-    }else if(canPull){
-      chatPanel.style.paddingBottom="30px";
-
     }else{
       chatPanel.style.paddingTop=0;
     }
+    if(canPull){
+      chatPanel.style.paddingBottom="30px";
+    }
+  };
+  static defaultProps = {
+    children:[],
+    isAnimate:true,
+    shouldScrollToBottom:true,
+    loading:false,
   };
   render() {
-    const {children=[]}=this.props;
-    return (<div className={styles["chat-box"]}>
-
+    const {children,isAnimate}=this.props;
+    return (
+    <div className={styles["chat-box"]}>
       <div className={styles["chat-panel"]} ref={(target)=>{ this._chatPanel=target  }}>
         {children.map((child,index)=>{
           let reverseChild=children[children.length-1-index];
-          return <ChatMessage {...reverseChild.props}  key={reverseChild.key}/>
+          return <ChatMessage {...reverseChild.props}  key={reverseChild.key} isAnimate={isAnimate}/>
         })}
       </div>
-      <div className={styles["chat-scroll-block"]} ref={(target)=>{ this._scrollBlock=target  }}>
-      </div>
+      <div className={styles["chat-scroll-block"]} ref={(target)=>{ this._scrollBlock=target  }}/>
+      {this.props.loading?<span className={styles["chat-panel-loading"]}><Icon type="loading" /></span>:null}
     </div>)
   }
 }
 
-const ChatMessage=({content,type,children})=>{
+const ChatMessage=({content,type,children,isAnimate})=>{
+
   const contentClasses=classnames({
     [styles["chat-message-content-center"]]:type==="center"||false,
     [styles["chat-message-content-right"]]:type==="right"||false,
@@ -174,7 +214,6 @@ ChatBox2.propTypes={
     canPull:PropTypes.bool,
     shouldScrollToBottom:PropTypes.bool,
     scrollToTopCallBack:PropTypes.func,
-
 };
 ChatBox2.ChatMessage=ChatMessage;
 export default ChatBox2;
