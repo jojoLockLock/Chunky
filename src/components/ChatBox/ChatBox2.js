@@ -26,8 +26,8 @@ class ChatBox2 extends React.Component{
     let chatPanel=this._chatPanel;
 
     $(chatPanel).on('mousewheel', this.panelOnMouseWheel);
-    // this.addTouchEvent();
-    this.addMouseDragEvent();
+    this.addTouchEvent();
+    // this.addMouseDragEvent();
     this.addEmpty();
     this.scrollPanelTo(100000);
   }
@@ -36,10 +36,10 @@ class ChatBox2 extends React.Component{
         chatPanel=this._chatPanel;
     scrollBlock.addEventListener('mousedown',(e)=> {
       let preClass=chatPanel.className,
-        startY=e.offsetY;
+          offsetY=e.offsetY;
       chatPanel.className+=` ${styles["ban-select-text"]}`;
       const move=(e)=> {
-        let targetTop=e.clientY-chatPanel.getBoundingClientRect().top-startY;
+        let targetTop=e.clientY-chatPanel.getBoundingClientRect().top-offsetY;
         //按照比例滚动..
         if(targetTop>0){
           this.scrollPanelTo(targetTop/chatPanel.clientHeight*chatPanel.scrollHeight)
@@ -55,13 +55,16 @@ class ChatBox2 extends React.Component{
     });
   };
   addTouchEvent=()=>{
-    let chatPanel=this._chatPanel;
+    let chatPanel=this._chatPanel,
+        scrollBlock=this._scrollBlock;
     chatPanel.addEventListener('touchstart',(e)=> {
       let preClass=chatPanel.className,
-        startY=e.offsetY;
+          offsetY=scrollBlock.offsetTop,
+          startY=e.touches[0].clientY;
       chatPanel.className+=` ${styles["ban-select-text"]}`;
       const move=(e)=> {
-        let targetTop=e.clientY-chatPanel.getBoundingClientRect().top-startY;
+        let targetTop=offsetY+e.touches[0].clientY-startY;
+        console.info(targetTop);
         //按照比例滚动..
         if(targetTop>0){
           this.scrollPanelTo(targetTop/chatPanel.clientHeight*chatPanel.scrollHeight)
@@ -83,6 +86,11 @@ class ChatBox2 extends React.Component{
       this.scrollPanelTo(100000);
     }
     this._scrollBlock.style.opacity=0;
+    //设置滑块的top和height
+    setTimeout(()=>{
+      this.setScrollBlockTop();
+      this.setScrollBlockHeight();
+    },500);
   }
   //添加信息后，chatPanelScrollTop调整
   updateChatPanelScrollTop() {
