@@ -154,3 +154,8 @@ $secondary-color-level-3:rgb(145,145,145);
      transform: translateX(0);  }
 
 }
+
+
+.chat-input-panel{
+  @include full();
+}

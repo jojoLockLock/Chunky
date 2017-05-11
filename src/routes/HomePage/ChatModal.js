@@ -195,7 +195,8 @@ class ChatModal extends React.Component{
     return <ChatBox2  canPull={!(activeChat.userAccount in noMoreChatRecords)}
                       shouldScrollToBottom={shouldScrollToBottom}
                       scrollToTopCallBack={this.getPastChatRecords}
-                      loading={loading}>
+                      loading={loading}
+                      isAnimate={true}>
       {messages.map((msg,index)=>{
         let type=Object.is(msg.senderAccount,"sys")?"center":(Object.is(msg.senderAccount,userAccount)?"right":"left");
         return <ChatMessage type={type}
@@ -211,9 +212,10 @@ class ChatModal extends React.Component{
     return (
       <div style={{width:"500px"}}>
           <Row style={{width:'1100px'}} className={'vertical-projection'}>
-            {/*<Col span={6}  style={{height:'500px'}}>*/}
-              {/*/!*{this.getSideBar()}*!/*/}
-            {/*</Col>*/}
+            <Col span={6}  style={{height:'500px'}}>
+              {/*{this.getSideBar()}*/}
+              {<ChatBox2.ChatInput />}
+            </Col>
             <Col span={12} style={{height:'500px'}}>
               {/*{this.getChatBox()}*/}
               {this.getChatBox2()}

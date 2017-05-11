@@ -47,7 +47,7 @@
   right: 3px;
   z-index: 111;
   cursor: pointer;
-  transition: opacity 0.5s;
+  transition: opacity 0.2s;
   opacity: 0;
   position: absolute;
   background-color: #cccccc;
@@ -148,6 +148,26 @@
 }
 .chat-box .chat-message .chat-message-content-right:hover:before {
   border-bottom-color: rgba(207, 237, 240, 0.8);
+}
+@keyframes rightIn {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}
+@keyframes leftIn {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 /*# sourceMappingURL=ChatBox.css.map */

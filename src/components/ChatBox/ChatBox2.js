@@ -27,7 +27,7 @@ class ChatBox2 extends React.Component{
 
     $(chatPanel).on('mousewheel', this.panelOnMouseWheel);
     this.addTouchEvent();
-    // this.addMouseDragEvent();
+    this.addMouseDragEvent();
     this.addEmpty();
     this.scrollPanelTo(100000);
   }
@@ -134,7 +134,7 @@ class ChatBox2 extends React.Component{
     scrollBlock.style.opacity=1;
     this.scrollBlockTimer=setTimeout(()=>{
       scrollBlock.style.opacity=0;
-    },3000);
+    },1000);
     //设置滑块的top和height
     this.setScrollBlockTop();
     this.setScrollBlockHeight();
@@ -200,14 +200,13 @@ class ChatBox2 extends React.Component{
 }
 
 const ChatMessage=({content,type,children,isAnimate})=>{
-
   const contentClasses=classnames({
     [styles["chat-message-content-center"]]:type==="center"||false,
     [styles["chat-message-content-right"]]:type==="right"||false,
     [styles["chat-message-content-left"]]:type==="left"||false,
     [styles["chat-message-content"]]:true,
-    [styles["chat-message-animate-left"]]:type==="left"||false,
-    [styles["chat-message-animate-right"]]:type==="right"||false,
+    [styles["chat-message-animate-left"]]:isAnimate&&(type==="left"||false),
+    [styles["chat-message-animate-right"]]:isAnimate&&(type==="right"||false),
   });
   return (
     <div className={styles["chat-message"]}>
@@ -223,5 +222,23 @@ ChatBox2.propTypes={
     shouldScrollToBottom:PropTypes.bool,
     scrollToTopCallBack:PropTypes.func,
 };
+
+class ChatInput extends React.Component{
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    return (
+      <div className={styles["chat-input-panel"]}>
+        <input type="textarea" onFocus={this.props.onFocus||null} onKeyDown={this.props.onKeyDown||null}/>
+      </div>
+    )
+  }
+}
+ChatInput.propTypes={
+  onFocus:PropTypes.func,
+  onKeyDown:PropTypes.func
+};
 ChatBox2.ChatMessage=ChatMessage;
+ChatBox2.ChatInput=ChatInput;
 export default ChatBox2;

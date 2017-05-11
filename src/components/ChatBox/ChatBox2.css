@@ -142,5 +142,9 @@
     transform: translateX(0);
   }
 }
+.chat-input-panel {
+  height: 100%;
+  width: 100%;
+}
 
 /*# sourceMappingURL=ChatBox2.css.map */
