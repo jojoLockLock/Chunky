@@ -145,6 +145,28 @@
 .chat-input-panel {
   height: 100%;
   width: 100%;
+  position: relative;
+  background-color: #f7f7f7;
+}
+.chat-input-panel .chat-input {
+  height: 100%;
+  width: 100%;
+  resize: none;
+  border: none;
+  padding: 5px;
+  background-color: transparent;
+}
+.chat-input-panel .chat-input::placeholder {
+  color: #cccccc;
+}
+.chat-input-panel .chat-input:focus {
+  outline: none;
+}
+.chat-input-panel .btn-confirm {
+  position: absolute;
+  z-index: 11;
+  right: 5px;
+  bottom: 5px;
 }
 
 /*# sourceMappingURL=ChatBox2.css.map */

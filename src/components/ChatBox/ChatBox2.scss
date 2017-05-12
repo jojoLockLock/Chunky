@@ -158,4 +158,26 @@ $secondary-color-level-3:rgb(145,145,145);
 
 .chat-input-panel{
   @include full();
+  position: relative;
+  background-color: rgb(247,247,247);
+  .chat-input{
+    @include full();
+    resize: none;
+    border: none;
+    padding:5px;
+    background-color: transparent;
+    &::placeholder{
+      color: #cccccc;
+    }
+    &:focus{
+      outline: none;
+    }
+  }
+  .btn-confirm{
+    position: absolute;
+    z-index: 11;
+    right:5px;
+    bottom:5px;
+  }
+
 }

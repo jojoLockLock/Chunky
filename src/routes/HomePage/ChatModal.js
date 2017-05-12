@@ -216,10 +216,10 @@ class ChatModal extends React.Component{
               {/*{this.getSideBar()}*/}
               {<ChatBox2.ChatInput />}
             </Col>
-            <Col span={12} style={{height:'500px'}}>
+            {/*<Col span={12} style={{height:'500px'}}>*/}
               {/*{this.getChatBox()}*/}
-              {this.getChatBox2()}
-            </Col>
+              {/*{this.getChatBox2()}*/}
+            {/*</Col>*/}
             <Col span={12} style={{height:'500px'}}>
               {this.getChatBox()}
 

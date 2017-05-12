@@ -227,17 +227,41 @@ class ChatInput extends React.Component{
   constructor(props) {
     super(props);
   }
+  onKeyDown=(e)=>{
+  let keyCode = e.keyCode || e.which || e.charCode,
+      ctrlKey = e.ctrlKey || e.metaKey;
+    if(ctrlKey && keyCode === 13) {
+      e.preventDefault();
+
+      return false;
+    }
+  };
+  onChange=(e)=>{
+
+  };
   render() {
     return (
       <div className={styles["chat-input-panel"]}>
-        <input type="textarea" onFocus={this.props.onFocus||null} onKeyDown={this.props.onKeyDown||null}/>
+        <textarea  type="textarea"
+                   className={styles["chat-input"]}
+                   placeholder="your message"
+                   onFocus={this.props.onFocus||null}
+                   onKeyDown={this.onKeyDown}
+                   value={this.props.value}
+                   onChange={this.props.onChangeHandle}/>
+        <Button className={styles["btn-confirm"]}
+                size="small"
+                type="primary"
+                onClick={this.props.onConfirm}>发送 Ctrl+Enter</Button>
       </div>
     )
   }
 }
 ChatInput.propTypes={
   onFocus:PropTypes.func,
-  onKeyDown:PropTypes.func
+  onKeyDown:PropTypes.func,
+  onConfirm:PropTypes.func,
+  value:PropTypes.string,
 };
 ChatBox2.ChatMessage=ChatMessage;
 ChatBox2.ChatInput=ChatInput;
