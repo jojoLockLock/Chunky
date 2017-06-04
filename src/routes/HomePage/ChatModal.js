@@ -101,6 +101,7 @@ class ChatModal extends React.Component{
   };
   //初始化 并连接到socket
   initSocket=()=>{
+    console.info(socketHost);
     let socket = new Socket(socketHost);
     this.socket=socket;
 
@@ -207,6 +208,12 @@ class ChatModal extends React.Component{
 
     </ChatBox2>
   };
+  textOnChange=(e)=>{
+    console.info(e.target.value);
+  };
+  onPressEnter=()=>{
+
+  };
   render() {
 
     return (
@@ -214,15 +221,18 @@ class ChatModal extends React.Component{
           <Row style={{width:'1100px'}} className={'vertical-projection'}>
             <Col span={6}  style={{height:'500px'}}>
               {/*{this.getSideBar()}*/}
-              {<ChatBox2.ChatInput />}
+              {<ChatBox2.ChatInput onChange={this.messageOnChange}
+                                   onPressEnter={this.sendMessage}
+                                   onConfirm={this.sendMessage}
+                                   value={this.state.text}/>}
             </Col>
             {/*<Col span={12} style={{height:'500px'}}>*/}
               {/*{this.getChatBox()}*/}
               {/*{this.getChatBox2()}*/}
             {/*</Col>*/}
             <Col span={12} style={{height:'500px'}}>
-              {this.getChatBox()}
-
+              {/*{this.getChatBox()}*/}
+              {this.getChatBox2()}
             </Col>
           </Row>
       </div>

@@ -184,9 +184,9 @@ class ChatBox2 extends React.Component{
     loading:false,
   };
   render() {
-    const {children,isAnimate}=this.props;
+    const {children,isAnimate,style}=this.props;
     return (
-    <div className={styles["chat-box"]}>
+    <div className={styles["chat-box"]} style={style}>
       <div className={styles["chat-panel"]} ref={(target)=>{ this._chatPanel=target  }}>
         {children.map((child,index)=>{
           let reverseChild=children[children.length-1-index];
@@ -199,7 +199,7 @@ class ChatBox2 extends React.Component{
   }
 }
 
-const ChatMessage=({content,type,children,isAnimate})=>{
+const ChatMessage=({content,type,children,isAnimate,className})=>{
   const contentClasses=classnames({
     [styles["chat-message-content-center"]]:type==="center"||false,
     [styles["chat-message-content-right"]]:type==="right"||false,
@@ -207,6 +207,7 @@ const ChatMessage=({content,type,children,isAnimate})=>{
     [styles["chat-message-content"]]:true,
     [styles["chat-message-animate-left"]]:isAnimate&&(type==="left"||false),
     [styles["chat-message-animate-right"]]:isAnimate&&(type==="right"||false),
+    [className]:true,
   });
   return (
     <div className={styles["chat-message"]}>
@@ -232,23 +233,36 @@ class ChatInput extends React.Component{
       ctrlKey = e.ctrlKey || e.metaKey;
     if(ctrlKey && keyCode === 13) {
       e.preventDefault();
-
+      if(this.props.onPressEnter){
+        this.props.onPressEnter();
+      }
       return false;
     }
   };
-  onChange=(e)=>{
-
+  onFocus=()=>{
+    this.panel.style.backgroundColor="white";
+    if(this.props.onFocus){
+      this.props.onFocus();
+    }
+  };
+  onBlur=()=>{
+    this.panel.style="";
+    if(this.props.onBlur){
+      this.props.onBlur();
+    }
   };
   render() {
     return (
-      <div className={styles["chat-input-panel"]}>
+      <div className={styles["chat-input-panel"]} ref={(target)=>{this.panel=target;}}>
         <textarea  type="textarea"
                    className={styles["chat-input"]}
                    placeholder="your message"
-                   onFocus={this.props.onFocus||null}
+                   onFocus={this.onFocus||null}
+                   onBlur={this.onBlur||null}
                    onKeyDown={this.onKeyDown}
+                   defaultValue={this.props.defaultValue}
                    value={this.props.value}
-                   onChange={this.props.onChangeHandle}/>
+                   onChange={this.props.onChange}/>
         <Button className={styles["btn-confirm"]}
                 size="small"
                 type="primary"
