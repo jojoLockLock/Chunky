@@ -101,7 +101,6 @@ class ChatModal extends React.Component{
   };
   //初始化 并连接到socket
   initSocket=()=>{
-    console.info(socketHost);
     let socket = new Socket(socketHost);
     this.socket=socket;
 

@@ -2,7 +2,7 @@
  * Created by Administrator on 2017/3/29.
  */
 export const  mockConfig={
-  isMocking:false,
+  isMocking:true,
   url:{
     login:'/api/login',
     register:'/api/register',

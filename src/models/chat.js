@@ -39,7 +39,11 @@ export default {
       payload.chatRecords.forEach((item,index)=>{
         item.key=`${targetAccount}${targetChatRecords.length+index}`;
       });
-      const lastTime=getTimeString(targetChatRecords[targetChatRecords.length-1].date);
+      let lastTime=new Date().getTime();
+      if(targetChatRecords.length!==0){
+        lastTime=getTimeString(targetChatRecords[targetChatRecords.length-1].date);
+      }
+
 
       const timeMessage={
         senderAccount:"sys",
