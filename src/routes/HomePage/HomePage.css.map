@@ -1,7 +1,0 @@
-{
-"version": 3,
-"mappings": "AACA,SAAS;EACP,gBAAgB,EAAE,KAAK",
-"sources": ["HomePage.scss"],
-"names": [],
-"file": "HomePage.css"
-}

@@ -1,7 +1,0 @@
-{
-"version": 3,
-"mappings": "AACA,aAAa;EACX,UAAU,EAAE,KAAK;EACjB,WAAW,EAAE,KAAK;EAClB,SAAS,EAAC,IAAI;EACd,UAAU,EAAE,MAAM",
-"sources": ["ErrorHolder.scss"],
-"names": [],
-"file": "ErrorHolder.css"
-}

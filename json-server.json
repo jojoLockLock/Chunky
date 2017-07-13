@@ -1,8 +1,0 @@
-{
-  "host": "0.0.0.0",
-  "port": "9090",
-  "watch": true,
-  "delay":500,
-  "quiet": true,
-  "read-only":true
-}
