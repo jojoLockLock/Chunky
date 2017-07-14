@@ -73,11 +73,19 @@ class ChatBox extends React.Component{
       const move=(e)=> {
         let targetTop=e.clientY-chatPanel.getBoundingClientRect().top-offsetY;
         //按照比例滚动..
+        let chatPanelScrollTop=null;
         if(targetTop>0){
-          this.scrollPanelTo(targetTop/chatPanel.clientHeight*chatPanel.scrollHeight)
+          chatPanelScrollTop=this.scrollPanelTo(targetTop/chatPanel.clientHeight*chatPanel.scrollHeight)
         }else{
-          this.scrollPanelTo(0);
+          chatPanelScrollTop=this.scrollPanelTo(0);
         }
+        if(chatPanelScrollTop===0){
+          if(this.props.scrollToTopCallBack){
+            this.props.scrollToTopCallBack();
+          }
+
+        }
+
       };
       window.addEventListener('mousemove',move);
       window.addEventListener('mouseup',()=>{
@@ -96,12 +104,19 @@ class ChatBox extends React.Component{
       chatPanel.className+=` ${styles["ban-select-text"]}`;
       const move=(e)=> {
         let targetTop=offsetY+e.touches[0].clientY-startY;
-        console.info(targetTop);
         //按照比例滚动..
+        let chatPanelScrollTop=null;
         if(targetTop>0){
-          this.scrollPanelTo(targetTop/chatPanel.clientHeight*chatPanel.scrollHeight)
+          chatPanelScrollTop=this.scrollPanelTo(targetTop/chatPanel.clientHeight*chatPanel.scrollHeight)
         }else{
-          this.scrollPanelTo(0);
+          chatPanelScrollTop=this.scrollPanelTo(0);
+        }
+
+        if(chatPanelScrollTop===0){
+          if(this.props.scrollToTopCallBack){
+            this.props.scrollToTopCallBack();
+          }
+
         }
       };
       window.addEventListener('touchmove',move);
@@ -132,11 +147,21 @@ class ChatBox extends React.Component{
 
   }
   panelOnMouseWheel=(e)=>{
+    let chatPanelScrollTop=null;
     if(Object.is(e.deltaY,1)){
-      this.scrollPanelTo(this._chatPanelScrollTop-30);
+      chatPanelScrollTop=this.scrollPanelTo(this._chatPanelScrollTop-30);
     }else{
-      this.scrollPanelTo(this._chatPanelScrollTop+30);
+      chatPanelScrollTop=this.scrollPanelTo(this._chatPanelScrollTop+30);
     }
+
+    if(chatPanelScrollTop===0){
+      if(this.props.scrollToTopCallBack){
+        this.props.scrollToTopCallBack();
+      }
+
+    }
+
+
   };
   //移动chatPanel到指定的高度
   scrollPanelTo=(top)=>{
@@ -152,12 +177,7 @@ class ChatBox extends React.Component{
     chatPanel.scrollTop=maxScrollTop-top;
 
 
-    if(chatPanelScrollTop===0){
-      if(this.props.scrollToTopCallBack){
-        this.props.scrollToTopCallBack();
-      }
 
-    }
     if(chatPanelScrollTop===maxScrollTop){
 
     }
@@ -170,6 +190,8 @@ class ChatBox extends React.Component{
     //设置滑块的top和height
     this.setScrollBlockTop();
     this.setScrollBlockHeight();
+
+    return chatPanelScrollTop;
   };
   setScrollBlockTop=()=>{
     let scrollBlock=this._scrollBlock,
@@ -205,9 +227,8 @@ class ChatBox extends React.Component{
     }else{
       chatPanel.style.paddingTop=0;
     }
-    if(canPull){
-      chatPanel.style.paddingBottom="30px";
-    }
+    chatPanel.style.paddingTop=paddingTop>0?`${paddingTop}px`:0;
+    chatPanel.style.paddingBottom=canPull?"30px":"0";
   };
   static defaultProps = {
     children:[],

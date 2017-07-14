@@ -94,7 +94,7 @@ class Socket {
       if(!Object.is(typeof payload,'object')){
         return reject(new Error('payload must a object'))
       }
-      this.socket.send(JSON.stringify({type,...payload}));
+      this.socket.send(JSON.stringify({type,payload}));
       resolve();
     })
   }

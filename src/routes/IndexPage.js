@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'dva';
 import styles from './IndexPage.css';
-import ChatModal from './ChatModal';
+import ChatModal from './ChatFrame';
 function IndexPage({login,userData,initSocket,setSocketConnectState,sendMessage}) {
 
 

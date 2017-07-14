@@ -51,21 +51,82 @@ export default {
     addChatRecords(preState,{payload}) {
       const {userAccount,records}=payload;
       const {chatRecords}=preState;
+
       return {
         ...preState,
         chatRecords:{
           ...chatRecords,
           [userAccount]:[
-            ...records,
-            ...chatRecords[userAccount]
+            ...records||[],
+            ...chatRecords[userAccount]||[]
           ]
         }
       }
+    },
+    setNoMoreChatRecords(preState,{payload}) {
+      const {chatRecords,noMoreChatRecords}=preState;
+      return {
+        ...preState,
+        noMoreChatRecords:{
+          ...noMoreChatRecords,
+          [payload]:true
+        },
+        chatRecords:{
+          ...chatRecords,
+          [payload]:[
+              {
+                content:"没有更多的聊天记录",
+                type:"center",
+                key:`no-more-records-${payload}`
+              },
+            ...chatRecords[payload]||[]
+          ]
+        }
+      };
     }
   },
 
   effects: {
     *getChatRecords({payload,resolve,reject},{call,put,select}) {
+
+      const {isLogin,token}=yield select(state=>state.user);
+
+      if(!isLogin){
+        return
+      }
+
+      const res=yield call(services.getChatRecords,{...payload,token})
+
+      if(res.status!==1){
+        return reject&&reject(res.message);
+      }
+
+      const {data}=res.payload,
+            {targetAccount}=payload;
+
+      if(data.length!==0){
+
+        yield put({
+          type:"addChatRecords",
+          payload:{
+            userAccount:targetAccount,
+            records:data.map(i=>({
+              ...i,
+              key:i._id,
+              type:i.from===targetAccount?"left":"right"
+            }))
+          }
+        })
+
+      }else{
+
+        yield put({
+          type:"setNoMoreChatRecords",
+          payload:targetAccount
+        })
+
+      }
+      resolve&&resolve();
 
     },
 
@@ -81,7 +142,7 @@ export default {
         return
       }
       const {onClose,controllers}=payload;
-      const socket=yield yield call(services.connectSocket,{
+      const socket=yield call(services.connectSocket,{
         token,
         onClose,
       })
@@ -95,13 +156,15 @@ export default {
         payload:socket,
       })
 
-
+      yield put({
+        type:"setSocketConnectState",
+        payload:true
+      })
 
     },
     *sendMessage({payload,resolve,reject},{call,put,select}) {
       const {isConnect,socket}=yield select(state=>state.chat);
       const {isLogin,data}=yield select(state=>state.user);
-
       if(!isConnect){
         return reject&&reject("socket is not connect");
       }
@@ -119,18 +182,24 @@ export default {
       })
 
       let nowTimestamp=new Date().getTime();
+
+      payload={
+        userAccount:payload.to,
+        message:{
+          ...payload,
+          from:data.userAccount,
+          activeDate:nowTimestamp,
+          key:`${nowTimestamp}-${payload.to}`,
+          type:"right"
+        }
+      }
+
       yield put({
         type:"addNewMessage",
-        payload:{
-          userAccount:payload.to,
-          message:{
-            ...payload,
-            from:data.userAccount,
-            activeDate:nowTimestamp,
-            key:`${nowTimestamp}-${payload.to}`
-          }
-        }
+        payload,
       })
+
+      socket.sendMessage("boardCast",payload);
     }
   },
 

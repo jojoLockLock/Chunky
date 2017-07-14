@@ -2,10 +2,13 @@
  * Created by jojo on 2017/7/13.
  */
 import ApiConfig from '../config/ApiConfig';
-const {httpApi}=ApiConfig;
+
 import request from '../utils/request';
 
 import * as tools from '../utils/tools';
+
+const {httpApi}=ApiConfig;
+
 export async function login(payload) {
 
   const options={
