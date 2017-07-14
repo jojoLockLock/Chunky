@@ -1,0 +1,77 @@
+.friend-list-wrap {
+  height: 100%;
+  width: 100%;
+  min-width: 250px;
+  font-size: 14px;
+  cursor: default; }
+  .friend-list-wrap * {
+    box-sizing: border-box; }
+
+.friend-list {
+  height: 100%;
+  width: 100%;
+  list-style: none; }
+
+.friend-list-item {
+  height: 80px;
+  line-height: 80px;
+  text-align: left;
+  padding: 10px;
+  vertical-align: top;
+  position: relative; }
+  .friend-list-item:hover {
+    background: #ebf8f9; }
+  .friend-list-item .icon {
+    display: inline-block;
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    float: left;
+    margin-right: 10px; }
+    .friend-list-item .icon img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover; }
+  .friend-list-item .body {
+    height: 60px;
+    width: calc(100% - 120px);
+    float: left; }
+    .friend-list-item .body .subtext, .friend-list-item .body .title {
+      display: block;
+      width: 100%;
+      height: 30px;
+      line-height: 30px;
+      overflow: hidden;
+      text-overflow: ellipsis; }
+    .friend-list-item .body .title {
+      color: #00a2ae;
+      font-weight: bolder; }
+    .friend-list-item .body .sutext {
+      color: #D7D7D7; }
+  .friend-list-item .addtion {
+    height: 60px;
+    width: 50px;
+    float: right; }
+    .friend-list-item .addtion .time {
+      display: block;
+      width: 100%;
+      height: 30px;
+      line-height: 30px;
+      text-align: center; }
+
+.friend-list-item.friend-list-item-active {
+  background: rgba(167, 223, 227, 0.8); }
+  .friend-list-item.friend-list-item-active:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 5px;
+    z-index: 2;
+    background: #00a2ae; }
+  .friend-list-item.friend-list-item-active:hover {
+    background: rgba(167, 223, 227, 0.8); }
+
+/*# sourceMappingURL=FrendList.css.map */

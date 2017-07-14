@@ -5,6 +5,8 @@ import React from 'react';
 import { connect } from 'dva';
 import ChatBox from '../components/ChatBox/ChatBox';
 import {Row,Col,message as Message} from 'antd';
+import FrendList from '../components/FriendList/FrendList';
+
 const {ChatInput,ChatMessage}=ChatBox;
 
 class ChatFrame extends React.Component{
@@ -117,13 +119,8 @@ class ChatFrame extends React.Component{
     return (
       <div>
         <Row>
-          <Col span={6} style={{border:"1px solid black",height:500}}>
-            {
-              friendList.map(f=>{
-                return <span key={`friend-${userAccount}`}>
-                  {f.userAccount}</span>
-              })
-            }
+          <Col span={24} style={{border:"1px solid black",height:500}}>
+            <FrendList/>
           </Col>
           <Col span={18}>
             <Row>
