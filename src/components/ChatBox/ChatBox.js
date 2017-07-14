@@ -221,7 +221,7 @@ class ChatBox extends React.Component{
     childList.forEach(child=>{
       totalHeight+=child.clientHeight;
     });
-    paddingTop=chatPanel.clientHeight-totalHeight;
+    paddingTop=chatPanel.offsetHeight-totalHeight;
     if(paddingTop>0){
       chatPanel.style.paddingTop=paddingTop+"px";
     }else{

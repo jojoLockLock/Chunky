@@ -19,7 +19,8 @@
     padding: 10px; }
   .chat-panel .chat-message-content {
     padding: 5px 10px;
-    position: relative; }
+    position: relative;
+    text-align: left; }
   .chat-panel .chat-message-content-left, .chat-panel .chat-message-content-right {
     cursor: pointer;
     display: table-cell;

@@ -2,6 +2,7 @@
  * Created by jojo on 2017/7/13.
  */
 import * as services from './ChatServices';
+import moment from 'moment';
 
 const initState={
   isSuccess:false,
@@ -49,8 +50,9 @@ export default {
       }
     },
     addChatRecords(preState,{payload}) {
-      const {userAccount,records}=payload;
-      const {chatRecords}=preState;
+      const {userAccount,records}=payload,
+            {chatRecords}=preState,
+            targetRecords=chatRecords[userAccount]||[];
 
       return {
         ...preState,
@@ -58,29 +60,18 @@ export default {
           ...chatRecords,
           [userAccount]:[
             ...records||[],
-            ...chatRecords[userAccount]||[]
+            ...targetRecords
           ]
         }
       }
     },
     setNoMoreChatRecords(preState,{payload}) {
-      const {chatRecords,noMoreChatRecords}=preState;
+      const {noMoreChatRecords}=preState;
       return {
         ...preState,
         noMoreChatRecords:{
           ...noMoreChatRecords,
           [payload]:true
-        },
-        chatRecords:{
-          ...chatRecords,
-          [payload]:[
-              {
-                content:"没有更多的聊天记录",
-                type:"center",
-                key:`no-more-records-${payload}`
-              },
-            ...chatRecords[payload]||[]
-          ]
         }
       };
     }

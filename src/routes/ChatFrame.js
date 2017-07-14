@@ -50,13 +50,8 @@ class ChatFrame extends React.Component{
           boardCast: this.boardCastController
         }
       })
-      this.props.getChatRecords({
-        targetAccount:"tester2",
-        limit:10,
-        skip:0,
-      }).then(()=>{
-        console.info("init")
-      })
+
+      this.getChatRecords();
     })
   }
   messageOnChange=(e)=>{
@@ -92,7 +87,7 @@ class ChatFrame extends React.Component{
     })
 
   }
-  fetchMoreChatRecords=()=>{
+  getChatRecords=()=>{
     if(this.state.loading){
       return;
     }
@@ -136,16 +131,24 @@ class ChatFrame extends React.Component{
                 <ChatBox chatBoxKey={"test"}
                          canPull={!("tester2" in this.props.chat.noMoreChatRecords)}
                          loading={this.state.loading}
-                         scrollToTopCallBack={this.fetchMoreChatRecords}
+                         scrollToTopCallBack={this.getChatRecords}
                          configKey={"test"}>
-                  {chatRecords.map(i=>{
-                    i.type==="center"&&console.info(i.content);
-                    return (
-                      <ChatMessage key={i.key}
-                                   content={i.content}
-                                   type={i.type}/>
-                    )
-                  })}
+
+                  {[
+                    ...(
+                      "tester2" in this.props.chat.noMoreChatRecords
+                        ?
+                        [<ChatMessage key={`no-more-records-key`}
+                                      type="center"
+                                      content="没有更多的聊天记录了"/>]
+                        :
+                        []
+                    ),
+                    ...chatRecords.map(i=>{
+                      return <ChatMessage key={i.key}
+                                        content={i.content}
+                                        type={i.type}/>
+                  })]}
                 </ChatBox>
               </Col>
             </Row>
