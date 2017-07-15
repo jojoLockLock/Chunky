@@ -1,56 +1,83 @@
 /**
  * Created by jojo on 2017/7/14.
  */
-import React from 'react';
+import React,{PropTypes} from 'react';
 import styles from './FrendList.css';
 import classnames from 'classnames';
 import {Badge} from 'antd';
 class FriensList extends React.Component{
+  static propTypes={
+    data:PropTypes.array,
+    activeKey:PropTypes.string,
+    onChange:PropTypes.func,
+  }
+  static defaultProps={
+    data:[],
+  }
+
   constructor(props){
     super(props);
     this.state={
-      count:0
+      count:7,
+      activeKey:props.activeKey||"",
     }
-    setInterval(()=>{
-      this.setState({
-        count:this.state.count+1,
-      })
-    },500)
+    // setInterval(()=>{
+    //   this.setState({
+    //     count:this.state.count+1,
+    //   })
+    // },50)
   }
+  componentWillReceiveProps=(newProps)=>{
+    this.setState({
+      activeKey:newProps.activeKey||""
+    })
+  }
+  getOnChange=(key)=>{
+    return ()=>{
+      if("activeKey" in this.props){
 
+      }else{
+        this.setState({
+          activeKey:key,
+        })
+      }
+      this.props.onChange&&this.props.onChange(key);
+    }
+  }
   render() {
+    const {data}=this.props;
+    const {activeKey}=this.state;
     return (
       <div className={styles["friend-list-wrap"]}>
         <ul className={styles["friend-list"]}>
-          <FriendItem title={"BboyJojoBboyJojoBboyJojoBboyJojoBboyJojoBboyJojoBboyJojoBboyJojo"}
-                      subtext={"BboyJojoBboyJojoBboyJojoBboyJojoBboyJojoBboyJojoBboyJojoBboyJojo"}
-                      icon="http://img3.imgtn.bdimg.com/it/u=2677600274,390916543&fm=26&gp=0.jpg"
-                      time="17:50"/>
-          <FriendItem title={"BboyJojoBboyJojoBboyJojoBboyJojoBboyJojoBboyJojoBboyJojoBboyJojo"}
-                      isActive={true}
-                      count={this.state.count}
-                      subtext={"BboyJojoBboyJojoBboyJojoBboyJojoBboyJojoBboyJojoBboyJojoBboyJojo"}
-                      icon="http://img3.imgtn.bdimg.com/it/u=2677600274,390916543&fm=26&gp=0.jpg"
-                      time="17:50"/>
+
+          {data.map(i=><FriendItem title={i.title}
+                                   isActive={i.key===this.state.activeKey}
+                                   key={i.key}
+                                   count={i.count}
+                                   time={i.time}
+                                   onClick={this.getOnChange(i.key)}
+                                   subtext={i.subtext}
+                                   icon={i.icon}/>)}
         </ul>
       </div>
     )
   }
 }
 
-const FriendItem=({title,subtext,icon,time,isActive,count})=>{
+const FriendItem=({title,subtext,icon,time,isActive,count,onClick})=>{
 
   const classes=classnames({
     [styles["friend-list-item"]]:true,
     [styles["friend-list-item-active"]]:isActive
   })
 
-  const offsetLeft=count<10?"55px":"48px";
+  const offsetLeft=count<10?"50px":"45px";
 
   return (
-    <li className={classes}>
-      <a style={{position:"absolute",top:-30,left:offsetLeft,transtion:"left 0.5s"}}>
-        <Badge count={count} />
+    <li className={classes} onClick={onClick}>
+      <a style={{position:"absolute",top:-20,left:offsetLeft,transtion:"left 0.5s"}}>
+        <Badge count={count}/>
       </a>
         <a className={styles["icon"]}>
           <img src={icon} />
@@ -69,4 +96,13 @@ const FriendItem=({title,subtext,icon,time,isActive,count})=>{
   )
 }
 
+
+FriendItem.propTypes={
+  title:PropTypes.string,
+  subText:PropTypes.string,
+  icon:PropTypes.string,
+  time:PropTypes.string,
+  isActive:PropTypes.bool,
+  count:PropTypes.number,
+}
 export default FriensList;

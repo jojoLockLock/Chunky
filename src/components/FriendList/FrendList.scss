@@ -1,9 +1,15 @@
+
+$item-height:60px;
+$item-padding:10px;
+$item-row-height: $item-height - $item-padding *2;
 .friend-list-wrap{
   height: 100%;
   width: 100%;
   min-width: 250px;
   font-size: 14px;
   cursor: default;
+  background:white;
+
   *{
     box-sizing: border-box;
   }
@@ -16,34 +22,26 @@
 }
 
 .friend-list-item{
-  height: 80px;
-  line-height: 80px;
+  height: $item-height;
+  line-height: $item-height;
   text-align: left;
-  //border:1px solid #cccccc;
-  padding:10px;
+  padding:$item-padding 20px;
   vertical-align: top;
   position: relative;
-  &:hover{
-    background: #ebf8f9;
+  background-color:white;
+  //transition: background-color 0.1s;
+  border-bottom:1px solid #cccccc;
+  &:first-child{
+    border-top:1px solid #cccccc;
   }
-  //&:before{
-  //  content:"";
-  //  position: absolute;
-  //  height:100%;
-  //  width:8px;
-  //  background:#cfedf0;
-  //  top:0;
-  //  left:0;
-  //  z-index: 2;
-  //}
   .icon{
     display: inline-block;
-    height: 60px;
-    width: 60px;
+    height: $item-row-height;
+    width:  $item-row-height;
     border-radius: 50%;
     overflow: hidden;
     float:left;
-    margin-right:10px;
+    margin-right:20px;
     img{
       height: 100%;
       width: 100%;
@@ -52,43 +50,45 @@
   }
 
   .body{
-    height: 60px;
-    width: calc(100% - 120px);
+    height: $item-row-height;
+    width: calc(100% - 100px);
     float:left;
     .subtext,.title{
       display: block;
       width: 100%;
-      height:30px;
-      line-height: 30px;
+      height: $item-row-height/2;
+      line-height: $item-row-height/2;
       overflow: hidden;
       text-overflow: ellipsis;
     }
     .title{
-      color:#00a2ae;
+      //color:#00a2ae;
+      color:#929EAC;
       font-weight: bolder;
     }
-    .sutext{
-      color:#D7D7D7;
+    .subtext{
+      color:black;
     }
   }
 
   .addtion{
-    height: 60px;
-    width: 50px;
+    height: $item-row-height;
+    width: $item-row-height;
     float:right;
     .time{
       display: block;
       width: 100%;
-      height:30px;
-      line-height: 30px;
+      height:20px;
+      line-height: 20px;
       text-align: center;
+      color:#00a2ae;
     }
   }
 }
 
 
 .friend-list-item.friend-list-item-active{
-  background: rgba(167,223,227,0.8);
+  background-color: #E6E9F2;
 
   &:before{
     content:"";
@@ -101,8 +101,8 @@
     background:#00a2ae;
   }
 
-  &:hover{
-    background: rgba(167,223,227,0.8);
-  }
+  //&:hover{
+  //  background: rgba(167,223,227,0.8);
+  //}
 }
 

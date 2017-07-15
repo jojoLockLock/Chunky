@@ -18,6 +18,35 @@ class ChatFrame extends React.Component{
       canPull:true,
       isLoading:false,
       value:"",
+      friendList:[
+        {
+          title:"BboyJojoBboyJojoBboyJojoBboyJojoBboyJojoBboyJojoBboyJojoBboyJojo",
+          subtext:"BboyJojoBboyJojoBboyJojoBboyJojoBboyJojoBboyJojoBboyJojoBboyJojo",
+          icon:"http://h.hiphotos.baidu.com/zhidao/wh%3D600%2C800/sign=" +
+          "4c665748aa64034f0f98ca009ff35509/a71ea8d3fd1f413490979ceb241f95cad0c85e86.jpg",
+          time:"17:50",
+          key:"one",
+          count:1
+        },
+        {
+          title:"BboyJojoBboyJojoBboyJojoBboyJojoBboyJojoBboyJojoBboyJojoBboyJojo",
+          subtext:"BboyJojoBboyJojoBboyJojoBboyJojoBboyJojoBboyJojoBboyJojoBboyJojo",
+          icon:"http://h.hiphotos.baidu.com/zhidao/wh%3D600%2C800/sign=" +
+          "4c665748aa64034f0f98ca009ff35509/a71ea8d3fd1f413490979ceb241f95cad0c85e86.jpg",
+          time:"17:50",
+          key:"two",
+          count:31
+        },
+        {
+          title:"BboyJojoBboyJojoBboyJojoBboyJojoBboyJojoBboyJojoBboyJojoBboyJojo",
+          subtext:"BboyJojoBboyJojoBboyJojoBboyJojoBboyJojoBboyJojoBboyJojoBboyJojo",
+          icon:"http://h.hiphotos.baidu.com/zhidao/wh%3D600%2C800/sign=" +
+          "4c665748aa64034f0f98ca009ff35509/a71ea8d3fd1f413490979ceb241f95cad0c85e86.jpg",
+          time:"17:50",
+          key:"three",
+          count:0
+        }
+      ]
     }
   }
   boardCastController=(data)=>{
@@ -111,6 +140,11 @@ class ChatFrame extends React.Component{
       })
     })
   }
+  friendListOnChange=(key)=>{
+    this.setState({
+      activeKey:key,
+    })
+  }
   render() {
     const {chat,user}=this.props;
     const {userAccount}=user.data||{};
@@ -120,7 +154,7 @@ class ChatFrame extends React.Component{
       <div>
         <Row>
           <Col span={24} style={{border:"1px solid black",height:500}}>
-            <FrendList/>
+            <FrendList data={this.state.friendList} activeKey={this.state.activeKey} onChange={this.friendListOnChange}/>
           </Col>
           <Col span={18}>
             <Row>
