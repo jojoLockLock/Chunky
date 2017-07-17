@@ -4,7 +4,9 @@
   min-width: 250px;
   font-size: 14px;
   cursor: default;
-  background: white; }
+  background: white;
+  overflow: auto;
+  user-select: none; }
   .friend-list-wrap * {
     box-sizing: border-box; }
 
@@ -20,10 +22,7 @@
   padding: 10px 20px;
   vertical-align: top;
   position: relative;
-  background-color: white;
-  border-bottom: 1px solid #cccccc; }
-  .friend-list-item:first-child {
-    border-top: 1px solid #cccccc; }
+  background-color: white; }
   .friend-list-item .icon {
     display: inline-block;
     height: 40px;
@@ -48,10 +47,10 @@
       overflow: hidden;
       text-overflow: ellipsis; }
     .friend-list-item .body .title {
-      color: #929EAC;
+      color: black;
       font-weight: bolder; }
     .friend-list-item .body .subtext {
-      color: black; }
+      color: #929EAC; }
   .friend-list-item .addtion {
     height: 40px;
     width: 40px;

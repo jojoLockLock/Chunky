@@ -9,3 +9,8 @@ export const jsonToQueryString=(jsonObject)=>{
   });
   return  queryString.substring(0,queryString.length-1);
 };
+
+
+export const getStyle=(element,props)=>{
+  return window.getComputedStyle(element,null).getPropertyValue(props);
+}

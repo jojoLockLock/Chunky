@@ -13,7 +13,10 @@ const initState={
   chatRecords:{
 
   },
-  socket:null
+  socket:null,
+  messageCount:{
+
+  }
 };
 
 export default {
@@ -23,6 +26,16 @@ export default {
   state: initState,
 
   reducers: {
+    setMessageCount(preState,{payload}) {
+      const {userAccount,count=0}=payload;
+      return {
+        ...preState,
+        messageCount:{
+          ...preState.messageCount,
+          [userAccount]:count,
+        }
+      }
+    },
     setSocketConnectState(preState,{payload}) {
       return {
         ...preState,

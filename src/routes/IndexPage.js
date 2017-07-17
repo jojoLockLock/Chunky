@@ -1,13 +1,23 @@
 import React from 'react';
 import { connect } from 'dva';
 import styles from './IndexPage.css';
-import ChatModal from './ChatFrame';
-function IndexPage({login,userData,initSocket,setSocketConnectState,sendMessage}) {
+import ChatFrame from './ChatFrame';
+import LoginForm from './LoginForm';
+function IndexPage({login,user,initSocket,setSocketConnectState,sendMessage}) {
+
 
 
   return (
-    <div className={styles.normal}>
-      <ChatModal/>
+    <div className={styles["normal"]}>
+      {user.isLogin
+        ?
+        <ChatFrame className={styles["chat-frame"]}/>
+        :
+        <div className={styles["login-modal"]}>
+          <LoginForm onSubmit={login}/>
+        </div>  }
+
+
     </div>
   );
 }
@@ -18,6 +28,7 @@ IndexPage.propTypes = {
 function mapStateToProps(state) {
   return {
     // userData:state.user,
+    user:state.user,
   }
 }
 function mapDispatchToProps(dispatch) {

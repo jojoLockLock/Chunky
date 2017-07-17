@@ -62,6 +62,8 @@ class ChatBox extends React.Component{
     chatBoxList[this.props.configKey]=this.scrollPanelTo
 
 
+    this.props.scrollToTopCallBack&&this.props.scrollToTopCallBack();
+
   }
   addMouseDragEvent=()=>{
     let scrollBlock=this._scrollBlock,

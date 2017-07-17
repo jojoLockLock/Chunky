@@ -9,7 +9,8 @@ $item-row-height: $item-height - $item-padding *2;
   font-size: 14px;
   cursor: default;
   background:white;
-
+  overflow: auto;
+  user-select: none;
   *{
     box-sizing: border-box;
   }
@@ -30,9 +31,9 @@ $item-row-height: $item-height - $item-padding *2;
   position: relative;
   background-color:white;
   //transition: background-color 0.1s;
-  border-bottom:1px solid #cccccc;
+  //border-bottom:1px solid #cccccc;
   &:first-child{
-    border-top:1px solid #cccccc;
+    //border-top:1px solid #cccccc;
   }
   .icon{
     display: inline-block;
@@ -63,11 +64,13 @@ $item-row-height: $item-height - $item-padding *2;
     }
     .title{
       //color:#00a2ae;
-      color:#929EAC;
+      color:black;
+
       font-weight: bolder;
     }
     .subtext{
-      color:black;
+      color:#929EAC;
+
     }
   }
 

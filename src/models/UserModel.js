@@ -44,7 +44,8 @@ export default {
           }
         })
 
-        resolve&&resolve();
+        resolve&&resolve(res.payload);
+
       }else{
         reject&&reject(res.message);
       }
