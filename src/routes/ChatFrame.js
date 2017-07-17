@@ -47,6 +47,8 @@ class ChatFrame extends React.Component{
       count:(chat.messageCount[from]||0)+1,
     })
 
+    this.props.sortFriendListByActiveDate();
+
     ChatBox.scrollToBottom("test");
   }
   componentDidMount=()=>{
@@ -64,7 +66,7 @@ class ChatFrame extends React.Component{
     friendList.forEach(f=>{
       this.getChatRecords(f.userAccount);
     })
-
+    // this.props.sortFriendListByActiveDate();
   }
   messageOnChange=(e)=>{
 
@@ -92,6 +94,8 @@ class ChatFrame extends React.Component{
     });
 
     ChatBox.scrollToBottom("test");
+    console.info("send");
+    this.props.sortFriendListByActiveDate();
   };
   //初始化 并连接到socket
   initSocket=()=>{
@@ -332,6 +336,15 @@ function mapDispatchToProps(dispatch,ownProps) {
         type:"chat/setMessageCount",
         payload:{
           ...payload,
+        }
+      })
+    },
+    sortFriendListByActiveDate:(payload)=>{
+      console.info("xxxx");
+      dispatch({
+        type:"user/sortFriendListByActiveDate",
+        payload:{
+
         }
       })
     }

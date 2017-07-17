@@ -26,6 +26,7 @@ export default {
   state: initState,
 
   reducers: {
+
     setMessageCount(preState,{payload}) {
       const {userAccount,count=0}=payload;
       return {

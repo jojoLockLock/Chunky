@@ -28,6 +28,15 @@ export default {
     },
     initUserData(preState,{payload}) {
       return initState;
+    },
+    setFriendList(preState,{payload}) {
+      return {
+        ...preState,
+        data:{
+          ...preState.data||{},
+          friendList:payload,
+        }
+      }
     }
 
   },
@@ -50,6 +59,12 @@ export default {
         reject&&reject(res.message);
       }
 
+    },
+    *sortFriendListByActiveDate({payload,resolve,reject},{call,put,select}) {
+      const {friendList=[]}=yield select(state=>state.user.data||{})
+      const {chatRecords}=yield select(state=>state.chat);
+
+      console.info(friendList,chatRecords);
     }
   }
 }
