@@ -4,7 +4,6 @@
   min-width: 250px;
   font-size: 14px;
   cursor: default;
-  background: white;
   overflow: auto;
   user-select: none; }
   .friend-list-wrap * {
@@ -21,8 +20,7 @@
   text-align: left;
   padding: 10px 20px;
   vertical-align: top;
-  position: relative;
-  background-color: white; }
+  position: relative; }
   .friend-list-item .icon {
     display: inline-block;
     height: 40px;
