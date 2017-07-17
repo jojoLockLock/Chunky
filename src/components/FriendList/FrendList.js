@@ -70,9 +70,9 @@ const FriendItem=({title,subtext,icon,time,isActive,count,onClick})=>{
 
   return (
     <li className={classes} onClick={onClick}>
-      <a style={{position:"absolute",top:-20,left:offsetLeft,transtion:"left 0.5s"}}>
-        <Badge count={count}/>
-      </a>
+      {/*<a style={{position:"absolute",top:-20,left:offsetLeft,transtion:"left 0.5s"}}>*/}
+        {/**/}
+      {/*</a>*/}
         <a className={styles["icon"]}>
           <img src={icon} />
         </a>
@@ -84,7 +84,7 @@ const FriendItem=({title,subtext,icon,time,isActive,count,onClick})=>{
 
       <div className={styles["addtion"]}>
         <span className={styles["time"]}>{time}</span>
-        <span></span>
+        <span className={styles["count"]}><Badge count={count}/></span>
       </div>
     </li>
   )

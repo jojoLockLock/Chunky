@@ -26,7 +26,7 @@ $item-row-height: $item-height - $item-padding *2;
   height: $item-height;
   line-height: $item-height;
   text-align: left;
-  padding:$item-padding 20px;
+  padding:$item-padding 10px $item-padding 20px;
   vertical-align: top;
   position: relative;
   //background-color:white;
@@ -85,6 +85,13 @@ $item-row-height: $item-height - $item-padding *2;
       line-height: 20px;
       text-align: center;
       color:#00a2ae;
+    }
+    .count{
+      display: block;
+      width: 100%;
+      height:20px;
+      line-height:20px;
+      text-align: center;
     }
   }
 }

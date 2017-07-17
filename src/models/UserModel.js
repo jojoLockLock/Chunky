@@ -2,10 +2,15 @@
  * Created by jojo on 2017/7/13.
  */
 import * as services from './UserServices';
+
+const userData=JSON.parse(sessionStorage.getItem("userData"))||{};
+const {token,data,userAccount}=userData;
+const isLogin=token&&data&&userAccount;
+
 const initState={
-  isLogin:false,
-  data:null,
-  token:null,
+  isLogin:isLogin,
+  data:data&&userAccount?{...data,userAccount}:null,
+  token:token||null,
 }
 
 export default {
@@ -26,9 +31,6 @@ export default {
         token:payload.token,
       }
     },
-    initUserData(preState,{payload}) {
-      return initState;
-    },
     setFriendList(preState,{payload}) {
       return {
         ...preState,
@@ -45,13 +47,18 @@ export default {
     *login({payload,resolve,reject},{call,put,select}) {
       const res=yield call(services.login,{...payload});
       if(res.status===1){
+
+        const finalPayload={
+          ...res.payload,
+          userAccount:payload.userAccount
+        }
+
         yield put({
           type:"setUserData",
-          payload:{
-            ...res.payload,
-            userAccount:payload.userAccount
-          }
+          payload:finalPayload
         })
+
+        sessionStorage.setItem("userData",JSON.stringify(finalPayload));
 
         resolve&&resolve(res.payload);
 
@@ -61,10 +68,21 @@ export default {
 
     },
     *sortFriendListByActiveDate({payload,resolve,reject},{call,put,select}) {
+      
       const {friendList=[]}=yield select(state=>state.user.data||{})
       const {chatRecords}=yield select(state=>state.chat);
 
-      console.info(friendList,chatRecords);
+      friendList.sort((before,after)=>{
+        const beforeRecords=chatRecords[before]||[],
+              afterRecords=chatRecords[after]||[];
+        return parseInt(afterRecords[afterRecords.length-1].activeDate)-
+          parseInt(beforeRecords[beforeRecords.length-1].activeDate)
+      })
+
+      yield put({
+        type:"setFriendList",
+        payload:friendList
+      })
     }
   }
 }
