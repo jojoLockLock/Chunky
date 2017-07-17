@@ -56,9 +56,9 @@ class ChatBox extends React.Component{
     $(chatPanel).on('mousewheel', this.panelOnMouseWheel);
     this.addTouchEvent();
     this.addMouseDragEvent();
-    this.addEmpty();
-    this.scrollPanelTo(100000);
 
+    this.scrollPanelTo(100000);
+    this.addEmpty();
     chatBoxList[this.props.configKey]=this.scrollPanelTo
 
 
@@ -220,6 +220,7 @@ class ChatBox extends React.Component{
         totalHeight=0,
         paddingTop,
         {canPull}=this.props;
+    chatPanel.style.paddingTop=0;
     childList.forEach(child=>{
       totalHeight+=child.clientHeight;
     });
