@@ -63,12 +63,11 @@ class ChatFrame extends React.Component{
         boardCast: this.boardCastController
       }
     })
-    Promise.all(friendList.map(f=>{
-      return this.getChatRecords(f.userAccount);
-    })).then(result=>{
-      this.props.sortFriendListByActiveDate();
 
+    this.props.getAllChatRecords().then(result=>{
+      this.props.sortFriendListByActiveDate();
     })
+
     // this.props.sortFriendListByActiveDate();
   }
   messageOnChange=(e)=>{
@@ -205,7 +204,6 @@ class ChatFrame extends React.Component{
             [className||""]:true
           })
     let chatRecords=chat.chatRecords[activeKey]||[];
-
 
 
     return (
@@ -357,6 +355,15 @@ function mapDispatchToProps(dispatch,ownProps) {
         payload:{
           userAccount
         }
+      })
+    },
+    getAllChatRecords:()=>{
+      return new Promise((resolve,reject)=>{
+        dispatch({
+          type:"chat/getAllChatRecords",
+          resolve,
+          reject,
+        })
       })
     }
   }

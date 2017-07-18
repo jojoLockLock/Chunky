@@ -3,9 +3,14 @@ import { connect } from 'dva';
 import styles from './IndexPage.css';
 import ChatFrame from './ChatFrame';
 import LoginForm from './LoginForm';
-function IndexPage({login,user,initSocket,setSocketConnectState,sendMessage}) {
+function IndexPage({login,user,getAllChatRecords,
+initSocket,setSocketConnectState,sendMessage}) {
 
+  function loginHandle(payload) {
+    login(payload).then(result=>{
 
+    })
+  }
 
   return (
     <div className={styles["normal"]}>
@@ -46,38 +51,7 @@ function mapDispatchToProps(dispatch) {
         })
       })
     },
-    initSocket:(payload)=>{
-      return new Promise((resolve,reject)=>{
-        dispatch({
-          type:"chat/initSocket",
-          payload:{
-            ...payload
-          },
-          resolve,
-          reject,
-        })
-      })
-    },
-    setSocketConnectState:(isConnect)=>{
-      dispatch({
-        type:"chat/setSocketConnectState",
-        payload:!!isConnect
-      })
-    },
-    sendMessage:(payload)=>{
-      return ()=>{
-        return new Promise((resolve,reject)=>{
-          dispatch({
-            type:"chat/sendMessage",
-            payload:{
-              ...payload,
-            },
-            resolve,
-            reject,
-          })
-        })
-      }
-    },
+
   }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(IndexPage);

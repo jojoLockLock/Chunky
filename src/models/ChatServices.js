@@ -40,3 +40,26 @@ export async function getChatRecords(payload) {
 
   return request(httpApi.USER_CHAT_RECORD+tools.jsonToQueryString(payload),options);
 }
+
+
+export async function getAllChatRecords(payload) {
+
+  const {limit,skip,token,targetAccount}=payload;
+
+  payload={
+    limit,
+    skip,
+    targetAccount
+  }
+
+  const options={
+    method:"GET",
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      "access-token":token,
+    }
+  }
+
+
+  return request(httpApi.USER_CHAT_RECORDS+tools.jsonToQueryString(payload),options);
+}

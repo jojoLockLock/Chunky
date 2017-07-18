@@ -16,7 +16,8 @@ const initState={
   socket:null,
   messageCount:{
 
-  }
+  },
+  isChatRecordsInit:false,
 };
 
 export default {
@@ -79,13 +80,29 @@ export default {
         }
       }
     },
+    initChatRecords(preState,{payload}) {
+      return {
+        ...preState,
+        isChatRecordsInit:true,
+        chatRecords:{
+          ...payload
+        }
+      }
+    },
     setNoMoreChatRecords(preState,{payload}) {
       const {noMoreChatRecords}=preState;
+
+      const increaseNoMoreChatRecords={};
+
+      (payload||[]).forEach(u=>{
+        increaseNoMoreChatRecords[u]=true;
+      })
+
       return {
         ...preState,
         noMoreChatRecords:{
           ...noMoreChatRecords,
-          [payload]:true
+          ...increaseNoMoreChatRecords
         }
       };
     }
@@ -127,51 +144,56 @@ export default {
 
         yield put({
           type:"setNoMoreChatRecords",
-          payload:targetAccount
+          payload:[targetAccount]
         })
 
       }
       resolve&&resolve();
 
     },
-    *getAllChatRecords({payload,resolve,reject},{call,put,select}) {
-      const {isLogin,token}=yield select(state=>state.user);
+    *getAllChatRecords({resolve,reject},{call,put,select}) {
+      const {isLogin,token,data}=yield select(state=>state.user);
 
       if(!isLogin){
         return
       }
-
-      const res=yield call(services.getChatRecords,{...payload,token})
+      const {friendList}=data;
+      const res=yield call(services.getAllChatRecords,{
+        token,
+        limit:15,
+        skip:0,
+        targetAccount:friendList.map(f=>f.userAccount)
+      })
 
       if(res.status!==1){
         return reject&&reject(res.message);
       }
 
-      const {data}=res.payload,
-        {targetAccount}=payload;
+      const chatRecords=res.payload,
+            increaseNoMoreChatRecrods=[];
 
-      if(data.length!==0){
+      Object.keys(chatRecords||{}).forEach((k,index)=>{
+        if(chatRecords[k].data.length===0){
+          increaseNoMoreChatRecrods.push(k);
+        }
+        chatRecords[k]=chatRecords[k].data.map(i=>({
+          ...i,
+          key:i._id,
+          type:i.from===k?"left":"right"
+        }))
+      })
 
-        yield put({
-          type:"addChatRecords",
-          payload:{
-            userAccount:targetAccount,
-            records:data.map(i=>({
-              ...i,
-              key:i._id,
-              type:i.from===targetAccount?"left":"right"
-            }))
-          }
-        })
 
-      }else{
+      yield put({
+        type:"initChatRecords",
+        payload:chatRecords
+      })
 
-        yield put({
-          type:"setNoMoreChatRecords",
-          payload:targetAccount
-        })
+      yield put({
+        type:"setNoMoreChatRecords",
+        payload:increaseNoMoreChatRecrods
+      })
 
-      }
       resolve&&resolve();
     },
     *initSocket({payload,resolve,reject},{call,put,select}) {
