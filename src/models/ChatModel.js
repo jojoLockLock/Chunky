@@ -134,7 +134,46 @@ export default {
       resolve&&resolve();
 
     },
+    *getAllChatRecords({payload,resolve,reject},{call,put,select}) {
+      const {isLogin,token}=yield select(state=>state.user);
 
+      if(!isLogin){
+        return
+      }
+
+      const res=yield call(services.getChatRecords,{...payload,token})
+
+      if(res.status!==1){
+        return reject&&reject(res.message);
+      }
+
+      const {data}=res.payload,
+        {targetAccount}=payload;
+
+      if(data.length!==0){
+
+        yield put({
+          type:"addChatRecords",
+          payload:{
+            userAccount:targetAccount,
+            records:data.map(i=>({
+              ...i,
+              key:i._id,
+              type:i.from===targetAccount?"left":"right"
+            }))
+          }
+        })
+
+      }else{
+
+        yield put({
+          type:"setNoMoreChatRecords",
+          payload:targetAccount
+        })
+
+      }
+      resolve&&resolve();
+    },
     *initSocket({payload,resolve,reject},{call,put,select}) {
       const {isConnect}=yield select(state=>state.chat);
       const {isLogin,token}=yield select(state=>state.user);

@@ -47,7 +47,7 @@ class ChatFrame extends React.Component{
       count:(chat.messageCount[from]||0)+1,
     })
 
-    this.props.sortFriendListByActiveDate();
+    this.props.setFriendItemToTopByUserAccount(from);
 
     ChatBox.scrollToBottom("test");
   }
@@ -63,8 +63,11 @@ class ChatFrame extends React.Component{
         boardCast: this.boardCastController
       }
     })
-    friendList.forEach(f=>{
-      this.getChatRecords(f.userAccount);
+    Promise.all(friendList.map(f=>{
+      return this.getChatRecords(f.userAccount);
+    })).then(result=>{
+      this.props.sortFriendListByActiveDate();
+
     })
     // this.props.sortFriendListByActiveDate();
   }
@@ -94,8 +97,9 @@ class ChatFrame extends React.Component{
     });
 
     ChatBox.scrollToBottom("test");
-    console.info("send");
-    this.props.sortFriendListByActiveDate();
+
+    this.props.setFriendItemToTopByUserAccount(activeKey);
+
   };
   //初始化 并连接到socket
   initSocket=()=>{
@@ -340,11 +344,18 @@ function mapDispatchToProps(dispatch,ownProps) {
       })
     },
     sortFriendListByActiveDate:(payload)=>{
-      console.info("xxxx");
       dispatch({
         type:"user/sortFriendListByActiveDate",
         payload:{
 
+        }
+      })
+    },
+    setFriendItemToTopByUserAccount:(userAccount)=>{
+      dispatch({
+        type:"user/setFriendItemToTopByUserAccount",
+        payload:{
+          userAccount
         }
       })
     }

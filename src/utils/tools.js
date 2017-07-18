@@ -5,7 +5,14 @@ export const jsonToQueryString=(jsonObject)=>{
   let keys=Object.keys(jsonObject),
     queryString="?";
   keys.forEach(k=>{
-    queryString+=`${k}=${jsonObject[k]}&`
+
+    let content=jsonObject[k]
+
+    if(content.constructor===[].constructor){
+      content=content.join(",")
+    }
+
+    queryString+=`${k}=${content}&`
   });
   return  queryString.substring(0,queryString.length-1);
 };
