@@ -232,7 +232,7 @@ class ChatFrame extends React.Component{
   }
   render() {
     const {chat,user,className}=this.props,
-          {userAccount}=user.data||{},
+          {userAccount,friendList}=user.data||{},
           {activeKey}=this.state,
           classes=classnames({
             [styles["frame"]]:true,
@@ -240,7 +240,14 @@ class ChatFrame extends React.Component{
           })
     let chatRecords=chat.chatRecords[activeKey]||[];
 
+    let activeUeserName="";
 
+    friendList.some(f=>{
+      if(f.userAccount===this.state.activeKey){
+        activeUeserName=f.userName;
+        return true;
+      }
+    });
     return (
       <div className={classes}>
         <div className={styles["frame-side-bar"]}>
@@ -279,7 +286,11 @@ class ChatFrame extends React.Component{
         </div>
         <div className={styles["frame-right"]}>
           <div className={styles["chat-header"]}>
-            {this.state.activeKey}
+            {activeKey
+              ?
+              <p>{activeUeserName}({activeKey})</p>
+              :
+              null}
           </div>
           <div style={{height:"calc( 100% - 180px)"}} className={styles["chat-content-wrap"]}>
             <ChatBox chatBoxKey={"test"}

@@ -74,7 +74,7 @@ const FriendItem=({title,subtext,icon,time,isActive,count,onClick})=>{
         {/**/}
       {/*</a>*/}
         <a className={styles["icon"]}>
-          <img src={icon} />
+          <img src={icon} draggable={false}/>
         </a>
 
       <div className={styles["body"]}>

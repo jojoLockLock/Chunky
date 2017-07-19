@@ -288,7 +288,7 @@ const ChatMessage=({showIcon,content,type,children,isAnimate,className,icon="htt
       {type!=="center"&&showIcon
         ?
         <span className={iconClasses}>
-          <img src={icon}/>
+          <img src={icon} draggable={false}/>
         </span>
         :
         null}
