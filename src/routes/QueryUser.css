@@ -1,0 +1,8 @@
+.query-result {
+  width: 100%; }
+  .query-result .query-item td {
+    padding: 5px; }
+  .query-result .query-item td:nth-child(2) {
+    text-align: right; }
+
+/*# sourceMappingURL=QueryUser.css.map */

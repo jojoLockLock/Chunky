@@ -4,11 +4,13 @@
 import React from 'react';
 import { connect } from 'dva';
 import ChatBox from '../components/ChatBox/ChatBox';
-import {Row,Col,message as Message} from 'antd';
+import {Row,Col,message as Message,Badge,
+Button,Modal,Icon,notification as Notification} from 'antd';
 import FrendList from '../components/FriendList/FrendList';
 import moment from 'moment'
 import styles from './ChatFrame.css'
 import classnames from 'classnames';
+import QueryUser from './QueryUser';
 const {ChatInput,ChatMessage}=ChatBox;
 
 class ChatFrame extends React.Component{
@@ -21,7 +23,32 @@ class ChatFrame extends React.Component{
       isLoading:false,
       value:"",
       activeKey:null,
+      visible:{
+        add:false
+      }
     }
+  }
+  getStateHandle=(stateType)=>{
+    return (type,value)=>{
+      return ()=>{
+        this.setState({
+          [stateType]:{
+            ...this.state[stateType],
+            [type]:value,
+          }
+        })
+      }
+    }
+  }
+  notificationController=(data)=>{
+    console.info(data);
+
+    Notification.info({
+      message:"好友添加请求",
+      placement:"bottomRight",
+      description:`${data.payload.userAccount} 想成为你的好友`,
+      icon: <Icon type="user-add" style={{color:"#3db8c1"}}/>
+    })
   }
   boardCastController=(data)=>{
 
@@ -60,7 +87,8 @@ class ChatFrame extends React.Component{
         setSocketConnectState(false);
       },
       controllers: {
-        boardCast: this.boardCastController
+        boardCast: this.boardCastController,
+        notification:this.notificationController,
       }
     })
 
@@ -100,11 +128,6 @@ class ChatFrame extends React.Component{
     this.props.setFriendItemToTopByUserAccount(activeKey);
 
   };
-  //初始化 并连接到socket
-  initSocket=()=>{
-
-
-  };
   onChange=(e)=>{
 
     this.setState({
@@ -141,6 +164,18 @@ class ChatFrame extends React.Component{
     return ()=>{
       this.getChatRecords(targetAccount);
     }
+  }
+  putUserFriendRequest=(payload)=>{
+    this.props.putUserFriendRequest(payload)
+      .then(()=>{
+        this.getStateHandle("visible")("add",false)();
+      })
+      .catch(msg=>{
+
+      })
+      .then(()=>{
+
+      })
   }
   friendListOnChange=(key)=>{
 
@@ -208,13 +243,35 @@ class ChatFrame extends React.Component{
 
     return (
       <div className={classes}>
+        <div className={styles["frame-side-bar"]}>
+          <ul className={styles["operation-list"]}>
+            <li className={styles["operation-item"]}>
+              <Badge dot={true}>
+                <a>
+                  <Icon type="notification" />
+                </a>
+              </Badge>
+            </li>
+            <li className={styles["operation-item"]}>
+              <Badge dot={true}>
+                <a>
+                  <Icon type="user" />
+                </a>
+              </Badge>
+            </li>
+            <li className={styles["operation-item"]}>
+              <Button icon="plus"
+                      onClick={this.getStateHandle("visible")("add",true)}/>
+            </li>
+          </ul>
 
+
+        </div>
         <div className={styles["frame-left"]}>
           <div className={styles["friend-list-header"]}>
 
           </div>
-          <div className={styles["friend-list-content"]}
-               >
+          <div className={styles["friend-list-content"]}>
             <FrendList data={this.getFriendListData()}
                        activeKey={activeKey}
                        onChange={this.friendListOnChange}/>
@@ -258,6 +315,16 @@ class ChatFrame extends React.Component{
                        onConfirm={this.sendMessage}/>
           </div>
         </div>
+
+        <Modal visible={this.state.visible.add}
+               width={400}
+               footer={null}
+               onCancel={this.getStateHandle("visible")("add",false)}
+               title={<h3><Icon type="user-add"/>&nbsp;添加好友</h3> }>
+          <QueryUser queryUser={this.props.queryUser}
+                     putUserFriendRequest={this.putUserFriendRequest}/>
+        </Modal>
+
       </div>
     )
   }
@@ -363,6 +430,43 @@ function mapDispatchToProps(dispatch,ownProps) {
           type:"chat/getAllChatRecords",
           resolve,
           reject,
+        })
+      })
+    },
+    queryUser:(value)=>{
+      return new Promise((resolve,reject)=>{
+        dispatch({
+          type:"user/queryUser",
+          payload:{
+            value,
+          },
+          reject,
+          resolve,
+        })
+      })
+    },
+    putUserFriendRequest:(targetAccount)=>{
+      return new Promise((resolve,reject)=>{
+        dispatch({
+          type:"user/putUserFriendRequest",
+          payload:{
+            targetAccount,
+          },
+          reject,
+          resolve,
+        })
+      })
+    },
+    patchUserFriendRequest:(targetAccount,resCode)=>{
+      return new Promise((resolve,reject)=>{
+        dispatch({
+          type:"user/patchUserFriendRequest",
+          payload:{
+            targetAccount,
+            resCode,
+          },
+          reject,
+          resolve,
         })
       })
     }

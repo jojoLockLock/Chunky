@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA,aAAa;EACX,KAAK,EAAE,IAAI;EAET,4BAAE;IACA,OAAO,EAAC,GAAG;EAEb,yCAAe;IACb,UAAU,EAAE,KAAK",
+"sources": ["QueryUser.scss"],
+"names": [],
+"file": "QueryUser.css"
+}

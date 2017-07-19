@@ -79,18 +79,20 @@ export default {
 
       friendList.sort((before,after)=>{
 
-        const beforeRecords=chatRecords[before]||[],
-              afterRecords=chatRecords[after]||[];
+        const beforeRecords=chatRecords[before.userAccount]||[],
+              afterRecords=chatRecords[after.userAccount]||[];
 
         return parseInt((afterRecords[afterRecords.length-1]||{}).activeDate||0)-
-          parseInt((beforeRecords[beforeRecords.length-1]||{}).activeDate||0)
+          parseInt((beforeRecords[beforeRecords.length-1]||{}).activeDate||0);
       })
+
       yield put({
         type:"setFriendList",
         payload:friendList
       })
+
     },
-    *setFriendItemToTopByUserAccount({payload,resolve,ject},{call,put,select}) {
+    *setFriendItemToTopByUserAccount({payload,resolve,reject},{call,put,select}) {
       const {userAccount}=payload;
       const {friendList=[]}=yield select(state=>state.user.data||{})
 
@@ -116,6 +118,52 @@ export default {
         ]
       })
 
-    }
+    },
+    *queryUser({payload,resolve,reject},{call,put,select}){
+      const {value}=payload;
+      const {isLogin,token}=yield select(state=>state.user);
+
+      const res=yield call(services.queryUser,{value,token});
+
+      if(res.status===1){
+
+        resolve&&resolve(res.payload)
+
+      }else{
+
+        reject&&reject(res.message);
+
+      }
+    },
+    *putUserFriendRequest({payload,resolve,reject},{call,put,select}) {
+      const {token}=yield select(state=>state.user);
+
+      const res=yield call(services.putUserFriendRequest,{...payload,token});
+
+      if(res.status===1){
+
+        resolve&&resolve()
+
+      }else{
+
+        reject&&reject(res.message);
+
+      }
+    },
+    *patchUserFriendRequest({payload,resolve,reject},{call,put,select}) {
+      const {token}=yield select(state=>state.user);
+
+      const res=yield call(services.patchUserFriendRequest,{...payload,token});
+
+      if(res.status===1){
+
+        resolve&&resolve()
+
+      }else{
+
+        reject&&reject(res.message);
+
+      }
+    },
   }
 }

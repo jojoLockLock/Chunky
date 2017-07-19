@@ -152,6 +152,7 @@ export default {
 
     },
     *getAllChatRecords({resolve,reject},{call,put,select}) {
+
       const {isLogin,token,data}=yield select(state=>state.user);
 
       if(!isLogin){

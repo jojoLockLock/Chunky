@@ -3,32 +3,59 @@ import { connect } from 'dva';
 import styles from './IndexPage.css';
 import ChatFrame from './ChatFrame';
 import LoginForm from './LoginForm';
-function IndexPage({login,user,getAllChatRecords,
-initSocket,setSocketConnectState,sendMessage}) {
+import RegisterForm from './RegisterForm';
 
-  function loginHandle(payload) {
-    login(payload).then(result=>{
 
-    })
+class IndexPage extends React.Component{
+  constructor(props) {
+    super(props);
+    this.state={
+      loading:{
+        login:false,
+        register:false,
+      }
+    }
   }
+  getStateHandle=(stateType)=>{
+    return (type,value)=>{
+      return ()=>{
+        this.setState({
+          [stateType]:{
+            ...this.state[stateType],
+            [type]:value,
+          }
+        })
+      }
+    }
+  }
+  loginHandle=(payload)=>{
+    this.props.login&&this.props.login(payload)
+      .then(result=>{
 
-  return (
-    <div className={styles["normal"]}>
-      {user.isLogin
-        ?
-        <ChatFrame className={styles["chat-frame"]}/>
-        :
-        <div className={styles["login-modal"]}>
-          <LoginForm onSubmit={login}/>
-        </div>  }
+      })
+      .catch(msg=>{
+
+      })
+  }
+  render() {
+    const {user,login}=this.props;
+    return (
+      <div className={styles["normal"]}>
+        {user.isLogin
+          ?
+          <ChatFrame className={styles["chat-frame"]}/>
+          :
+          <div className={styles["login-modal"]}>
+            <LoginForm onSubmit={login}/>
+          </div>  }
 
 
-    </div>
-  );
+      </div>
+    )
+  }
 }
 
-IndexPage.propTypes = {
-};
+
 
 function mapStateToProps(state) {
   return {
