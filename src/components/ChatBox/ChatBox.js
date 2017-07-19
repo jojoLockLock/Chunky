@@ -253,7 +253,10 @@ class ChatBox extends React.Component{
         <div className={styles["chat-panel"]} ref={(target)=>{ this._chatPanel=target  }}>
           {children.map((child,index)=>{
             let reverseChild=children[children.length-1-index];
-            return <ChatMessage {...reverseChild.props}  key={reverseChild.key} isAnimate={isAnimate}/>
+            return <ChatMessage {...reverseChild.props}
+                                showIcon={this.props.showIcon}
+                                key={reverseChild.key}
+                                isAnimate={isAnimate}/>
           })}
         </div>
         <div className={styles["chat-scroll-block"]} ref={(target)=>{ this._scrollBlock=target  }}/>
@@ -262,7 +265,7 @@ class ChatBox extends React.Component{
   }
 }
 
-const ChatMessage=({content,type,children,isAnimate,className})=>{
+const ChatMessage=({showIcon,content,type,children,isAnimate,className,icon="http://127.0.0.1:8080/icon.jpg"})=>{
   const contentClasses=classnames({
     [styles["chat-message-content-center"]]:type==="center"||false,
     [styles["chat-message-content-right"]]:type==="right"||false,
@@ -272,20 +275,41 @@ const ChatMessage=({content,type,children,isAnimate,className})=>{
     [styles["chat-message-animate-right"]]:isAnimate&&(type==="right"||false),
     [className]:true,
   });
+
+  const iconClasses=classnames({
+    [styles["chat-message-icon-left"]]:type==="left",
+    [styles["chat-message-icon-right"]]:type==="right",
+    [styles["chat-message-icon"]]:true,
+    [styles["chat-message-animate-left"]]:isAnimate&&(type==="left"||false),
+    [styles["chat-message-animate-right"]]:isAnimate&&(type==="right"||false),
+  })
   return (
     <div className={styles["chat-message"]}>
+      {type!=="center"&&showIcon
+        ?
+        <span className={iconClasses}>
+          <img src={icon}/>
+        </span>
+        :
+        null}
       <div className={contentClasses}>
         {content||children}
       </div>
     </div>
   )
 };
+
+ChatBox.defaultProps={
+  showIcon:true
+}
+
 ChatBox.propTypes={
     className:PropTypes.string,
     canPull:PropTypes.bool,
     shouldScrollToBottom:PropTypes.bool,
     scrollToTopCallBack:PropTypes.func,
     configKey:PropTypes.string.isRequired,
+    showIcon:PropTypes.bool,
 };
 
 ChatBox.scrollToBottom=function (configKey) {

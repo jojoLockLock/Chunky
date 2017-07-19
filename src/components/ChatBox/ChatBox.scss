@@ -28,6 +28,29 @@ $secondary-color-level-3:rgb(145,145,145);
     overflow: hidden;
     padding:10px;
   }
+
+  .chat-message-icon{
+    display: inline-block;
+    width: 40px;
+    height:40px;
+    border-radius: 50%;
+    overflow: hidden;
+    img{
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+
+  }
+
+  .chat-message-icon-left{
+    float:left;
+  }
+
+  .chat-message-icon-right{
+    float:right;
+  }
+
   .chat-message-content{
     padding:5px 10px;
     position: relative;

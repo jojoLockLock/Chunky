@@ -17,6 +17,20 @@
     transform: rotate(180deg);
     overflow: hidden;
     padding: 10px; }
+  .chat-panel .chat-message-icon {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden; }
+    .chat-panel .chat-message-icon img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover; }
+  .chat-panel .chat-message-icon-left {
+    float: left; }
+  .chat-panel .chat-message-icon-right {
+    float: right; }
   .chat-panel .chat-message-content {
     padding: 5px 10px;
     position: relative;
