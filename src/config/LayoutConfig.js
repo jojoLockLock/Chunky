@@ -3,6 +3,13 @@
  */
 
 
-export default LayoutConfig={
 
+export default LayoutConfig={
+  animate:{
+    isAnimate:true,
+    duration:1000,
+  },
+  chatFrame:{
+
+  }
 }

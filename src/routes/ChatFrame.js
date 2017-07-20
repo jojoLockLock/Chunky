@@ -4,13 +4,14 @@
 import React from 'react';
 import { connect } from 'dva';
 import ChatBox from '../components/ChatBox/ChatBox';
-import {Row,Col,message as Message,Badge,
+import {Row,Col,Badge,
 Button,Modal,Icon,notification as Notification} from 'antd';
 import FrendList from '../components/FriendList/FrendList';
 import moment from 'moment'
 import styles from './ChatFrame.css'
 import classnames from 'classnames';
-import QueryUser from './QueryUser';
+import QueryFrame from './QueryFrame';
+import {Message} from '../components/CommonConfigComponents';
 const {ChatInput,ChatMessage}=ChatBox;
 
 class ChatFrame extends React.Component{
@@ -169,9 +170,10 @@ class ChatFrame extends React.Component{
     this.props.putUserFriendRequest(payload)
       .then(()=>{
         this.getStateHandle("visible")("add",false)();
+        Message.success("已发送好友请求")
       })
       .catch(msg=>{
-
+        Message.error(msg);
       })
       .then(()=>{
 
@@ -230,14 +232,12 @@ class ChatFrame extends React.Component{
 
     return messageTime.format("MM-DD");
   }
-  render() {
-    const {chat,user,className}=this.props,
-          {userAccount,friendList}=user.data||{},
-          {activeKey}=this.state,
-          classes=classnames({
-            [styles["frame"]]:true,
-            [className||""]:true
-          })
+  getChatPanel=()=>{
+
+    const {chat,user}=this.props,
+          {friendList}=user.data||{},
+          {activeKey}=this.state;
+
     let chatRecords=chat.chatRecords[activeKey]||[];
 
     let activeUeserName="";
@@ -248,6 +248,93 @@ class ChatFrame extends React.Component{
         return true;
       }
     });
+
+
+    return (
+      <div className={styles["frame-right"]}>
+        <div className={styles["chat-header"]}>
+          {activeKey
+            ?
+            <p>{activeUeserName}({activeKey})</p>
+            :
+            null}
+        </div>
+        <div style={{height:"calc( 100% - 180px)"}} className={styles["chat-content-wrap"]}>
+          <ChatBox chatBoxKey={"test"}
+                   canPull={!(activeKey in this.props.chat.noMoreChatRecords)}
+                   loading={this.state.loading}
+                   scrollToTopCallBack={this.getScrollToTopCallBack(this.state.activeKey)}
+                   configKey={"test"}>
+
+            {[
+              ...(
+                activeKey in this.props.chat.noMoreChatRecords
+                  ?
+                  [<ChatMessage key={`no-more-records-key`}
+                                type="center"
+                                content="没有更多的聊天记录了"/>]
+                  :
+                  []
+              ),
+              ...chatRecords.map(i=>{
+                return <ChatMessage key={i.key}
+                                    content={i.content}
+                                    type={i.type}/>
+              })]}
+          </ChatBox>
+        </div>
+        <div className={styles["chat-footer"]} style={{
+          height:"120px",
+          width:"100%",
+          borderTop:"1px solid #cccccc"}}>
+          <ChatInput value={this.state.value}
+                     onChange={this.onChange}
+                     onPressEnter={this.sendMessage}
+                     onConfirm={this.sendMessage}/>
+        </div>
+      </div>
+    )
+  }
+  getFriendListPanel=()=>{
+
+    const {activeKey}=this.state;
+
+    return (
+      <div className={styles["frame-left"]}>
+        <div className={styles["friend-list-header"]}>
+
+        </div>
+        <div className={styles["friend-list-content"]}>
+          <FrendList data={this.getFriendListData()}
+                     activeKey={activeKey}
+                     onChange={this.friendListOnChange}/>
+        </div>
+      </div>
+    )
+  }
+  getHolderPanel=()=>{
+    return (
+      <div className={styles["frame-right"]}>
+
+        <p style={{
+          textAlign:"center",
+          fontSize:"50px",
+          color:"#cccccc",
+          lineHeight:"500px"}}>
+          <Icon type="meh" />
+        </p>
+      </div>
+    )
+  }
+  render() {
+    const {user,className}=this.props,
+          {activeKey}=this.state,
+          classes=classnames({
+            [styles["frame"]]:true,
+            [className||""]:true
+          })
+
+
     return (
       <div className={classes}>
         <div className={styles["frame-side-bar"]}>
@@ -274,66 +361,23 @@ class ChatFrame extends React.Component{
 
 
         </div>
-        <div className={styles["frame-left"]}>
-          <div className={styles["friend-list-header"]}>
 
-          </div>
-          <div className={styles["friend-list-content"]}>
-            <FrendList data={this.getFriendListData()}
-                       activeKey={activeKey}
-                       onChange={this.friendListOnChange}/>
-          </div>
-        </div>
-        <div className={styles["frame-right"]}>
-          <div className={styles["chat-header"]}>
-            {activeKey
-              ?
-              <p>{activeUeserName}({activeKey})</p>
-              :
-              null}
-          </div>
-          <div style={{height:"calc( 100% - 180px)"}} className={styles["chat-content-wrap"]}>
-            <ChatBox chatBoxKey={"test"}
-                     canPull={!(activeKey in this.props.chat.noMoreChatRecords)}
-                     loading={this.state.loading}
-                     scrollToTopCallBack={this.getScrollToTopCallBack(this.state.activeKey)}
-                     configKey={"test"}>
+        {this.getFriendListPanel()}
 
-              {[
-                ...(
-                  activeKey in this.props.chat.noMoreChatRecords
-                    ?
-                    [<ChatMessage key={`no-more-records-key`}
-                                  type="center"
-                                  content="没有更多的聊天记录了"/>]
-                    :
-                    []
-                ),
-                ...chatRecords.map(i=>{
-                  return <ChatMessage key={i.key}
-                                      content={i.content}
-                                      type={i.type}/>
-                })]}
-            </ChatBox>
-          </div>
-          <div className={styles["chat-footer"]} style={{
-            height:"120px",
-            width:"100%",
-            borderTop:"1px solid #cccccc"}}>
-            <ChatInput value={this.state.value}
-                       onChange={this.onChange}
-                       onPressEnter={this.sendMessage}
-                       onConfirm={this.sendMessage}/>
-          </div>
-        </div>
+        {activeKey?this.getChatPanel():this.getHolderPanel()}
+
 
         <Modal visible={this.state.visible.add}
                width={400}
                footer={null}
                onCancel={this.getStateHandle("visible")("add",false)}
                title={<h3><Icon type="user-add"/>&nbsp;添加好友</h3> }>
-          <QueryUser queryUser={this.props.queryUser}
-                     putUserFriendRequest={this.putUserFriendRequest}/>
+          <QueryFrame queryUser={this.props.queryUser}
+                      friendList={[
+                          ...user.data.friendList,
+                          {userAccount:user.data.userAccount}
+                        ]}
+                      putUserFriendRequest={this.putUserFriendRequest}/>
         </Modal>
 
       </div>

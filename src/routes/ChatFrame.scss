@@ -2,16 +2,18 @@
   width: 100%;
   height:100%;
   vertical-align: top;
+  position: relative;
 }
 .frame-left,.frame-right,.frame-side-bar{
   display: inline-block;
+  background: #f7f7f7;
+  position: relative;
 }
 
 .frame-side-bar{
   width: 50px;
   height: 100%;
   border-right:1px solid #cccccc;
-  background: #f7f7f7;
   float:left;
   position: relative;
   display: flex;
@@ -34,11 +36,11 @@
   width: 260px;
   height:100%;
   border-right:1px solid #cccccc;
-  background: #f7f7f7;
 }
 .frame-right{
   width: calc(100% - 310px);
   height: 100%;
+  float:right;
 }
 .friend-list-header{
   height: 60px;
