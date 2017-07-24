@@ -12,6 +12,7 @@ import styles from './ChatFrame.css'
 import classnames from 'classnames';
 import QueryFrame from './QueryFrame';
 import {Message} from '../components/CommonConfigComponents';
+import NotificationPanel from './NotificationPanel';
 const {ChatInput,ChatMessage}=ChatBox;
 
 class ChatFrame extends React.Component{
@@ -25,7 +26,9 @@ class ChatFrame extends React.Component{
       value:"",
       activeKey:null,
       visible:{
-        add:false
+        add:false,
+        chatPanel:true,
+        notification:true,
       }
     }
   }
@@ -97,6 +100,11 @@ class ChatFrame extends React.Component{
       this.props.sortFriendListByActiveDate();
     })
 
+
+    this.props.getFriendNotifications({
+      limit:15,
+      skip:0,
+    })
     // this.props.sortFriendListByActiveDate();
   }
   messageOnChange=(e)=>{
@@ -341,7 +349,7 @@ class ChatFrame extends React.Component{
           <ul className={styles["operation-list"]}>
             <li className={styles["operation-item"]}>
               <Badge dot={true}>
-                <a>
+                <a onClick={this.getStateHandle("visible")("notification",true)}>
                   <Icon type="notification" />
                 </a>
               </Badge>
@@ -380,6 +388,13 @@ class ChatFrame extends React.Component{
                       putUserFriendRequest={this.putUserFriendRequest}/>
         </Modal>
 
+
+        <Modal visible={this.state.visible.notification}
+               onCancel={this.getStateHandle("visible")("notification",false)}
+               title={<h3><Icon type="notification"/>&nbsp;通知</h3>}
+               footer={null}>
+          <NotificationPanel data={this.props.user.notifications.friendRequest}/>
+        </Modal>
       </div>
     )
   }
@@ -522,6 +537,18 @@ function mapDispatchToProps(dispatch,ownProps) {
           },
           reject,
           resolve,
+        })
+      })
+    },
+    getFriendNotifications:(payload)=>{
+      return new Promise((resolve,reject)=>{
+        dispatch({
+          type:"user/getFriendNotifications",
+          payload:{
+            ...payload,
+          },
+          resolve,
+          reject,
         })
       })
     }

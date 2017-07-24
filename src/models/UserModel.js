@@ -13,6 +13,9 @@ const initState={
   isLogin:isLogin,
   data:data&&userAccount?{...data,userAccount}:null,
   token:token||null,
+  notifications:{
+    friendRequest:[]
+  }
 }
 
 
@@ -43,6 +46,33 @@ export default {
           friendList:payload,
         }
       }
+    },
+    addFriendNotifications(preState,{payload}) {
+
+      const {notifications}=preState;
+
+      console.info(payload);
+
+      return {
+        ...preState,
+        notifications:{
+          ...notifications,
+          friendRequest:[
+            ...notifications.friendRequest,
+            ...payload||[]
+          ]
+        }
+      }
+    },
+    initUserData(preState,{payload}) {
+      return {
+        isLogin:false,
+        data:null,
+        token:null,
+        notifications:{
+          friendRequest:[]
+        }
+      }
     }
 
   },
@@ -69,6 +99,13 @@ export default {
       }else{
         reject&&reject(res.message);
       }
+
+    },
+    *logout({payload,resolve,reject},{call,put,select}) {
+      window.sessionStorage.clear();
+      yield put({
+        type:"initUserData"
+      })
 
     },
     *sortFriendListByActiveDate({payload,resolve,reject},{call,put,select}) {
@@ -157,6 +194,24 @@ export default {
 
       if(res.status===1){
 
+        resolve&&resolve()
+
+      }else{
+
+        reject&&reject(res.message);
+
+      }
+    },
+    *getFriendNotifications({payload,resolve,reject},{call,put,select}) {
+      const {token}=yield select(state=>state.user);
+
+      const res=yield call(services.getFriendNotifications,{...payload,token});
+
+      if(res.status===1){
+        yield put({
+          type:"addFriendNotifications",
+          payload:res.payload.data,
+        })
         resolve&&resolve()
 
       }else{

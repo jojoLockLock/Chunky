@@ -3,8 +3,7 @@ import { connect } from 'dva';
 import styles from './IndexPage.css';
 import ChatFrame from './ChatFrame';
 import LoginForm from './LoginForm';
-import RegisterForm from './RegisterForm';
-
+import {Button} from 'antd';
 
 class IndexPage extends React.Component{
   constructor(props) {
@@ -48,7 +47,7 @@ class IndexPage extends React.Component{
           <div className={styles["login-modal"]}>
             <LoginForm onSubmit={login}/>
           </div>  }
-
+          <Button onClick={this.props.logout}>LOG OUT</Button>
 
       </div>
     )
@@ -78,6 +77,13 @@ function mapDispatchToProps(dispatch) {
         })
       })
     },
+    logout:()=>{
+      return new Promise((resolve,reject)=>{
+        dispatch({
+          type:"user/logout",
+        })
+      })
+    }
 
   }
 }

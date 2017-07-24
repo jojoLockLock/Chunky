@@ -86,3 +86,25 @@ export async function patchUserFriendRequest(payload) {
   return request(httpApi.USER_FRIEND_REQUEST,options);
 
 }
+
+
+export async function getFriendNotifications(payload) {
+
+  const {limit,skip,token}=payload;
+
+  payload={
+    limit,
+    skip,
+  }
+
+  const options={
+    method:"GET",
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      "access-token":token,
+    }
+  }
+
+  console.info("???")
+  return request(httpApi.NOTIFICATION_FRIEND_REQUEST+tools.jsonToQueryString(payload),options);
+}
