@@ -13,6 +13,7 @@ import classnames from 'classnames';
 import QueryFrame from './QueryFrame';
 import {Message} from '../components/CommonConfigComponents';
 import NotificationPanel from './NotificationPanel';
+import JoIcon from '../components/JoIcon/JoIcon';
 const {ChatInput,ChatMessage}=ChatBox;
 
 class ChatFrame extends React.Component{
@@ -28,8 +29,9 @@ class ChatFrame extends React.Component{
       visible:{
         add:false,
         chatPanel:true,
-        notification:true,
-      }
+        notification:false,
+      },
+      activePanel:"message",
     }
   }
   getStateHandle=(stateType)=>{
@@ -105,6 +107,8 @@ class ChatFrame extends React.Component{
       limit:15,
       skip:0,
     })
+
+    this.props.getBasicData();
     // this.props.sortFriendListByActiveDate();
   }
   messageOnChange=(e)=>{
@@ -240,6 +244,18 @@ class ChatFrame extends React.Component{
 
     return messageTime.format("MM-DD");
   }
+  closeChat=()=>{
+    this.setState({
+      activeKey:null
+    })
+  }
+  getSideBarOnChange=(key)=>{
+    return ()=>{
+      this.setState({
+        activePanel:key
+      })
+    }
+  }
   getChatPanel=()=>{
 
     const {chat,user}=this.props,
@@ -263,7 +279,9 @@ class ChatFrame extends React.Component{
         <div className={styles["chat-header"]}>
           {activeKey
             ?
-            <p>{activeUeserName}({activeKey})</p>
+            <p>
+              <a onClick={this.closeChat}><Icon type="close"/></a>&nbsp;&nbsp;
+              {activeUeserName}({activeKey})</p>
             :
             null}
         </div>
@@ -311,6 +329,7 @@ class ChatFrame extends React.Component{
       <div className={styles["frame-left"]}>
         <div className={styles["friend-list-header"]}>
 
+
         </div>
         <div className={styles["friend-list-content"]}>
           <FrendList data={this.getFriendListData()}
@@ -324,15 +343,64 @@ class ChatFrame extends React.Component{
     return (
       <div className={styles["frame-right"]}>
 
-        <p style={{
+        <div style={{
           textAlign:"center",
-          fontSize:"50px",
+          fontSize:"80px",
           color:"#cccccc",
-          lineHeight:"500px"}}>
-          <Icon type="meh" />
-        </p>
+          paddingTop:"250px"}}>
+          {/*<Icon type="meh" />*/}
+          <JoIcon type="pig"/>
+          <p style={{fontSize:"18px"}}>Why there is a piggy?</p>
+        </div>
       </div>
     )
+  }
+  getNotificationPanel=()=>{
+    return (
+      <div className={styles["frame-left"]}>
+        <div className={styles["friend-list-header"]}>
+
+
+        </div>
+        <div className={styles["friend-list-content"]}>
+          <NotificationPanel data={this.props.user.notifications.friendRequest}
+                             patchUserFriendRequest={this.props.patchUserFriendRequest}/>
+
+        </div>
+      </div>
+    )
+  }
+  getSearchPanel=()=>{
+    const {user}=this.props;
+
+    return (
+      <div className={styles["frame-left"]}>
+        <div className={styles["friend-list-header"]}>
+
+
+        </div>
+        <div className={styles["friend-list-content"]} style={{padding:5,textAlign:"left"}}>
+          <QueryFrame queryUser={this.props.queryUser}
+                      friendList={[
+                        ...user.data.friendList,
+                        {userAccount:user.data.userAccount}
+                      ]}
+                      putUserFriendRequest={this.putUserFriendRequest}/>
+        </div>
+      </div>
+    )
+  }
+  getLeftPanel=()=>{
+    const {activePanel}=this.state;
+    if(activePanel==="message"){
+      return this.getFriendListPanel();
+    }
+    if(activePanel==="notification"){
+      return this.getNotificationPanel();
+    }
+    if(activePanel==="search"){
+      return this.getSearchPanel();
+    }
   }
   render() {
     const {user,className}=this.props,
@@ -342,59 +410,71 @@ class ChatFrame extends React.Component{
             [className||""]:true
           })
 
+    const itemStyle={
+      color:"#cccccc"
+    }
 
     return (
       <div className={classes}>
         <div className={styles["frame-side-bar"]}>
           <ul className={styles["operation-list"]}>
+
             <li className={styles["operation-item"]}>
               <Badge dot={true}>
-                <a onClick={this.getStateHandle("visible")("notification",true)}>
+                <a onClick={()=>{
+                  this.getStateHandle("visible")("notification",true)()
+                  this.getSideBarOnChange("notification")();
+                }}
+                  style={this.state.activePanel!=="notification"?itemStyle:{}}>
                   <Icon type="notification" />
                 </a>
               </Badge>
             </li>
             <li className={styles["operation-item"]}>
-              <Badge dot={true}>
-                <a>
+              <Badge dot={false}>
+                <a style={this.state.activePanel!=="user"?itemStyle:{}}>
                   <Icon type="user" />
                 </a>
               </Badge>
             </li>
             <li className={styles["operation-item"]}>
-              <Button icon="plus"
-                      onClick={this.getStateHandle("visible")("add",true)}/>
+              <Badge dot={true}>
+                <a  style={this.state.activePanel!=="message"?itemStyle:{}}
+                    onClick={this.getSideBarOnChange("message")}>
+                  <Icon type="message" />
+                </a>
+              </Badge>
             </li>
+            <li className={styles["operation-item"]}>
+              <a onClick={()=>{
+                this.getStateHandle("visible")("add",true)();
+                this.getSideBarOnChange("search")();
+
+              }}
+                 style={this.state.activePanel!=="search"?itemStyle:{}}>
+                <Icon type="search" />
+              </a>
+            </li>
+            <li className={styles["operation-item"]} style={{marginTop:"20px"}}>
+                <a onClick={this.props.logout}>
+                  <Icon type="poweroff" />
+                </a>
+            </li>
+
           </ul>
 
 
         </div>
 
-        {this.getFriendListPanel()}
+        {this.getLeftPanel()}
+
+        {/*{this.getFriendListPanel()}*/}
 
         {activeKey?this.getChatPanel():this.getHolderPanel()}
 
 
-        <Modal visible={this.state.visible.add}
-               width={400}
-               footer={null}
-               onCancel={this.getStateHandle("visible")("add",false)}
-               title={<h3><Icon type="user-add"/>&nbsp;添加好友</h3> }>
-          <QueryFrame queryUser={this.props.queryUser}
-                      friendList={[
-                          ...user.data.friendList,
-                          {userAccount:user.data.userAccount}
-                        ]}
-                      putUserFriendRequest={this.putUserFriendRequest}/>
-        </Modal>
 
 
-        <Modal visible={this.state.visible.notification}
-               onCancel={this.getStateHandle("visible")("notification",false)}
-               title={<h3><Icon type="notification"/>&nbsp;通知</h3>}
-               footer={null}>
-          <NotificationPanel data={this.props.user.notifications.friendRequest}/>
-        </Modal>
       </div>
     )
   }
@@ -408,6 +488,15 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch,ownProps) {
   return {
     dispatch,
+    getBasicData:()=>{
+      return new Promise((resolve,reject)=>{
+        dispatch({
+          type:"user/getBasicData",
+          resolve,
+          reject,
+        })
+      })
+    },
     login:(payload)=>{
       return new Promise((resolve,reject)=>{
         dispatch({
@@ -551,7 +640,16 @@ function mapDispatchToProps(dispatch,ownProps) {
           reject,
         })
       })
+    },
+    logout:()=>{
+      return new Promise((resolve,reject)=>{
+        dispatch({
+          type:"user/logout",
+        })
+      })
     }
+
+
   }
 
 }

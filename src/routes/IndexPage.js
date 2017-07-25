@@ -3,8 +3,10 @@ import { connect } from 'dva';
 import styles from './IndexPage.css';
 import ChatFrame from './ChatFrame';
 import LoginForm from './LoginForm';
+import RegisterForm from './RegisterForm';
 import {Button} from 'antd';
-
+import JoIcon from '../components/JoIcon/JoIcon';
+import UserEnterPage from './UserEnterPage';
 class IndexPage extends React.Component{
   constructor(props) {
     super(props);
@@ -12,7 +14,8 @@ class IndexPage extends React.Component{
       loading:{
         login:false,
         register:false,
-      }
+      },
+      activeFrame:"login"
     }
   }
   getStateHandle=(stateType)=>{
@@ -27,27 +30,15 @@ class IndexPage extends React.Component{
       }
     }
   }
-  loginHandle=(payload)=>{
-    this.props.login&&this.props.login(payload)
-      .then(result=>{
-
-      })
-      .catch(msg=>{
-
-      })
-  }
   render() {
-    const {user,login}=this.props;
+    const {user}=this.props;
     return (
       <div className={styles["normal"]}>
         {user.isLogin
           ?
           <ChatFrame className={styles["chat-frame"]}/>
           :
-          <div className={styles["login-modal"]}>
-            <LoginForm onSubmit={login}/>
-          </div>  }
-          <Button onClick={this.props.logout}>LOG OUT</Button>
+          <UserEnterPage/> }
 
       </div>
     )
@@ -65,26 +56,6 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     dispatch,
-    login:(payload)=>{
-      return new Promise((resolve,reject)=>{
-        dispatch({
-          type:"user/login",
-          payload:{
-            ...payload,
-          },
-          resolve,
-          reject,
-        })
-      })
-    },
-    logout:()=>{
-      return new Promise((resolve,reject)=>{
-        dispatch({
-          type:"user/logout",
-        })
-      })
-    }
-
   }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(IndexPage);

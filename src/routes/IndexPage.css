@@ -1,11 +1,12 @@
 .normal {
-  font-family: Georgia, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   /*margin-top: 3em;*/
   width: 100%;
   height: 100%;
   position: relative;
   min-width: 1000px;
-  min-height: 800px; }
+  min-height: 800px;
+  background: #37363C; }
   .normal .chat-frame {
     /*margin-top: 3em;*/
     text-align: center;
@@ -18,19 +19,30 @@
     left: 10%;
     right: 10%;
     bottom: 10%;
-    box-shadow: 0px 0px 3px 0px #cccccc; }
+    box-shadow: 0px 0px 3px 0px black;
+    border-radius: 8px;
+    overflow: hidden; }
 
 .login-modal {
-  width: 400px;
-  height: 240px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-left: -200px;
-  margin-top: -200px;
+  width: 340px;
+  margin: 10px auto;
   border: 1px solid #cccccc;
   padding: 30px;
-  border-radius: 5px;
-  box-shadow: 0px 0px 3px 0px #cccccc; }
+  border-radius: 8px;
+  background: white; }
+
+.register-modal {
+  width: 340px;
+  margin: 10px auto;
+  border: 1px solid #cccccc;
+  padding: 30px;
+  border-radius: 8px;
+  background: white; }
+
+.user-enter {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #F9F9F9; }
 
 /*# sourceMappingURL=IndexPage.css.map */

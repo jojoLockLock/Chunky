@@ -105,6 +105,31 @@ export async function getFriendNotifications(payload) {
     }
   }
 
-  console.info("???")
   return request(httpApi.NOTIFICATION_FRIEND_REQUEST+tools.jsonToQueryString(payload),options);
+}
+
+export async function getBasicData(payload) {
+
+  const options={
+    method:"GET",
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      "access-token":payload.token,
+    }
+  }
+
+  return request(httpApi.USER_BASIC,options);
+}
+
+export async function register(payload) {
+
+  const options={
+    method:"POST",
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+    },
+    body:JSON.stringify(payload)
+  }
+
+  return request(httpApi.USER,options);
 }

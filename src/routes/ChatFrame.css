@@ -9,10 +9,15 @@
   background: #f7f7f7;
   position: relative; }
 
+.frame-left {
+  z-index: 3; }
+
+.frame-right {
+  z-index: 1; }
+
 .frame-side-bar {
   width: 50px;
   height: 100%;
-  border-right: 1px solid #cccccc;
   float: left;
   position: relative;
   display: flex;
@@ -26,19 +31,20 @@
       text-align: center; }
 
 .frame-left {
-  width: 260px;
+  width: 280px;
   height: 100%;
-  border-right: 1px solid #cccccc; }
+  border-right: 1px solid #cccccc;
+  z-index: 4; }
 
 .frame-right {
-  width: calc(100% - 310px);
+  width: calc(100% - 330px);
   height: 100%;
-  float: right; }
+  float: right;
+  box-shadow: inset 1px 0px 12px 0 #cccccc; }
 
 .friend-list-header {
   height: 60px;
-  width: 100%;
-  border-bottom: 1px solid #cccccc; }
+  width: 100%; }
 
 .friend-list-content {
   overflow: auto;
@@ -47,13 +53,11 @@
 
 .chat-header {
   height: 60px;
-  border-bottom: 1px solid #cccccc;
   line-height: 60px;
   font-weight: bolder;
   font-size: 18px;
   text-align: left;
-  padding: 0 10px;
-  background: #f7f7f7; }
+  padding: 0 10px; }
 
 .chat-footer {
   height: 120px;
@@ -61,6 +65,6 @@
   border-top: 1px solid #cccccc; }
 
 .chat-content-wrap {
-  background: #f7f7f7; }
+  font-size: inherit; }
 
 /*# sourceMappingURL=ChatFrame.css.map */

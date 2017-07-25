@@ -20,8 +20,7 @@
   text-align: left;
   padding: 10px 10px 10px 20px;
   vertical-align: top;
-  position: relative;
-  cursor: pointer; }
+  position: relative; }
   .friend-list-item .icon {
     display: inline-block;
     height: 40px;
@@ -36,7 +35,7 @@
       object-fit: cover; }
   .friend-list-item .body {
     height: 40px;
-    width: calc(100% - 100px);
+    width: calc(100% - 120px);
     float: left; }
     .friend-list-item .body .subtext, .friend-list-item .body .title {
       display: block;
@@ -52,7 +51,7 @@
       color: #929EAC; }
   .friend-list-item .addtion {
     height: 40px;
-    width: 40px;
+    width: 60px;
     float: right; }
     .friend-list-item .addtion .time {
       display: block;
@@ -68,4 +67,4 @@
       line-height: 20px;
       text-align: center; }
 
-/*# sourceMappingURL=FrendList.css.map */
+/*# sourceMappingURL=UserList.css.map */

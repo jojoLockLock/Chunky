@@ -2,7 +2,7 @@
  * Created by jojo on 2017/7/14.
  */
 import React,{PropTypes} from 'react';
-import styles from './FrendList.css';
+import styles from './UserList.css';
 import classnames from 'classnames';
 import {Badge} from 'antd';
 class FriensList extends React.Component{
@@ -91,12 +91,12 @@ const FriendItem=({title,subtext,icon,time,isActive,count,onClick})=>{
 }
 
 
-FriendItem.propTypes={
-  title:PropTypes.string,
-  subText:PropTypes.string,
-  icon:PropTypes.string,
-  time:PropTypes.string,
-  isActive:PropTypes.bool,
-  count:PropTypes.number,
-}
+// FriendItem.propTypes={
+//   title:PropTypes.string,
+//   subText:PropTypes.string,
+//   icon:PropTypes.string,
+//   time:PropTypes.string,
+//   isActive:PropTypes.bool,
+//   count:PropTypes.number,
+// }
 export default FriensList;

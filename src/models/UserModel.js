@@ -51,7 +51,6 @@ export default {
 
       const {notifications}=preState;
 
-      console.info(payload);
 
       return {
         ...preState,
@@ -220,5 +219,43 @@ export default {
 
       }
     },
+    *getBasicData({payload,resolve,reject},{call,put,select}) {
+      const {token,data}=yield select(state=>state.user);
+
+      if(!token){
+        return;
+      }
+
+      const res=yield call(services.getBasicData,{token})
+      if(res.status===1){
+        const {userAccount}=data;
+
+        const finalPayload={
+          ...res.payload,
+          token,
+          userAccount,
+
+        }
+
+        yield put({
+          type:"setUserData",
+          payload:finalPayload
+        })
+
+        resolve&&resolve();
+      }else{
+        reject&&reject(res.message);
+      }
+
+    },
+    *register({payload,resolve,reject},{call,put,select}) {
+      const res=yield call(services.register,{...payload||{}})
+
+      if(res.status===1){
+        resolve&&resolve();
+      }else{
+        reject&&reject(res.message);
+      }
+    }
   }
 }

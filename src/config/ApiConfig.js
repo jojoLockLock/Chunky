@@ -11,7 +11,9 @@ export default {
 
     USER_CHAT_RECORDS:"/api/user/chat-records",
 
-    NOTIFICATION_FRIEND_REQUEST:"/api/notifications/friend-request"
+    NOTIFICATION_FRIEND_REQUEST:"/api/notifications/friend-request",
+
+    USER_BASIC:"/api/user/basic"
   },
   socketApi:{
     SOCKET_HOST:""

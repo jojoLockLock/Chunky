@@ -21,24 +21,27 @@ class NormalLoginForm extends React.Component {
 
     return (
       <Form >
-        <FormItem>
+        <FormItem label="Account">
           {getFieldDecorator('userAccount', {
             rules: [{ required: true, message: 'Please input your username!' }],
           })(
             <Input onPressEnter={this.handleSubmit}
-                   prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="Username" />
+                   prefix={<Icon type="user" style={{ fontSize: 13 }} />}
+                   placeholder="" />
           )}
         </FormItem>
-        <FormItem>
+        <FormItem label="Password">
           {getFieldDecorator('userPassword', {
             rules: [{ required: true, message: 'Please input your Password!' }],
           })(
             <Input onPressEnter={this.handleSubmit}
-                   prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type="password" placeholder="Password" />
+                   prefix={<Icon type="lock" style={{ fontSize: 13 }} />}
+                   type="password"
+                   placeholder="" />
           )}
         </FormItem>
 
-        <FormItem>
+        <FormItem >
 
           <Button type="primary"
                   style={{width:"100%"}}
@@ -46,9 +49,10 @@ class NormalLoginForm extends React.Component {
                   className="login-form-button"
                   onClick={this.handleSubmit}>
 
-            Log in
+            Sign in
           </Button >
-          Don't have an account? &nbsp;<a onClick={this.props.changeToRegister}>Go to register</a>
+          {/*Don't have an account? &nbsp;*/}
+          {/*<a onClick={this.props.switchFrame}>Go to register</a>*/}
         </FormItem>
       </Form>
     );

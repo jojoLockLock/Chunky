@@ -108,7 +108,7 @@ class RegistrationForm extends React.Component {
           label={"Invitation code"}
           hasFeedback
         >
-          {getFieldDecorator('invitationCode', {
+          {getFieldDecorator('inviteCode', {
             rules: [{ required: true, message: 'Please input your invitation code!', whitespace: true }],
           })(
             <Input />
@@ -119,8 +119,9 @@ class RegistrationForm extends React.Component {
           <Button type="primary"
                   htmlType="button"
                   style={{width:"100%"}}
-                  size="large" onClick={this.handleSubmit}>Register</Button>
-          Already have an account? &nbsp;<a onClick={this.props.changeToLogin}>Go to login</a>
+                  size="large" onClick={this.handleSubmit}>Sign up</Button>
+          {/*Already have an account? &nbsp;*/}
+          {/*<a onClick={this.props.switchFrame}>Go to login</a>*/}
         </FormItem>
       </Form>
     );

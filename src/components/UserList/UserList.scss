@@ -29,7 +29,6 @@ $item-row-height: $item-height - $item-padding *2;
   padding:$item-padding 10px $item-padding 20px;
   vertical-align: top;
   position: relative;
-  cursor: pointer;
   //background-color:white;
   //transition: background-color 0.1s;
   //border-bottom:1px solid #cccccc;
@@ -53,7 +52,7 @@ $item-row-height: $item-height - $item-padding *2;
 
   .body{
     height: $item-row-height;
-    width: calc(100% - 100px);
+    width: calc(100% - 120px);
     float:left;
     .subtext,.title{
       display: block;
@@ -76,7 +75,7 @@ $item-row-height: $item-height - $item-padding *2;
 
   .addtion{
     height: $item-row-height;
-    width: $item-row-height;
+    width: 60px;
     float:right;
     .time{
       display: block;
