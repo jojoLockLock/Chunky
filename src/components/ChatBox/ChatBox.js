@@ -241,7 +241,6 @@ class ChatBox extends React.Component{
   };
   render() {
     let {children,isAnimate,style}=this.props;
-
     children=children.constructor!==[].constructor
       ?
       [<ChatMessage {...children.props} key={children.key} isAnimate={isAnimate}/>]
@@ -266,6 +265,8 @@ class ChatBox extends React.Component{
 }
 
 const ChatMessage=({showIcon,content,type,children,isAnimate,className,icon="http://127.0.0.1:8080/icon.jpg"})=>{
+
+
   const contentClasses=classnames({
     [styles["chat-message-content-center"]]:type==="center"||false,
     [styles["chat-message-content-right"]]:type==="right"||false,
@@ -300,7 +301,9 @@ const ChatMessage=({showIcon,content,type,children,isAnimate,className,icon="htt
 };
 
 ChatBox.defaultProps={
-  showIcon:true
+  showIcon:true,
+  isAnimate:true,
+
 }
 
 ChatBox.propTypes={
@@ -360,7 +363,7 @@ class ChatInput extends React.Component{
         <Button className={styles["btn-confirm"]}
                 size="small"
                 type="primary"
-                onClick={this.props.onConfirm}>发送 Ctrl+Enter</Button>
+                onClick={this.props.onConfirm}>Ctrl+Enter</Button>
       </div>
     )
   }

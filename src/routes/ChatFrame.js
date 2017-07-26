@@ -5,15 +5,15 @@ import React from 'react';
 import { connect } from 'dva';
 import ChatBox from '../components/ChatBox/ChatBox';
 import {Row,Col,Badge,
-Button,Modal,Icon,notification as Notification} from 'antd';
+Button,Modal,Icon,notification as Notification,Tooltip,Popconfirm} from 'antd';
 import FrendList from '../components/FriendList/FrendList';
 import moment from 'moment'
 import styles from './ChatFrame.css'
 import classnames from 'classnames';
 import QueryFrame from './QueryFrame';
-import {Message} from '../components/CommonConfigComponents';
 import NotificationPanel from './NotificationPanel';
 import JoIcon from '../components/JoIcon/JoIcon';
+import {Message} from '../components/CommonConfigComponents'
 const {ChatInput,ChatMessage}=ChatBox;
 
 class ChatFrame extends React.Component{
@@ -48,7 +48,6 @@ class ChatFrame extends React.Component{
   }
   notificationController=(data)=>{
     console.info(data);
-
     Notification.info({
       message:"好友添加请求",
       placement:"bottomRight",
@@ -280,7 +279,7 @@ class ChatFrame extends React.Component{
           {activeKey
             ?
             <p>
-              <a onClick={this.closeChat}><Icon type="close"/></a>&nbsp;&nbsp;
+              &nbsp;&nbsp;
               {activeUeserName}({activeKey})</p>
             :
             null}
@@ -324,18 +323,40 @@ class ChatFrame extends React.Component{
   getFriendListPanel=()=>{
 
     const {activeKey}=this.state;
+    const data=this.getFriendListData();
 
+    const content=data.length===0
+      ?
+      <p style={{textAlign:"center",color:"#cccccc"}}>
+        Oh ! You are a lonely piggy.
+      </p>
+      :
+      <FrendList data={data}
+                 activeKey={activeKey}
+                 onChange={this.friendListOnChange}/>
+
+    return this.combineLeftPanelTemplate("FRIENDS",content)
+  }
+  getCorner=()=>{
+    const {activeKey}=this.state;
     return (
-      <div className={styles["frame-left"]}>
-        <div className={styles["friend-list-header"]}>
-
-
-        </div>
-        <div className={styles["friend-list-content"]}>
-          <FrendList data={this.getFriendListData()}
-                     activeKey={activeKey}
-                     onChange={this.friendListOnChange}/>
-        </div>
+      <div className={"corner"}
+           style={{height:"30px",lineHeight:"30px"}}>
+        {
+          activeKey
+            ?
+            <a onClick={this.closeChat}
+               style={{
+                 cursor:"pointer",
+                 position:"relative",
+                 zIndex:"10",
+                 fontSize:"16px",
+                 fontWeight:"900"
+               }}>
+              <Icon type="close"/>
+            </a>
+            :null
+        }
       </div>
     )
   }
@@ -356,36 +377,43 @@ class ChatFrame extends React.Component{
     )
   }
   getNotificationPanel=()=>{
-    return (
-      <div className={styles["frame-left"]}>
-        <div className={styles["friend-list-header"]}>
+    const data=[...this.props.user.notifications.friendRequest].reverse();
+    const content=data.length===0
+      ?
+      <p style={{textAlign:"center",color:"#cccccc"}}>
+        No one wanna become friends with you!
+      </p>
+      :
+      <NotificationPanel data={data}
+                         patchUserFriendRequest={this.props.patchUserFriendRequest}/>
 
-
-        </div>
-        <div className={styles["friend-list-content"]}>
-          <NotificationPanel data={this.props.user.notifications.friendRequest}
-                             patchUserFriendRequest={this.props.patchUserFriendRequest}/>
-
-        </div>
-      </div>
-    )
+    return this.combineLeftPanelTemplate("NOTIFICATIONS",content)
   }
   getSearchPanel=()=>{
     const {user}=this.props;
+    const content=<QueryFrame queryUser={this.props.queryUser}
+                              friendList={[
+                                ...user.data.friendList,
+                                {userAccount:user.data.userAccount}
+                              ]}
+                              putUserFriendRequest={this.putUserFriendRequest}/>;
+    return this.combineLeftPanelTemplate("SEARCH",content);
+  }
+  combineLeftPanelTemplate=(title,content)=>{
+
+    const classes=classnames({
+      [styles["frame-left"]]:true,
+      "frame-left":true,
+    })
 
     return (
-      <div className={styles["frame-left"]}>
-        <div className={styles["friend-list-header"]}>
-
-
+      <div className={classes}>
+        {this.getCorner()}
+        <div className={styles["frame-left-header"]}>
+          <h1 className={styles["title"]}>{title}</h1>
         </div>
-        <div className={styles["friend-list-content"]} style={{padding:5,textAlign:"left"}}>
-          <QueryFrame queryUser={this.props.queryUser}
-                      friendList={[
-                        ...user.data.friendList,
-                        {userAccount:user.data.userAccount}
-                      ]}
-                      putUserFriendRequest={this.putUserFriendRequest}/>
+        <div className={styles["friend-list-content"]}>
+          {content}
         </div>
       </div>
     )
@@ -417,31 +445,45 @@ class ChatFrame extends React.Component{
     return (
       <div className={classes}>
         <div className={styles["frame-side-bar"]}>
+          <div className={styles["side-bar-menu"]}>
+              <a >
+                <JoIcon type="menu-l"/>
+              </a>
+          </div>
+          <div className={styles["user-overview"]}>
+            <div className={styles["user-icon"]}>
+              <img src={user.data.icon}/>
+            </div>
+            <span className={styles["user-message"]}>
+              {user.data.userName}
+              </span>
+          </div>
           <ul className={styles["operation-list"]}>
 
+
+            {/*<li className={styles["operation-item"]}>*/}
+              {/*<Badge dot={false}>*/}
+                {/*<a style={this.state.activePanel!=="user"?itemStyle:{}}>*/}
+                  {/*<Icon type="user" />*/}
+                {/*</a>*/}
+              {/*</Badge>*/}
+            {/*</li>*/}
+            <li className={styles["operation-item"]}>
+              <Badge dot={true}>
+                <a  style={this.state.activePanel!=="message"?itemStyle:{}}
+                    onClick={this.getSideBarOnChange("message")}>
+                  <Icon type="message" />
+                </a>
+              </Badge>
+            </li>
             <li className={styles["operation-item"]}>
               <Badge dot={true}>
                 <a onClick={()=>{
                   this.getStateHandle("visible")("notification",true)()
                   this.getSideBarOnChange("notification")();
                 }}
-                  style={this.state.activePanel!=="notification"?itemStyle:{}}>
+                   style={this.state.activePanel!=="notification"?itemStyle:{}}>
                   <Icon type="notification" />
-                </a>
-              </Badge>
-            </li>
-            <li className={styles["operation-item"]}>
-              <Badge dot={false}>
-                <a style={this.state.activePanel!=="user"?itemStyle:{}}>
-                  <Icon type="user" />
-                </a>
-              </Badge>
-            </li>
-            <li className={styles["operation-item"]}>
-              <Badge dot={true}>
-                <a  style={this.state.activePanel!=="message"?itemStyle:{}}
-                    onClick={this.getSideBarOnChange("message")}>
-                  <Icon type="message" />
                 </a>
               </Badge>
             </li>
@@ -456,9 +498,14 @@ class ChatFrame extends React.Component{
               </a>
             </li>
             <li className={styles["operation-item"]} style={{marginTop:"20px"}}>
-                <a onClick={this.props.logout}>
-                  <Icon type="poweroff" />
-                </a>
+                <Popconfirm onConfirm={this.props.logout}
+                            okText={"Sure"}
+                            cancelText={"Cancel"}
+                            title={"Are you sure to exit?"}>
+                  <a >
+                    <Icon type="poweroff" />
+                  </a>
+                </Popconfirm>
             </li>
 
           </ul>
@@ -468,7 +515,6 @@ class ChatFrame extends React.Component{
 
         {this.getLeftPanel()}
 
-        {/*{this.getFriendListPanel()}*/}
 
         {activeKey?this.getChatPanel():this.getHolderPanel()}
 

@@ -35,7 +35,7 @@
       object-fit: cover; }
   .friend-list-item .body {
     height: 40px;
-    width: calc(100% - 120px);
+    width: calc(100% - 130px);
     float: left; }
     .friend-list-item .body .subtext, .friend-list-item .body .title {
       display: block;
@@ -51,7 +51,7 @@
       color: #929EAC; }
   .friend-list-item .addtion {
     height: 40px;
-    width: 60px;
+    width: 70px;
     float: right; }
     .friend-list-item .addtion .time {
       display: block;

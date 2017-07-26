@@ -26,6 +26,9 @@ class FriensList extends React.Component{
       activeKey:newProps.activeKey||""
     })
   }
+  componentDidMount=()=>{
+    $(this.target).niceScroll({cursorborder:"",cursorcolor:"#cccccc",boxzoom:false})
+  }
   getOnChange=(key)=>{
     return ()=>{
       if("activeKey" in this.props){
@@ -40,9 +43,8 @@ class FriensList extends React.Component{
   }
   render() {
     const {data}=this.props;
-    const {activeKey}=this.state;
     return (
-      <div className={styles["friend-list-wrap"]}>
+      <div className={styles["friend-list-wrap"]} ref={target=>this.target=target}>
         <ul className={styles["friend-list"]}>
 
           {data.map(i=><FriendItem title={i.title}

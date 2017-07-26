@@ -9,6 +9,45 @@
   <link rel="stylesheet" href="./animate.css">
   <script src="./jquery.min.js"></script>
   <script src="./jquery.nicescroll.js"></script>
+
+  <style>
+    .frame-left:after{
+      content:"";
+      background: url("./static/shadow.png") repeat -4px 0;
+      position: absolute;
+      z-index: -2;
+      width: 5px;
+      height: 100%;
+      right:-5px;
+
+      top:0;
+
+    }
+    .corner{
+      position: absolute;
+      z-index: 4;
+      width: 30px;
+      height: 30px;
+      background: white;
+      right:-15px;
+      top:15px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: #f7f7f7;
+    }
+    .corner:after{
+      content:"";
+      left:0;
+      top:0;
+      background: url("./static/circle-shadow.png") no-repeat -1px 0;
+      background-size: 100%;
+      position: absolute;
+      width: 100%;
+      height:100%;
+    }
+
+  </style>
+
 </head>
 <body>
 

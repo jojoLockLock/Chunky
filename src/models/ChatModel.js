@@ -159,6 +159,11 @@ export default {
         return
       }
       const {friendList}=data;
+
+      if(friendList.length===0){
+        return;
+      }
+
       const res=yield call(services.getAllChatRecords,{
         token,
         limit:15,

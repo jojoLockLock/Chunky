@@ -52,7 +52,7 @@ $item-row-height: $item-height - $item-padding *2;
 
   .body{
     height: $item-row-height;
-    width: calc(100% - 120px);
+    width: calc(100% - 130px);
     float:left;
     .subtext,.title{
       display: block;
@@ -75,7 +75,7 @@ $item-row-height: $item-height - $item-padding *2;
 
   .addtion{
     height: $item-row-height;
-    width: 60px;
+    width: 70px;
     float:right;
     .time{
       display: block;

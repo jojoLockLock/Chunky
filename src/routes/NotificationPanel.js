@@ -21,12 +21,13 @@ export default class NotificationPanel extends React.Component{
           return {
             icon:i.data.icon,
             count:0,
-            subtext:`账号:${i.userAccount}`,
+            subtext:`${i.userAccount}`,
             title:i.data.userName,
             key:`${i.userAccount}-notification`,
             time:i.resCode===0
-              ?<Button onClick={this.getResHandle(i.userAccount,1)}>添加</Button>
-              : <span>已添加</span>
+              ?<Button onClick={this.getResHandle(i.userAccount,1)}>
+                Accept</Button>
+              : <span>Has accept</span>
           }
         })
       }/>

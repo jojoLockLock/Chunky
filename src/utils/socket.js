@@ -19,6 +19,7 @@ class Socket {
   init() {
     this.socket.onmessage=(msg)=>{
       try{
+        console.info(msg);
         const data=JSON.parse(msg.data);
         const {controllers}=this;
         if(controllers[data.type]){
