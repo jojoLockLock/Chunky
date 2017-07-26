@@ -14,12 +14,14 @@ class FriensList extends React.Component{
   static defaultProps={
     data:[],
   }
-
   constructor(props){
     super(props);
     this.state={
       activeKey:props.activeKey||"",
     }
+  }
+  componentDidMount=()=>{
+    $(this.target).niceScroll({cursorborder:"",cursorcolor:"#cccccc",boxzoom:false})
   }
   componentWillReceiveProps=(newProps)=>{
     this.setState({
@@ -42,7 +44,7 @@ class FriensList extends React.Component{
     const {data}=this.props;
     const {activeKey}=this.state;
     return (
-      <div className={styles["friend-list-wrap"]}>
+      <div className={styles["friend-list-wrap"]} ref={target=>this.target=target}>
         <ul className={styles["friend-list"]}>
 
           {data.map(i=><FriendItem title={i.title}
