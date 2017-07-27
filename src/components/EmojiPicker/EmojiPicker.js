@@ -202,6 +202,7 @@ class EmojiPicker extends React.Component{
   }
   componentDidMount=()=>{
     $(this.target).niceScroll({cursorborder:"",cursorcolor:"#cccccc",boxzoom:false});
+    $(this.target).parent()[0].style.padding="0";
   }
   render() {
     const rows=[];
