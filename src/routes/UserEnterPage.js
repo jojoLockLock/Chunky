@@ -100,15 +100,16 @@ class Page extends React.Component{
       .catch(msg=>{
         this.setState({
           errorMessage:msg,
-          shakeModal:true
+          shakeModal:true,
+          loading:false,
         })
         this.resetShakeModal()
 
       })
       .then(result=>{
-        this.setState({
-          loading:false
-        })
+        // this.setState({
+        //   loading:false
+        // })
       })
   }
   registerHandle=(payload)=>{

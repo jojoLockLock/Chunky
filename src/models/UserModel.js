@@ -15,7 +15,11 @@ const initState={
   token:token||null,
   notifications:{
     friendRequest:[]
-  }
+  },
+  haveNew:{
+    notifications:false,
+    chats:false,
+  },
 }
 
 
@@ -51,14 +55,26 @@ export default {
 
       const {notifications}=preState;
 
+      const newNotifications=[];
 
+
+      (notifications.friendRequest||[]).map(fr=>{
+        let isExist=(payload||[0]).some(nfr=>{
+          return nfr.userAccount===fr.userAccount
+        })
+
+        if(!isExist){
+          newNotifications.push(fr);
+        }
+
+      })
       return {
         ...preState,
         notifications:{
           ...notifications,
           friendRequest:[
-            ...notifications.friendRequest,
-            ...payload||[]
+            ...newNotifications,
+            ...payload,
           ]
         }
       }
@@ -70,6 +86,18 @@ export default {
         token:null,
         notifications:{
           friendRequest:[]
+        }
+      }
+    },
+    setHaveNew(preState,{payload}) {
+
+      const {type,value}=payload;
+
+      return {
+        ...preState,
+        haveNew:{
+          ...preState.haveNew,
+          [type]:!!value,
         }
       }
     }
@@ -93,6 +121,29 @@ export default {
 
         sessionStorage.setItem("userData",JSON.stringify(finalPayload));
 
+        const unreadMessagesCount={};
+        let count=0;
+
+        res.payload.data.unreadMessagesCount.map(urm=>{
+          count+=urm.count;
+          unreadMessagesCount[urm.userAccount]=urm.count;
+        });
+
+        yield put({
+          type:"chat/setAllMessagesCount",
+          payload:unreadMessagesCount,
+        })
+
+        if(res!==0){
+          yield put({
+            type:"setHaveNew",
+            payload:{
+              type:"chats",
+              value:true
+            }
+          })
+        }
+
         resolve&&resolve(res.payload);
 
       }else{
@@ -102,9 +153,10 @@ export default {
     },
     *logout({payload,resolve,reject},{call,put,select}) {
       window.sessionStorage.clear();
-      yield put({
-        type:"initUserData"
-      })
+      // yield put({
+      //   type:"initUserData"
+      // })
+      window.location.reload();
 
     },
     *sortFriendListByActiveDate({payload,resolve,reject},{call,put,select}) {
@@ -241,6 +293,29 @@ export default {
           type:"setUserData",
           payload:finalPayload
         })
+
+        const unreadMessagesCount={}
+        let count=0;
+
+        res.payload.data.unreadMessagesCount.map(urm=>{
+          count+=0;
+          unreadMessagesCount[urm.userAccount]=urm.count;
+        });
+
+        yield put({
+          type:"chat/setAllMessagesCount",
+          payload:unreadMessagesCount,
+        })
+
+        if(res!==0){
+          yield put({
+            type:"setHaveNew",
+            payload:{
+              type:"chats",
+              value:true
+            }
+          })
+        }
 
         resolve&&resolve();
       }else{

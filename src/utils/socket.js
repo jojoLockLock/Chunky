@@ -57,12 +57,12 @@ class Socket {
         this.onCloseCallback&&this.onCloseCallback();
       }
 
-
-      window.addEventListener
-        ?
-        window.addEventListener('beforeunload', this.disconnect)
-        :
-        window.attachEvent('onbeforeunload', this.disconnect);
+      //
+      // window.addEventListener
+      //   ?
+      //   window.addEventListener('beforeunload', this.disconnect)
+      //   :
+      //   window.attachEvent('onbeforeunload', this.disconnect);
 
 
     })

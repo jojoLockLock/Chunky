@@ -47,13 +47,23 @@ class ChatFrame extends React.Component{
     }
   }
   notificationController=(data)=>{
-    console.info(data);
+
     Notification.info({
       message:"好友添加请求",
       placement:"bottomRight",
       description:`${data.payload.userAccount} 想成为你的好友`,
       icon: <Icon type="user-add" style={{color:"#3db8c1"}}/>
     })
+
+
+
+    this.props.setHaveNew({
+      type:"notifications",
+      value:true,
+    })
+
+    this.props.getFriendNotifications({limit:15,skip:0})
+
   }
   boardCastController=(data)=>{
 
@@ -78,6 +88,12 @@ class ChatFrame extends React.Component{
       userAccount:from,
       count:(chat.messageCount[from]||0)+1,
     })
+
+    data.status===1&&this.props.setHaveNew({
+      type:"chats",
+      value:true,
+    })
+
 
     this.props.setFriendItemToTopByUserAccount(from);
 
@@ -125,7 +141,6 @@ class ChatFrame extends React.Component{
     if(!activeKey){
       return;
     }
-
     this.props.sendMessage({
       to:activeKey,
       content:this.state.value,
@@ -196,6 +211,11 @@ class ChatFrame extends React.Component{
     this.setState({
       activeKey:key,
     })
+
+    let count=this.props.chat.messageCount[key]
+    if(count!==0){
+      this.props.initUnreadMessagesCount({targetAccount:key});
+    }
 
     this.props.setMessageCount({
       userAccount:key,
@@ -378,13 +398,15 @@ class ChatFrame extends React.Component{
   }
   getNotificationPanel=()=>{
     const data=[...this.props.user.notifications.friendRequest].reverse();
-    const content=data.length===0
+    const content=data.length===0&&!this.props.refetchState["friendRequest"]
       ?
       <p style={{textAlign:"center",color:"#cccccc"}}>
         No one wanna become friends with you!
       </p>
       :
       <NotificationPanel data={data}
+                         getBasicData={this.props.getBasicData}
+                         getFriendNotifications={this.props.getFriendNotifications}
                          patchUserFriendRequest={this.props.patchUserFriendRequest}/>
 
     return this.combineLeftPanelTemplate("NOTIFICATIONS",content)
@@ -442,6 +464,18 @@ class ChatFrame extends React.Component{
       color:"#cccccc"
     }
 
+    const {haveNew}=user;
+
+    //获得未读信息总量
+    const messageCount=this.props.chat.messageCount;
+    let totalCount=0;
+    if(Object.keys(messageCount).length!==0){
+      Object.keys(messageCount).forEach(uc=>{
+        totalCount+=messageCount[uc];
+      })
+    }
+
+
     return (
       <div className={classes}>
         <div className={styles["frame-side-bar"]}>
@@ -469,18 +503,28 @@ class ChatFrame extends React.Component{
               {/*</Badge>*/}
             {/*</li>*/}
             <li className={styles["operation-item"]}>
-              <Badge dot={true}>
+              <Badge count={totalCount}>
                 <a  style={this.state.activePanel!=="message"?itemStyle:{}}
-                    onClick={this.getSideBarOnChange("message")}>
+                    onClick={()=>{
+                      this.getSideBarOnChange("message")();
+                      this.props.setHaveNew({
+                        type:"chats",
+                        value:false,
+                      })
+                    }}>
                   <Icon type="message" />
                 </a>
               </Badge>
             </li>
             <li className={styles["operation-item"]}>
-              <Badge dot={true}>
+              <Badge dot={haveNew["notifications"]}>
                 <a onClick={()=>{
                   this.getStateHandle("visible")("notification",true)()
                   this.getSideBarOnChange("notification")();
+                  this.props.setHaveNew({
+                    type:"notifications",
+                    value:false,
+                  })
                 }}
                    style={this.state.activePanel!=="notification"?itemStyle:{}}>
                   <Icon type="notification" />
@@ -529,6 +573,7 @@ function mapStateToProps(state) {
   return {
     user:state.user,
     chat:state.chat,
+    refetchState:state.refetchState
   }
 }
 function mapDispatchToProps(dispatch,ownProps) {
@@ -692,6 +737,30 @@ function mapDispatchToProps(dispatch,ownProps) {
         dispatch({
           type:"user/logout",
         })
+      })
+    },
+    setRefetchState:(payload={})=>{
+      dispatch({
+        type:"refetchState/setRefetchState",
+        payload:{
+          ...payload
+        }
+      })
+    },
+    setHaveNew:(payload={})=>{
+      dispatch({
+        type:"user/setHaveNew",
+        payload:{
+          ...payload
+        }
+      })
+    },
+    initUnreadMessagesCount:(payload={})=>{
+      dispatch({
+        type:"chat/initUnreadMessagesCount",
+        payload:{
+          ...payload,
+        }
       })
     }
 

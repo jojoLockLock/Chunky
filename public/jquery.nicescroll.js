@@ -16,7 +16,6 @@
 		factory(jQuery);
 	}
 }(function(jQuery){
-  console.info(jQuery);
   // globals
   var domfocus = false;
   var mousefocus = false;

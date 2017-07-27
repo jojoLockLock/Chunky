@@ -27,7 +27,15 @@ export default {
   state: initState,
 
   reducers: {
-
+    setAllMessagesCount(preState,{payload}) {
+      return {
+        ...preState,
+        messageCount:{
+          ...preState.messageCount,
+          ...payload||{}
+        }
+      }
+    },
     setMessageCount(preState,{payload}) {
       const {userAccount,count=0}=payload;
       return {
@@ -216,7 +224,7 @@ export default {
       const {onClose,controllers}=payload;
       const socket=yield call(services.connectSocket,{
         token,
-        onClose,
+        onClose
       })
 
       Object.keys(controllers||{}).forEach(key=>{
@@ -270,8 +278,17 @@ export default {
         type:"addNewMessage",
         payload,
       })
-
-      socket.sendMessage("boardCast",payload);
+      // console.info("model send:",payload);
+      // socket.sendMessage("boardCast",payload);
+    },
+    *initUnreadMessagesCount({payload,resolve,reject},{call,put,select}) {
+      const {token}=yield select(state=>state.user);
+      const res=yield call(services.initUnreadMessagesCount,{token,...payload||{}})
+      if(res.status===1){
+        resolve&&resolve()
+      }else{
+        reject&&reject(res.message);
+      }
     }
   },
 

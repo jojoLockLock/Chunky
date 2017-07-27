@@ -13,7 +13,13 @@ export default class QueryUser extends React.Component{
       value:"",
       result:null,
       hideInFriendList:true,
+      disabled:{
+
+      }
     }
+  }
+  componentDidMount=()=>{
+    $(this.target).niceScroll({cursorborder:"",cursorcolor:"#cccccc",boxzoom:false})
   }
   onQuery=()=>{
 
@@ -57,8 +63,25 @@ export default class QueryUser extends React.Component{
   }
   getPutUserFriendRequest=(targetAccount)=>{
     return ()=>{
+      this.setState({
+        disabled:{
+          ...this.state.disabled,
+          [targetAccount]:true
+        }
+      })
       this.props.putUserFriendRequest&&this.props.putUserFriendRequest(targetAccount)
+      this.timer=setTimeout(()=>{
+        this.setState({
+          disabled:{
+            ...this.state.disabled,
+            [targetAccount]:false,
+          }
+        })
+      },5000);
     }
+  }
+  componentWillUnmount=()=>{
+    clearTimeout(this.timer);
   }
   getQueryResultPanel=()=>{
 
@@ -85,17 +108,18 @@ export default class QueryUser extends React.Component{
         return
       }
 
+      let {userAccount,userName}=i;
       rows.push(
-        <tr key={i.userAccount}
+        <tr key={userAccount}
             className={styles["query-item"]}>
           <td>
-            {i.userName}
+            {userName}
           </td>
           <td>
             <Button type="primary"
                     style={{width:"80px"}}
-                    onClick={this.getPutUserFriendRequest(i.userAccount)}
-                    disabled={inFriendList}>
+                    onClick={this.getPutUserFriendRequest(userAccount)}
+                    disabled={inFriendList||this.state.disabled[userAccount]}>
               {inFriendList?"已添加":"添加"}
             </Button>
           </td>
@@ -120,7 +144,12 @@ export default class QueryUser extends React.Component{
 
 
     return (
-      <div style={{width:"100%"}}>
+      <div style={{
+        width:"100%",
+        textAlign:"left",
+        overflow:"auto",
+        height:"100%"}}
+           ref={target=>this.target=target}>
 
           <Input.Search onChange={this.onChange}
                         onSearch={this.onQuery}
@@ -132,7 +161,8 @@ export default class QueryUser extends React.Component{
             不显示已添加的好友
           </Checkbox>
 
-          <div style={{marginTop:"15px",width:"100%"}}>
+          <div style={{marginTop:"15px",width:"100%",height:"100%"}}
+               >
 
             {this.state.result!==null
               ?

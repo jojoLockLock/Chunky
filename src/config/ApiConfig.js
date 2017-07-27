@@ -13,9 +13,11 @@ export default {
 
     NOTIFICATION_FRIEND_REQUEST:"/api/notifications/friend-request",
 
-    USER_BASIC:"/api/user/basic"
+    USER_BASIC:"/api/user/basic",
+
+    UNREAD_MESSAGES:"/api/user/unread-messages"
   },
   socketApi:{
-    SOCKET_HOST:""
+    SOCKET_HOST:"ws://localhost:3000"
   }
 }

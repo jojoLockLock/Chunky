@@ -1,7 +1,7 @@
 {
 "version": 3,
-"mappings": "AAAA,aAAa;EACX,KAAK,EAAE,IAAI;EAET,4BAAE;IACA,OAAO,EAAC,GAAG;EAEb,yCAAe;IACb,UAAU,EAAE,KAAK",
-"sources": ["QueryUser.scss"],
+"mappings": "AAAA,aAAa;EACX,KAAK,EAAE,IAAI;EACX,UAAU,EAAE,IAAI;EAEd,4BAAE;IACA,OAAO,EAAC,GAAG;EAEb,yCAAe;IACb,UAAU,EAAE,KAAK",
+"sources": ["QueryFrame.scss"],
 "names": [],
-"file": "QueryUser.css"
+"file": "QueryFrame.css"
 }

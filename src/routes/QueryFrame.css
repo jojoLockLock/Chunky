@@ -1,8 +1,9 @@
 .query-result {
-  width: 100%; }
+  width: 100%;
+  text-align: left; }
   .query-result .query-item td {
     padding: 5px; }
   .query-result .query-item td:nth-child(2) {
     text-align: right; }
 
-/*# sourceMappingURL=QueryFrame.csss.map */
+/*# sourceMappingURL=QueryFrame.css.map */
