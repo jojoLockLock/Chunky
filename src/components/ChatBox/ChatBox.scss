@@ -63,6 +63,7 @@ $secondary-color-level-3:rgb(145,145,145);
     max-width: 60%;
     table-layout:fixed;
     word-wrap:break-word;
+    font-size:16px;
   }
   .chat-message-content-left{
     float:left;
@@ -85,7 +86,7 @@ $secondary-color-level-3:rgb(145,145,145);
     width: 100%;
     display: block;
     text-align: center;
-    font-size:12px;
+    font-size:14px;
   }
 
   .chat-message-content-left:before,.chat-message-content-right:before{

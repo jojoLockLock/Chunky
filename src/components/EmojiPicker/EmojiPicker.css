@@ -9,7 +9,8 @@
     height: 100%; }
   .emoji-picker-wrap td {
     padding: 5px;
-    cursor: pointer; }
+    cursor: pointer;
+    text-align: center; }
   .emoji-picker-wrap td:hover {
     background: #cccccc;
     user-select: none; }

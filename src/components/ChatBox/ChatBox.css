@@ -40,7 +40,8 @@
     display: table-cell;
     max-width: 60%;
     table-layout: fixed;
-    word-wrap: break-word; }
+    word-wrap: break-word;
+    font-size: 16px; }
   .chat-panel .chat-message-content-left {
     float: left;
     margin-left: 10px;
@@ -60,7 +61,7 @@
     width: 100%;
     display: block;
     text-align: center;
-    font-size: 12px; }
+    font-size: 14px; }
   .chat-panel .chat-message-content-left:before, .chat-panel .chat-message-content-right:before {
     z-index: 11;
     position: absolute;

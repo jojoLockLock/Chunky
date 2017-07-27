@@ -31,6 +31,7 @@ class ChatFrame extends React.Component{
         add:false,
         chatPanel:true,
         notification:false,
+        emojiPicker:false,
       },
       activePanel:"message",
     }
@@ -333,6 +334,11 @@ class ChatFrame extends React.Component{
           height:"120px",
           width:"100%",
           borderTop:"1px solid #cccccc"}}>
+          <div style={{position:"absolute",zIndex:999}}>
+            <EmojiPicker onClick={this.emojiOnClick}
+                         onChange={this.emojiPickerOnChange}
+                         visible={this.state.visible.emojiPicker}/>
+          </div>
           <ChatInput value={this.state.value}
                      onChange={this.onChange}
                      onPressEnter={this.sendMessage}
@@ -381,10 +387,19 @@ class ChatFrame extends React.Component{
       </div>
     )
   }
+  emojiOnClick=(value)=>{
+    this.getStateHandle("visible")("emojiPicker",false)();
+    this.setState({
+      value:this.state.value+value,
+    })
+  }
+  emojiPickerOnChange=()=>{
+    this.getStateHandle("visible")("emojiPicker",!this.state.visible.emojiPicker)();
+  }
   getHolderPanel=()=>{
     return (
       <div className={styles["frame-right"]}>
-        <EmojiPicker/>
+
         <div style={{
           textAlign:"center",
           fontSize:"80px",
