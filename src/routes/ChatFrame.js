@@ -14,6 +14,7 @@ import QueryFrame from './QueryFrame';
 import NotificationPanel from './NotificationPanel';
 import JoIcon from '../components/JoIcon/JoIcon';
 import {Message} from '../components/CommonConfigComponents'
+import EmojiPicker from '../components/EmojiPicker/EmojiPicker';
 const {ChatInput,ChatMessage}=ChatBox;
 
 class ChatFrame extends React.Component{
@@ -383,7 +384,7 @@ class ChatFrame extends React.Component{
   getHolderPanel=()=>{
     return (
       <div className={styles["frame-right"]}>
-
+        <EmojiPicker/>
         <div style={{
           textAlign:"center",
           fontSize:"80px",
