@@ -66,30 +66,6 @@
   height: calc(100% - 60px);
   width: 100%; }
 
-.chat-header {
-  height: 60px;
-  line-height: 60px;
-  font-weight: bolder;
-  font-size: 18px;
-  text-align: left;
-  padding: 0 10px; }
-
-.chat-footer {
-  height: 120px;
-  width: 100%; }
-
-.chat-tool-bar {
-  height: 30px;
-  width: 100%;
-  border-top: 1px solid #cccccc;
-  line-height: 30px;
-  text-align: left;
-  padding-left: 5px; }
-
-.chat-content-wrap {
-  font-size: inherit;
-  height: calc( 100% - 210px); }
-
 .user-overview {
   position: absolute;
   width: 100%;

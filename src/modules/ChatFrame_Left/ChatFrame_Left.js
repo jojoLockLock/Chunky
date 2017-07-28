@@ -7,6 +7,7 @@ export default class extends React.Component{
     super(props);
   }
   render() {
+    const {activePanel}=this.props;
 
   }
 }

@@ -12,7 +12,6 @@ import classnames from 'classnames';
 import QueryFrame from '../../routes/QueryFrame';
 import NotificationPanel from '../../routes/NotificationPanel';
 import JoIcon from '../../components/JoIcon/JoIcon';
-import {Message} from '../../components/CommonConfigComponents'
 import ChatFrameRight from '../ChatFrame_Right/ChatFrame_Right';
 
 class ChatFrame extends React.Component{
@@ -34,6 +33,33 @@ class ChatFrame extends React.Component{
       activePanel:"message",
     }
   }
+  componentDidMount=()=>{
+    const {user,initSocket,setSocketConnectState}=this.props;
+    const {friendList}=user.data;
+
+    initSocket({
+      onClose:()=>{
+        setSocketConnectState(false);
+      },
+      controllers: {
+        boardCast: this.boardCastController,
+        notification:this.notificationController,
+      }
+    })
+
+    this.props.getAllChatRecords().then(result=>{
+      this.props.sortFriendListByActiveDate();
+    })
+
+
+    this.props.getFriendNotifications({
+      limit:15,
+      skip:0,
+    })
+
+    this.props.getBasicData();
+    // this.props.sortFriendListByActiveDate();
+  }
   getStateHandle=(stateType)=>{
     return (type,value)=>{
       return ()=>{
@@ -48,14 +74,28 @@ class ChatFrame extends React.Component{
   }
   notificationController=(data)=>{
 
+    const {type}=data.payload;
+
+    switch (type){
+      case "friend-request/req":
+        this.friendRequestReqHandle(data);
+        break;
+      case "friend-request/res":
+        this.friendRequestResHandle(data);
+        break;
+      default:
+        console.info(data)
+    }
+
+
+  }
+  friendRequestReqHandle=(data)=>{
     Notification.info({
-      message:"好友添加请求",
+      message:"New Friend Request",
       placement:"bottomRight",
-      description:`${data.payload.userAccount} 想成为你的好友`,
+      description:`${data.payload.userAccount} wanna be your friend`,
       icon: <Icon type="user-add" style={{color:"#3db8c1"}}/>
     })
-
-
 
     this.props.setHaveNew({
       type:"notifications",
@@ -63,7 +103,15 @@ class ChatFrame extends React.Component{
     })
 
     this.props.getFriendNotifications({limit:15,skip:0})
-
+  }
+  friendRequestResHandle=(data)=>{
+    Notification.info({
+      message:"You have a new Friend ",
+      placement:"bottomRight",
+      description:`${data.payload.userAccount} became your friend`,
+      icon: <Icon type="user-add" style={{color:"#3db8c1"}}/>
+    })
+    this.props.getBasicData();
   }
   boardCastController=(data)=>{
 
@@ -99,33 +147,7 @@ class ChatFrame extends React.Component{
 
     ChatBox.scrollToBottom("test");
   }
-  componentDidMount=()=>{
-    const {user,initSocket,setSocketConnectState}=this.props;
-    const {friendList}=user.data;
 
-    initSocket({
-      onClose:()=>{
-        setSocketConnectState(false);
-      },
-      controllers: {
-        boardCast: this.boardCastController,
-        notification:this.notificationController,
-      }
-    })
-
-    this.props.getAllChatRecords().then(result=>{
-      this.props.sortFriendListByActiveDate();
-    })
-
-
-    this.props.getFriendNotifications({
-      limit:15,
-      skip:0,
-    })
-
-    this.props.getBasicData();
-    // this.props.sortFriendListByActiveDate();
-  }
   //发送信息
   sendMessage=(payload)=>{
     const {to}=payload;
@@ -136,7 +158,7 @@ class ChatFrame extends React.Component{
     this.props.putUserFriendRequest(payload)
       .then(()=>{
         this.getStateHandle("visible")("add",false)();
-        Message.success("已发送好友请求")
+        Message.success("Success send friend request")
       })
       .catch(msg=>{
         Message.error(msg);
@@ -146,8 +168,6 @@ class ChatFrame extends React.Component{
       })
   }
   friendListOnChange=(key)=>{
-
-
     this.setState({
       activeKey:key,
     })

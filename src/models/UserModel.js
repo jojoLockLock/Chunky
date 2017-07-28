@@ -100,6 +100,15 @@ export default {
           [type]:!!value,
         }
       }
+    },
+    setFriendNotifications(preState,{payload}) {
+      return {
+        ...preState,
+        notifications:{
+          ...preState.notifications,
+          friendRequest:payload,
+        }
+      }
     }
 
   },
@@ -239,7 +248,22 @@ export default {
       }
     },
     *patchUserFriendRequest({payload,resolve,reject},{call,put,select}) {
-      const {token}=yield select(state=>state.user);
+      const {token,notifications}=yield select(state=>state.user);
+      const {friendRequest}=notifications;
+
+      friendRequest.some((fr,index)=>{
+        if(fr.userAccount===payload.targetAccount){
+          fr[index]={
+            ...fr[index],
+            resCode:payload.resCode
+          }
+        }
+      })
+
+      yield put({
+        type:"setFriendRequest",
+        payload:friendRequest
+      })
 
       const res=yield call(services.patchUserFriendRequest,{...payload,token});
 
