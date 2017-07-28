@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'dva';
 import styles from './IndexPage.css';
-import ChatFrame from './ChatFrame';
+import ChatFrame from '../modules/ChatFrame/ChatFrame';
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 import {Button} from 'antd';

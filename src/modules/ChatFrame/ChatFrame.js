@@ -3,19 +3,17 @@
  */
 import React from 'react';
 import { connect } from 'dva';
-import ChatBox from '../components/ChatBox/ChatBox';
 import {Row,Col,Badge,
 Button,Modal,Icon,notification as Notification,Tooltip,Popconfirm} from 'antd';
-import FrendList from '../components/FriendList/FrendList';
+import FrendList from '../../components/FriendList/FrendList';
 import moment from 'moment'
 import styles from './ChatFrame.css'
 import classnames from 'classnames';
-import QueryFrame from './QueryFrame';
-import NotificationPanel from './NotificationPanel';
-import JoIcon from '../components/JoIcon/JoIcon';
-import {Message} from '../components/CommonConfigComponents'
-import EmojiPicker from '../components/EmojiPicker/EmojiPicker';
-const {ChatInput,ChatMessage}=ChatBox;
+import QueryFrame from '../../routes/QueryFrame';
+import NotificationPanel from '../../routes/NotificationPanel';
+import JoIcon from '../../components/JoIcon/JoIcon';
+import {Message} from '../../components/CommonConfigComponents'
+import ChatFrameRight from '../ChatFrame_Right/ChatFrame_Right';
 
 class ChatFrame extends React.Component{
 
@@ -128,72 +126,12 @@ class ChatFrame extends React.Component{
     this.props.getBasicData();
     // this.props.sortFriendListByActiveDate();
   }
-  messageOnChange=(e)=>{
-
-    this.setState({
-      messageValue:e.target.value
-    })
-
-    ChatBox.scrollToBottom("test");
-  };
   //发送信息
-  sendMessage=()=>{
-    const {activeKey}=this.state;
-
-    if(!activeKey){
-      return;
-    }
-    this.props.sendMessage({
-      to:activeKey,
-      content:this.state.value,
-    })
-
-    this.setState({
-      value:""
-    });
-
-    ChatBox.scrollToBottom("test");
-
-    this.props.setFriendItemToTopByUserAccount(activeKey);
-
+  sendMessage=(payload)=>{
+    const {to}=payload;
+    this.props.sendMessage(payload)
+    this.props.setFriendItemToTopByUserAccount(to);
   };
-  onChange=(e)=>{
-
-    this.setState({
-      value:e.target.value,
-    })
-
-  }
-  getChatRecords=(targetAccount)=>{
-    if(this.state.loading){
-      return;
-    }
-    const {activeKey}=this.state;
-    if(!targetAccount){
-      return;
-    }
-    if(targetAccount in this.props.chat.noMoreChatRecords){
-      return;
-    }
-    const skip=(this.props.chat.chatRecords[targetAccount]||[]).length;
-    this.setState({
-      loading:true
-    })
-    this.props.getChatRecords({
-      targetAccount,
-      limit:10,
-      skip:skip,
-    }).then(()=>{
-      this.setState({
-        loading:false,
-      })
-    })
-  }
-  getScrollToTopCallBack=(targetAccount)=>{
-    return ()=>{
-      this.getChatRecords(targetAccount);
-    }
-  }
   putUserFriendRequest=(payload)=>{
     this.props.putUserFriendRequest(payload)
       .then(()=>{
@@ -224,7 +162,6 @@ class ChatFrame extends React.Component{
       count:0,
     })
 
-    ChatBox.scrollToBottom("test");
 
   }
   getFriendListData=()=>{
@@ -277,88 +214,7 @@ class ChatFrame extends React.Component{
       })
     }
   }
-  onInputBlur=()=>{
-    this.setState({
-      inputIsFocus:false,
-    })
-  }
-  onInputFocus=()=>{
-    console.info("xxx")
-    this.setState({
-      inputIsFocus:true,
-    })
-  }
-  getChatPanel=()=>{
 
-    const {chat,user}=this.props,
-          {friendList}=user.data||{},
-          {activeKey}=this.state;
-
-    let chatRecords=chat.chatRecords[activeKey]||[];
-
-    let activeUeserName="";
-
-    friendList.some(f=>{
-      if(f.userAccount===this.state.activeKey){
-        activeUeserName=f.userName;
-        return true;
-      }
-    });
-
-
-    return (
-      <div className={styles["frame-right"]}>
-        <div className={styles["chat-header"]}>
-          {activeKey
-            ?
-            <p>
-              &nbsp;&nbsp;
-              {activeUeserName}({activeKey})</p>
-            :
-            null}
-        </div>
-        <div className={styles["chat-content-wrap"]}>
-          <ChatBox chatBoxKey={"test"}
-                   canPull={!(activeKey in this.props.chat.noMoreChatRecords)}
-                   loading={this.state.loading}
-                   scrollToTopCallBack={this.getScrollToTopCallBack(this.state.activeKey)}
-                   configKey={"test"}>
-
-            {[
-              ...(
-                activeKey in this.props.chat.noMoreChatRecords
-                  ?
-                  [<ChatMessage key={`no-more-records-key`}
-                                type="center"
-                                content="没有更多的聊天记录了"/>]
-                  :
-                  []
-              ),
-              ...chatRecords.map(i=>{
-                return <ChatMessage key={i.key}
-                                    content={i.content}
-                                    type={i.type}/>
-              })]}
-          </ChatBox>
-        </div>
-        <div className={styles["chat-tool-bar"]}
-             style={this.state.inputIsFocus?{background:"white"}:{}}>
-          <EmojiPicker onClick={this.emojiOnClick}
-                       onChange={this.emojiPickerOnChange}
-                       visible={this.state.visible.emojiPicker}/>
-        </div>
-        <div className={styles["chat-footer"]}>
-
-          <ChatInput value={this.state.value}
-                     onFocus={this.onInputFocus}
-                     onBlur={this.onInputBlur}
-                     onChange={this.onChange}
-                     onPressEnter={this.sendMessage}
-                     onConfirm={this.sendMessage}/>
-        </div>
-      </div>
-    )
-  }
   getFriendListPanel=()=>{
 
     const {activeKey}=this.state;
@@ -396,31 +252,6 @@ class ChatFrame extends React.Component{
             </a>
             :null
         }
-      </div>
-    )
-  }
-  emojiOnClick=(value)=>{
-    this.getStateHandle("visible")("emojiPicker",false)();
-    this.setState({
-      value:this.state.value+value,
-    })
-  }
-  emojiPickerOnChange=()=>{
-    this.getStateHandle("visible")("emojiPicker",!this.state.visible.emojiPicker)();
-  }
-  getHolderPanel=()=>{
-    return (
-      <div className={styles["frame-right"]}>
-
-        <div style={{
-          textAlign:"center",
-          fontSize:"80px",
-          color:"#cccccc",
-          paddingTop:"250px"}}>
-          {/*<Icon type="meh" />*/}
-          <JoIcon type="pig"/>
-          <p style={{fontSize:"18px"}}>Why there is a piggy?</p>
-        </div>
       </div>
     )
   }
@@ -480,13 +311,46 @@ class ChatFrame extends React.Component{
       return this.getSearchPanel();
     }
   }
-  render() {
+  getSideBar=()=>{
     const {user,className}=this.props,
-          {activeKey}=this.state,
-          classes=classnames({
-            [styles["frame"]]:true,
-            [className||""]:true
-          })
+      {activeKey}=this.state,
+      classes=classnames({
+        [styles["frame"]]:true,
+        [className||""]:true
+      })
+
+    const itemStyle={
+      color:"#cccccc"
+    }
+
+    const {haveNew}=user;
+    return (
+      <div className={styles["frame-side-bar"]}>
+        <div className={styles["side-bar-menu"]}>
+          <a>
+            <JoIcon type="menu-l"/>
+          </a>
+        </div>
+        <div className={styles["user-overview"]}>
+          <div className={styles["user-icon"]}>
+            <img src={user.data.icon}/>
+          </div>
+          <span className={styles["user-message"]}>
+              {user.data.userName}
+              </span>
+        </div>
+        {this.getOperationList()}
+      </div>
+    )
+  }
+  getOperationList=()=>{
+
+    const {user,className}=this.props,
+      {activeKey}=this.state,
+      classes=classnames({
+        [styles["frame"]]:true,
+        [className||""]:true
+      })
 
     const itemStyle={
       color:"#cccccc"
@@ -503,96 +367,100 @@ class ChatFrame extends React.Component{
       })
     }
 
+    return (
+      <ul className={styles["operation-list"]}>
+        <li className={styles["operation-item"]}>
+          <Badge count={totalCount}>
+            <a  style={this.state.activePanel!=="message"?itemStyle:{}}
+                onClick={()=>{
+                  this.getSideBarOnChange("message")();
+                  this.props.setHaveNew({
+                    type:"chats",
+                    value:false,
+                  })
+                }}>
+              <Icon type="message" />
+            </a>
+          </Badge>
+        </li>
+        <li className={styles["operation-item"]}>
+          <Badge dot={haveNew["notifications"]}>
+            <a onClick={()=>{
+              this.getStateHandle("visible")("notification",true)()
+              this.getSideBarOnChange("notification")();
+              this.props.setHaveNew({
+                type:"notifications",
+                value:false,
+              })
+            }}
+               style={this.state.activePanel!=="notification"?itemStyle:{}}>
+              <Icon type="notification" />
+            </a>
+          </Badge>
+        </li>
+        <li className={styles["operation-item"]}>
+          <a onClick={()=>{
+            this.getStateHandle("visible")("add",true)();
+            this.getSideBarOnChange("search")();
+
+          }}
+             style={this.state.activePanel!=="search"?itemStyle:{}}>
+            <Icon type="search" />
+          </a>
+        </li>
+        <li className={styles["operation-item"]} style={{marginTop:"20px"}}>
+          <Popconfirm onConfirm={this.props.logout}
+                      okText={"Sure"}
+                      cancelText={"Cancel"}
+                      title={"Are you sure to exit?"}>
+            <a >
+              <Icon type="poweroff" />
+            </a>
+          </Popconfirm>
+        </li>
+
+      </ul>
+    )
+  }
+  getFrameRight=()=>{
+    const {chat,user}=this.props,
+      {friendList}=user.data||{},
+      {activeKey}=this.state;
+
+    let chatRecords=chat.chatRecords[activeKey]||[];
+
+    let activeUeserName="";
+
+    friendList.some(f=>{
+      if(f.userAccount===this.state.activeKey){
+        activeUeserName=f.userName;
+        return true;
+      }
+    });
+
+    return (
+      <ChatFrameRight className={styles["frame-right"]}
+                      sendMessage={this.sendMessage}
+                      chatRecords={chatRecords}
+                      userName={activeUeserName}
+                      userAccount={activeKey}
+                      getChatRecords={this.props.getChatRecords}
+                      noMoreChatRecords={activeKey in chat.noMoreChatRecords}/>
+    )
+  }
+  render() {
+    const {className}=this.props,
+          classes=classnames({
+            [styles["frame"]]:true,
+            [className||""]:true
+          })
+
 
     return (
       <div className={classes}>
-        <div className={styles["frame-side-bar"]}>
-          <div className={styles["side-bar-menu"]}>
-              <a >
-                <JoIcon type="menu-l"/>
-              </a>
-          </div>
-          <div className={styles["user-overview"]}>
-            <div className={styles["user-icon"]}>
-              <img src={user.data.icon}/>
-            </div>
-            <span className={styles["user-message"]}>
-              {user.data.userName}
-              </span>
-          </div>
-          <ul className={styles["operation-list"]}>
-
-
-            {/*<li className={styles["operation-item"]}>*/}
-              {/*<Badge dot={false}>*/}
-                {/*<a style={this.state.activePanel!=="user"?itemStyle:{}}>*/}
-                  {/*<Icon type="user" />*/}
-                {/*</a>*/}
-              {/*</Badge>*/}
-            {/*</li>*/}
-            <li className={styles["operation-item"]}>
-              <Badge count={totalCount}>
-                <a  style={this.state.activePanel!=="message"?itemStyle:{}}
-                    onClick={()=>{
-                      this.getSideBarOnChange("message")();
-                      this.props.setHaveNew({
-                        type:"chats",
-                        value:false,
-                      })
-                    }}>
-                  <Icon type="message" />
-                </a>
-              </Badge>
-            </li>
-            <li className={styles["operation-item"]}>
-              <Badge dot={haveNew["notifications"]}>
-                <a onClick={()=>{
-                  this.getStateHandle("visible")("notification",true)()
-                  this.getSideBarOnChange("notification")();
-                  this.props.setHaveNew({
-                    type:"notifications",
-                    value:false,
-                  })
-                }}
-                   style={this.state.activePanel!=="notification"?itemStyle:{}}>
-                  <Icon type="notification" />
-                </a>
-              </Badge>
-            </li>
-            <li className={styles["operation-item"]}>
-              <a onClick={()=>{
-                this.getStateHandle("visible")("add",true)();
-                this.getSideBarOnChange("search")();
-
-              }}
-                 style={this.state.activePanel!=="search"?itemStyle:{}}>
-                <Icon type="search" />
-              </a>
-            </li>
-            <li className={styles["operation-item"]} style={{marginTop:"20px"}}>
-                <Popconfirm onConfirm={this.props.logout}
-                            okText={"Sure"}
-                            cancelText={"Cancel"}
-                            title={"Are you sure to exit?"}>
-                  <a >
-                    <Icon type="poweroff" />
-                  </a>
-                </Popconfirm>
-            </li>
-
-          </ul>
-
-
-        </div>
-
+        {this.getSideBar()}
         {this.getLeftPanel()}
-
-
-        {activeKey?this.getChatPanel():this.getHolderPanel()}
-
-
-
-
+        {this.getFrameRight()}
       </div>
     )
   }

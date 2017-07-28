@@ -1,0 +1,115 @@
+.frame {
+  width: 100%;
+  height: 100%;
+  vertical-align: top;
+  position: relative; }
+
+.frame-left, .frame-right, .frame-side-bar {
+  display: inline-block;
+  background: #f7f7f7;
+  position: relative; }
+
+.frame-left {
+  z-index: 3; }
+
+.frame-right {
+  z-index: 1; }
+
+.frame-side-bar {
+  width: 60px;
+  height: 100%;
+  float: left;
+  position: relative;
+  display: flex;
+  align-items: flex-end; }
+  .frame-side-bar .operation-list {
+    width: 100%;
+    padding-top: 15px; }
+    .frame-side-bar .operation-list .operation-item {
+      width: 100%;
+      font-size: 20px;
+      padding: 10px 0;
+      text-align: center; }
+
+.side-bar-menu {
+  position: absolute;
+  top: 5px;
+  width: 100%;
+  font-size: 24px;
+  padding: 10px 0;
+  text-align: center; }
+
+.frame-left {
+  width: 270px;
+  height: 100%;
+  z-index: 4; }
+
+.frame-right {
+  width: calc(100% - 330px);
+  height: 100%;
+  float: right; }
+
+.frame-left-header {
+  height: 60px;
+  width: 100%;
+  text-align: left; }
+  .frame-left-header .title {
+    height: 100%;
+    line-height: 60px;
+    font-size: 20px;
+    padding-left: 20px;
+    color: #787878;
+    font-weight: 500; }
+
+.friend-list-content {
+  overflow: auto;
+  height: calc(100% - 60px);
+  width: 100%; }
+
+.chat-header {
+  height: 60px;
+  line-height: 60px;
+  font-weight: bolder;
+  font-size: 18px;
+  text-align: left;
+  padding: 0 10px; }
+
+.chat-footer {
+  height: 120px;
+  width: 100%; }
+
+.chat-tool-bar {
+  height: 30px;
+  width: 100%;
+  border-top: 1px solid #cccccc;
+  line-height: 30px;
+  text-align: left;
+  padding-left: 5px; }
+
+.chat-content-wrap {
+  font-size: inherit;
+  height: calc( 100% - 210px); }
+
+.user-overview {
+  position: absolute;
+  width: 100%;
+  height: 60px;
+  top: 60px;
+  left: 0;
+  text-align: center; }
+  .user-overview .user-icon {
+    height: 40px;
+    width: 40px;
+    margin-left: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    border-radius: 50%; }
+    .user-overview .user-icon img {
+      object-fit: cover;
+      height: 100%;
+      width: 100%; }
+  .user-overview .user-message {
+    color: #787878;
+    font-weight: 500; }
+
+/*# sourceMappingURL=ChatFrame_Left.css.map */

@@ -204,20 +204,18 @@ class EmojiPicker extends React.Component{
     $(this.target).niceScroll({cursorborder:"",cursorcolor:"#cccccc",boxzoom:false});
     $(this.target).parent()[0].style.padding="0";
 
-    if(this.props.closable) {
 
+    if(this.props.closable){
       window.document.body.addEventListener("click",(e)=>{
         let isInclude=!!e.target.querySelector(`.${styles["emoji-picker-cell"]}`);
-
         isInclude=isInclude||e.target.className===`${styles["emoji-picker-cell"]}`;
-
-        isInclude||this.props.close();
-
+        isInclude&&this.props.close();
       })
     }
 
 
   }
+
   render() {
     const rows=[];
     const count=8;
@@ -261,53 +259,38 @@ export default class extends React.Component{
   static PropTypes={
     onChange:PropTypes.func,
     onClick:PropTypes.func,
-    visible:PropTypes.bool,
     closable:PropTypes.bool,
     placement:PropTypes.string,
   }
   constructor(props) {
     super(props);
     this.state={
-      visible:props.visible||false,
-    }
-  }
-  onClick=()=>{
-    let newValue=!this.state.visible;
-
-    if("visible" in this.props){
-
-      this.props.onChange&&this.props.onChange(newValue)
-
-    }else{
-
-      this.setState({
-        visible:newValue
-      })
     }
   }
   close=()=>{
     this.setState({
       visible:false,
     })
-  }
-  componentWillReceiveProps=(newProps)=>{
-    if("visible" in newProps){
+    setTimeout(()=>{
       this.setState({
-        visible:newProps.visible,
+        visible:null,
       })
-    }
+    })
   }
+
   render() {
     const {onClick,closable,placement,style,className}=this.props;
-
     const content=<EmojiPicker onClick={onClick}
                                close={this.close}
                                closable={closable}/>
 
+    const popProps=this.state.visible===false?{visible:false}:{}
+
+
     return (
       <Popover content={content}
                title=""
-               visible={this.state.visible}
+               {...popProps}
                placement={placement}
                trigger={"click"}>
         <a onClick={this.onClick} style={style} className={className}>
