@@ -7,16 +7,12 @@
   .emoji-picker-wrap table {
     width: 100%;
     height: 100%; }
-  .emoji-picker-wrap td {
+  .emoji-picker-wrap .emoji-picker-cell {
     padding: 5px;
     cursor: pointer;
     text-align: center; }
-  .emoji-picker-wrap td:hover {
+  .emoji-picker-wrap .emoji-picker-cell:hover {
     background: #cccccc;
     user-select: none; }
-
-.emoji-picker-icon {
-  border: 1px solid #dcdcd5;
-  padding: 5px; }
 
 /*# sourceMappingURL=EmojiPicker.css.map */

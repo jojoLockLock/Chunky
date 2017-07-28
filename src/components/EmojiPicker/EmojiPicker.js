@@ -203,13 +203,29 @@ class EmojiPicker extends React.Component{
   componentDidMount=()=>{
     $(this.target).niceScroll({cursorborder:"",cursorcolor:"#cccccc",boxzoom:false});
     $(this.target).parent()[0].style.padding="0";
+
+    if(this.props.closable) {
+
+      window.document.body.addEventListener("click",(e)=>{
+        let isInclude=!!e.target.querySelector(`.${styles["emoji-picker-cell"]}`);
+
+        isInclude=isInclude||e.target.className===`${styles["emoji-picker-cell"]}`;
+
+        isInclude||this.props.close();
+
+      })
+    }
+
+
   }
   render() {
     const rows=[];
     const count=8;
     emojis.forEach((e,index)=>{
       let row=rows[parseInt(index/count)]||[];
-      row.push(<td key={`${index}-emoji-cell`}>{e}</td>)
+      row.push(<td key={`${index}-emoji-cell`}
+                   className={styles["emoji-picker-cell"]}>
+        {e}</td>)
 
       rows[parseInt(index/count)]=row;
 
@@ -238,10 +254,16 @@ class EmojiPicker extends React.Component{
 
 
 export default class extends React.Component{
+  static defaultProps={
+    placement:"topLeft",
+    closable:true,
+  }
   static PropTypes={
     onChange:PropTypes.func,
     onClick:PropTypes.func,
-    visible:PropTypes.bool
+    visible:PropTypes.bool,
+    closable:PropTypes.bool,
+    placement:PropTypes.string,
   }
   constructor(props) {
     super(props);
@@ -263,6 +285,11 @@ export default class extends React.Component{
       })
     }
   }
+  close=()=>{
+    this.setState({
+      visible:false,
+    })
+  }
   componentWillReceiveProps=(newProps)=>{
     if("visible" in newProps){
       this.setState({
@@ -271,15 +298,19 @@ export default class extends React.Component{
     }
   }
   render() {
-    const {onClick}=this.props;
+    const {onClick,closable,placement,style,className}=this.props;
+
+    const content=<EmojiPicker onClick={onClick}
+                               close={this.close}
+                               closable={closable}/>
+
     return (
-      <Popover content={<EmojiPicker onClick={onClick}/>}
+      <Popover content={content}
                title=""
                visible={this.state.visible}
-               placement="top"
+               placement={placement}
                trigger={"click"}>
-        <a className={styles["emoji-picker-icon"]}
-           onClick={this.onClick}>
+        <a onClick={this.onClick} style={style} className={className}>
           <Icon type="smile-o"/>
         </a>
       </Popover>

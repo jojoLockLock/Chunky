@@ -277,6 +277,17 @@ class ChatFrame extends React.Component{
       })
     }
   }
+  onInputBlur=()=>{
+    this.setState({
+      inputIsFocus:false,
+    })
+  }
+  onInputFocus=()=>{
+    console.info("xxx")
+    this.setState({
+      inputIsFocus:true,
+    })
+  }
   getChatPanel=()=>{
 
     const {chat,user}=this.props,
@@ -306,7 +317,7 @@ class ChatFrame extends React.Component{
             :
             null}
         </div>
-        <div style={{height:"calc( 100% - 180px)"}} className={styles["chat-content-wrap"]}>
+        <div className={styles["chat-content-wrap"]}>
           <ChatBox chatBoxKey={"test"}
                    canPull={!(activeKey in this.props.chat.noMoreChatRecords)}
                    loading={this.state.loading}
@@ -330,16 +341,17 @@ class ChatFrame extends React.Component{
               })]}
           </ChatBox>
         </div>
-        <div className={styles["chat-footer"]} style={{
-          height:"120px",
-          width:"100%",
-          borderTop:"1px solid #cccccc"}}>
-          <div style={{position:"absolute",zIndex:999}}>
-            <EmojiPicker onClick={this.emojiOnClick}
-                         onChange={this.emojiPickerOnChange}
-                         visible={this.state.visible.emojiPicker}/>
-          </div>
+        <div className={styles["chat-tool-bar"]}
+             style={this.state.inputIsFocus?{background:"white"}:{}}>
+          <EmojiPicker onClick={this.emojiOnClick}
+                       onChange={this.emojiPickerOnChange}
+                       visible={this.state.visible.emojiPicker}/>
+        </div>
+        <div className={styles["chat-footer"]}>
+
           <ChatInput value={this.state.value}
+                     onFocus={this.onInputFocus}
+                     onBlur={this.onInputBlur}
                      onChange={this.onChange}
                      onPressEnter={this.sendMessage}
                      onConfirm={this.sendMessage}/>

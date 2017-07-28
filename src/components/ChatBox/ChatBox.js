@@ -321,9 +321,14 @@ ChatBox.scrollToBottom=function (configKey) {
   })
 }
 
+const chatInputs={};
+
 class ChatInput extends React.Component{
   constructor(props) {
     super(props);
+  }
+  componentDidMount=()=>{
+    chatInputs[this.props.configKey]=this.input;
   }
   onKeyDown=(e)=>{
   let keyCode = e.keyCode || e.which || e.charCode,
@@ -352,6 +357,7 @@ class ChatInput extends React.Component{
     return (
       <div className={styles["chat-input-panel"]} ref={(target)=>{this.panel=target;}}>
         <textarea  type="textarea"
+                   ref={target=>this.input=target}
                    className={styles["chat-input"]}
                    placeholder="your message"
                    onFocus={this.onFocus||null}
@@ -367,6 +373,11 @@ class ChatInput extends React.Component{
       </div>
     )
   }
+}
+ChatInput.getFocus=(configKey)=>{
+  setTimeout(()=>{
+    chatInputs[configKey].focus();
+  })
 }
 ChatInput.propTypes={
   onFocus:PropTypes.func,

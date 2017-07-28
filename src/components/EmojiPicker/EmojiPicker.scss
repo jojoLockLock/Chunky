@@ -8,19 +8,18 @@
     width: 100%;
     height: 100%;
   }
-  td{
+  .emoji-picker-cell{
     padding:5px;
     cursor: pointer;
     text-align: center;
   }
-  td:hover{
+  .emoji-picker-cell:hover{
     background: #cccccc;
     user-select: none;
   }
 }
 .emoji-picker-icon{
-  border:1px solid #dcdcd5;
-  padding:5px ;
-
+  //border:1px solid #dcdcd5;
+  //padding:5px ;
 }
 
