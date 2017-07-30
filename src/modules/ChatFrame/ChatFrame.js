@@ -13,7 +13,7 @@ import QueryFrame from '../../routes/QueryFrame';
 import NotificationPanel from '../../routes/NotificationPanel';
 import JoIcon from '../../components/JoIcon/JoIcon';
 import ChatFrameRight from '../ChatFrame_Right/ChatFrame_Right';
-
+import UserCenter from '../../routes/UserCenter';
 class ChatFrame extends React.Component{
 
   constructor(props){
@@ -481,6 +481,12 @@ class ChatFrame extends React.Component{
         {this.getSideBar()}
         {this.getLeftPanel()}
         {this.getFrameRight()}
+        <Modal key="user-center-modal"
+               title={"User center"}
+               visible={true}
+               footer={null}>
+          <UserCenter/>
+        </Modal>
       </div>
     )
   }

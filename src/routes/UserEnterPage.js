@@ -7,9 +7,13 @@ import styles from './UserEnterPage.css';
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 import JoIcon from '../components/JoIcon/JoIcon';
-import {Alert,Spin} from 'antd';
+import {Alert,Spin,message as Message} from 'antd';
 import QueueAnim from 'rc-queue-anim';
 import classnames from 'classnames';
+Message.config({
+  top:70,
+  duration:3,
+})
 class Page extends React.Component{
   constructor(props) {
     super(props);
@@ -118,7 +122,8 @@ class Page extends React.Component{
     })
     this.props.register(payload)
       .then(result=>{
-
+        Message.success("Register success")
+        this.switchFrame();
       })
       .catch(msg=>{
         this.setState({
