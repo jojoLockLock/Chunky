@@ -29,6 +29,7 @@ class ChatFrame extends React.Component{
         chatPanel:true,
         notification:false,
         emojiPicker:false,
+        userCenter:false
       },
       activePanel:"message",
     }
@@ -351,7 +352,8 @@ class ChatFrame extends React.Component{
             <JoIcon type="menu-l"/>
           </a>
         </div>
-        <div className={styles["user-overview"]}>
+        <div className={styles["user-overview"]}
+             onClick={this.getStateHandle("visible")("userCenter",true)}>
           <div className={styles["user-icon"]}>
             <img src={user.data.icon}/>
           </div>
@@ -469,7 +471,7 @@ class ChatFrame extends React.Component{
     )
   }
   render() {
-    const {className}=this.props,
+    const {className,user}=this.props,
           classes=classnames({
             [styles["frame"]]:true,
             [className||""]:true
@@ -483,9 +485,11 @@ class ChatFrame extends React.Component{
         {this.getFrameRight()}
         <Modal key="user-center-modal"
                title={"User center"}
-               visible={true}
+               onCancel={this.getStateHandle("visible")("userCenter",false)}
+               visible={this.state.visible["userCenter"]}
+               width={600}
                footer={null}>
-          <UserCenter/>
+          <UserCenter data={user.data}/>
         </Modal>
       </div>
     )

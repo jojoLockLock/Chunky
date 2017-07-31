@@ -35,6 +35,7 @@ class RegistrationForm extends React.Component {
         <FormItem
           label={"Nickname"}
           // hasFeedback
+          required={false}
         >
           {getFieldDecorator('userName', {
             initialValue:userName,
