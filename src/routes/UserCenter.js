@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import UserDataForm from './UserDataForm';
-import {Row,Col,Button,Menu, Icon,Spin,Upload} from 'antd';
+import {Row,Col,Button,Menu, Icon,Spin,Upload,message as Message} from 'antd';
 import styles from './UserCenter.css';
 import JoIcon from '../components/JoIcon/JoIcon';
 import { connect } from 'dva';
@@ -28,9 +28,23 @@ class UserCenter extends React.Component{
     const props = {
       action: '',
       beforeUpload: (file) => {
+
+        if(file.size/1024/1024>2){
+          Message.error("Not allowed over 2M size")
+          return false;
+        }
+        if(!file.name.endsWith(".jpg")){
+          Message.error("Can only receive jpg or png")
+          return false;
+        }
+        if(!file.name.endsWith(".png")){
+          Message.error("Can only receive jpg or png")
+          return false;
+        }
         this.setState({
           file,
         })
+
         return false;
       },
     };
@@ -102,6 +116,18 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     dispatch,
+    uploadIcon:(icon)=>{
+      return new Promise((resolve,reject)=>{
+        dispatch({
+          type:"user/uploadIcon",
+          payload:{
+            icon,
+          },
+          resolve,
+          reject,
+        })
+      })
+    }
   }
 }
 

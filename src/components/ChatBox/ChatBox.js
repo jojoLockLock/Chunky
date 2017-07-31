@@ -317,7 +317,6 @@ ChatBox.propTypes={
 
 ChatBox.scrollToBottom=function (configKey) {
   setTimeout(()=>{
-    console.info("scroll")
     chatBoxList[configKey]&&chatBoxList[configKey](1000000);
   })
 }
