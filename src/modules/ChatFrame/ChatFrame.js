@@ -146,7 +146,6 @@ class ChatFrame extends React.Component{
 
     this.props.setFriendItemToTopByUserAccount(from);
 
-    ChatBox.scrollToBottom("test");
   }
 
   //发送信息
@@ -489,7 +488,7 @@ class ChatFrame extends React.Component{
                visible={this.state.visible["userCenter"]}
                width={600}
                footer={null}>
-          <UserCenter data={user.data}/>
+          <UserCenter/>
         </Modal>
       </div>
     )

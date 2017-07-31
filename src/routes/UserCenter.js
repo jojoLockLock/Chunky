@@ -3,17 +3,19 @@
  */
 import React from 'react';
 import UserDataForm from './UserDataForm';
-import {Row,Col,Button,Menu, Icon,Spin} from 'antd';
+import {Row,Col,Button,Menu, Icon,Spin,Upload} from 'antd';
 import styles from './UserCenter.css';
 import JoIcon from '../components/JoIcon/JoIcon';
-const SubMenu = Menu.SubMenu;
-const MenuItemGroup = Menu.ItemGroup;
-export default class extends React.Component{
+import { connect } from 'dva';
+
+
+class UserCenter extends React.Component{
   constructor(props) {
     super(props);
     this.state={
       activeKey:"icon",
       loading:false,
+      file:null,
     }
   }
   handleClick=(item)=>{
@@ -22,20 +24,27 @@ export default class extends React.Component{
     })
   }
   getIconForm=()=>{
+    const { loading } = this.state;
+    const props = {
+      action: '',
+      beforeUpload: (file) => {
+        this.setState({
+          file,
+        })
+        return false;
+      },
+    };
+
     const {data}=this.props;
     return <div>
-      {/*<div style={{*/}
-        {/*color:"rgba(0, 0, 0, 0.85)",*/}
-        {/*height:"32px",*/}
-        {/*lineHeight:"32px"}}>*/}
-        {/*Icon:*/}
-      {/*</div>*/}
       <div className={styles["user-icon"]}>
         <img src={data.icon}/>
       </div>
-      <Button type="default"
-              style={{width:"150px"}}>
-        Upload new icon</Button>
+      <Upload {...props} >
+        <Button style={{width:"150px"}}>
+           Upload new icon
+        </Button>
+      </Upload>
     </div>
   }
   getBasicForm=()=>{
@@ -82,3 +91,18 @@ export default class extends React.Component{
     </div>
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    data:state.user.data,
+
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    dispatch,
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(UserCenter);

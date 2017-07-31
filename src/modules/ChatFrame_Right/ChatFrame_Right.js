@@ -115,7 +115,11 @@ export default class extends React.Component{
     })
   }
   componentDidUpdate=()=>{
-    ChatBox.scrollToBottom("chat-box");
+  }
+  componentWillReceiveProps=(newProps)=>{
+    if(newProps.userAccount!==this.props.userAccount){
+      ChatBox.scrollToBottom("chat-box");
+    }
   }
   render() {
 
