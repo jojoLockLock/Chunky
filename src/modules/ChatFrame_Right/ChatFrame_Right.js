@@ -62,6 +62,8 @@ export default class extends React.Component{
       value:this.state.value+value,
     })
 
+    ChatInput.getFocus("chat-input");
+
   }
   sendMessage=()=>{
     const {userAccount}=this.props;
@@ -116,9 +118,14 @@ export default class extends React.Component{
   }
   componentDidUpdate=()=>{
   }
+  componentDidMount=()=>{
+    ChatInput.getFocus("chat-input");
+  }
   componentWillReceiveProps=(newProps)=>{
     if(newProps.userAccount!==this.props.userAccount){
       ChatBox.scrollToBottom("chat-box");
+      ChatInput.getFocus("chat-input");
+
     }
   }
   render() {
@@ -177,6 +184,7 @@ export default class extends React.Component{
         <div className={styles["chat-footer"]}>
 
           <ChatInput value={this.state.value}
+                     configKey={"chat-input"}
                      onFocus={this.onInputFocus}
                      onBlur={this.onInputBlur}
                      onChange={this.onChange}

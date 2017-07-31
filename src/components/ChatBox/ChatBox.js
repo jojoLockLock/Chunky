@@ -167,6 +167,9 @@ class ChatBox extends React.Component{
   };
   //移动chatPanel到指定的高度
   scrollPanelTo=(top)=>{
+    if(!this._chatPanel){
+      return;
+    }
     let chatPanel=this._chatPanel,
         scrollBlock=this._scrollBlock,
         maxScrollTop=chatPanel.scrollHeight-chatPanel.clientHeight,
@@ -196,6 +199,11 @@ class ChatBox extends React.Component{
     return chatPanelScrollTop;
   };
   setScrollBlockTop=()=>{
+
+    if(!this._chatPanel){
+      return;
+    }
+
     let scrollBlock=this._scrollBlock,
         chatPanel=this._chatPanel,
         scrollHeight=chatPanel.scrollHeight;
@@ -203,6 +211,9 @@ class ChatBox extends React.Component{
 
   };
   setScrollBlockHeight=()=>{
+    if(!this._chatPanel){
+      return;
+    }
     let scrollBlock=this._scrollBlock,
         chatPanel=this._chatPanel,
         clientHeight=chatPanel.clientHeight,
@@ -376,7 +387,7 @@ class ChatInput extends React.Component{
 }
 ChatInput.getFocus=(configKey)=>{
   setTimeout(()=>{
-    chatInputs[configKey].focus();
+    chatInputs[configKey]&&chatInputs[configKey].focus();
   })
 }
 ChatInput.propTypes={
