@@ -33,11 +33,7 @@ class UserCenter extends React.Component{
           Message.error("Not allowed over 2M size")
           return false;
         }
-        if(!file.name.endsWith(".jpg")){
-          Message.error("Can only receive jpg or png")
-          return false;
-        }
-        if(!file.name.endsWith(".png")){
+        if((!file.name.endsWith(".jpg"))&&(!file.name.endsWith(".png"))){
           Message.error("Can only receive jpg or png")
           return false;
         }
