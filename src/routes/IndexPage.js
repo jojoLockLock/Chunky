@@ -7,6 +7,7 @@ import RegisterForm from './RegisterForm';
 import {Button} from 'antd';
 import JoIcon from '../components/JoIcon/JoIcon';
 import UserEnterPage from './UserEnterPage';
+import classnames from 'classnames';
 class IndexPage extends React.Component{
   constructor(props) {
     super(props);
@@ -32,11 +33,18 @@ class IndexPage extends React.Component{
   }
   render() {
     const {user}=this.props;
+
+    const chatFrameClasses=classnames({
+      [styles["chat-frame"]]:true,
+      ["animated"]:true,
+      ["fadeIn"]:true,
+    })
+
     return (
       <div className={styles["normal"]}>
         {user.isLogin
           ?
-          <ChatFrame className={styles["chat-frame"]}/>
+          <ChatFrame className={chatFrameClasses}/>
           :
           <UserEnterPage/> }
 

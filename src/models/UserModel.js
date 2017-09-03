@@ -223,8 +223,7 @@ export default {
       const res=yield call(services.queryUser,{value,token});
 
       if(res.status===1){
-
-        resolve&&resolve(res.payload)
+        resolve&&resolve([res.payload])
 
       }else{
 

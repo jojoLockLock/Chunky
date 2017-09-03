@@ -111,7 +111,7 @@ class RegistrationForm extends React.Component {
           {getFieldDecorator('inviteCode', {
             rules: [{ required: true, message: 'Please input your invitation code!', whitespace: true }],
           })(
-            <Input />
+            <Input onPressEnter={this.handleSubmit}/>
           )}
         </FormItem>
 
