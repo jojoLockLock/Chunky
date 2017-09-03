@@ -129,7 +129,24 @@ export async function register(payload) {
       "Content-Type": "application/json; charset=utf-8",
     },
     body:JSON.stringify(payload)
-  }
+  };
+
+
+
+  return request(httpApi.USER,options);
+}
+
+export async function patchBasicData(payload) {
+  let result=sessionStorage.getItem("userData");
+
+  const options={
+    method:"PATCH",
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      "access-token":JSON.parse(result).token
+    },
+    body:JSON.stringify(payload)
+  };
 
   return request(httpApi.USER,options);
 }

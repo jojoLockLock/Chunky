@@ -19,7 +19,7 @@ class RegistrationForm extends React.Component {
           loading:true
         })
         this.props.onSubmit&&this.props.onSubmit(values).then(()=>{
-          this.setState({loading:true})
+          this.setState({loading:false})
         });
       }
     });

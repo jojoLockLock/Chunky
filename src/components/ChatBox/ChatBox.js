@@ -275,7 +275,7 @@ class ChatBox extends React.Component{
   }
 }
 
-const ChatMessage=({showIcon,content,type,children,isAnimate,className,icon="http://127.0.0.1:8080/icon.jpg"})=>{
+const ChatMessage=({showIcon,content,type,children,isAnimate,className,icon="http://via.placeholder.com/100X100"})=>{
 
 
   const contentClasses=classnames({

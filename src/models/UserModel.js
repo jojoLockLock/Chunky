@@ -354,6 +354,12 @@ export default {
       }else{
         reject&&reject(res.message);
       }
+    },
+    *patchBasicData({payload,resolve,reject},{call,put,select}) {
+      const res = yield call(services.patchBasicData,{...payload||{}});
+      if(res.status===1){
+        resolve&&resolve();
+      }
     }
   }
 }

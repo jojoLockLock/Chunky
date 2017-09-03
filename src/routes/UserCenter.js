@@ -60,7 +60,7 @@ class UserCenter extends React.Component{
   getBasicForm=()=>{
     const {data}=this.props;
 
-    return <UserDataForm defaultValue={{userName:data.userName}}/>
+    return <UserDataForm defaultValue={{userName:data.userName}} onSubmit={this.props.patchBasicData}/>
   }
   getForm=()=>{
     const {activeKey}=this.state;
@@ -105,7 +105,6 @@ class UserCenter extends React.Component{
 function mapStateToProps(state) {
   return {
     data:state.user.data,
-
   }
 }
 
@@ -118,6 +117,18 @@ function mapDispatchToProps(dispatch) {
           type:"user/uploadIcon",
           payload:{
             icon,
+          },
+          resolve,
+          reject,
+        })
+      })
+    },
+    patchBasicData:(payload)=>{
+      return new Promise((resolve,reject)=>{
+        dispatch({
+          type:"user/patchBasicData",
+          payload:{
+            ...payload,
           },
           resolve,
           reject,
