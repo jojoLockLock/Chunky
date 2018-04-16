@@ -1,4 +1,6 @@
 # Chunky
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/jojoLockLock/Chunky.svg)](https://greenkeeper.io/)
 React+Redux+dva
 
 * 使用了Json Server作mock服务器
